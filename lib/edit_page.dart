@@ -38,7 +38,8 @@ class _State extends State<EditPage> {
     );
     if (selected != null) {
       setState(() {
-        _labelDate = (DateFormat.yMMMMEEEEd('ja')).format(selected);
+        var formatter = new DateFormat('yyyy/MM/dd(E)', "ja_JP");
+        _labelDate = formatter.format(selected);
       });
     }
   }
@@ -103,9 +104,9 @@ class _State extends State<EditPage> {
                   TextField(
                     controller: _priceController,
                     enabled: true,
-                    maxLength: 8,
+                    // maxLength: 8,
                     style: TextStyle(color: Colors.black),
-                    obscureText: false,
+                    // obscureText: false,
                     decoration: InputDecoration(
                       hintText: '価格を入力してください',
                       enabledBorder: new OutlineInputBorder(
@@ -202,10 +203,9 @@ class _State extends State<EditPage> {
               height: 50,
               // リスト追加ボタン
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // DBに登録する
-                  var memo = Memo(
-                    id: 0,
+                  var _todo = Todo(
                     title: _titleController.text,
                     memo: _memoController.text,
                     price: int.parse(_priceController.text),
@@ -214,7 +214,14 @@ class _State extends State<EditPage> {
                     isSum: switchChange(_switchIsSum),
                     konyuZumi: switchChange(_switchKonyuZumi),
                   );
-                  dbManager.insertMemo(memo);
+                  await Todo.insertTodo(_todo);
+                  // 各Controllerのクリア
+                  _titleController.clear();
+                  _memoController.clear();
+                  _priceController.clear();
+                  _switchReleaseDay = false;
+                  _switchIsSum = false;
+                  _switchKonyuZumi = false;
                 },
                 child: Text(
                   'リスト追加',
