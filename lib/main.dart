@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'edit_page.dart';
 import 'dbManager.dart';
+
+// ChangeNotifierを継承すると変更可能なデータを渡せる
+class TodoListState with ChangeNotifier {
+  List<Todo> _todoList = [];
+
+  Future<void> initializeList() async {
+    _todoList = await Todo.getTodos();
+    notifyListeners();
+  }
+}
 
 void main() {
   // 最初に表示するWidget
@@ -16,7 +27,10 @@ class ShoppingList extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ListPage(),
+      home: ChangeNotifierProvider(
+        create: (context) => TodoListState(),
+        child: ListPage(),
+      ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -29,31 +43,8 @@ class ShoppingList extends StatelessWidget {
   }
 }
 
-// ChangeNotifierを継承すると変更可能なデータを渡せる
-// class TodoListState extends ChangeNotifier {
-//   void getTodoList() {
-//     notifyListeners();
-//   }
-// }
-
-class ListPage extends StatefulWidget {
-  @override
-  _MySqlPageState createState() => _MySqlPageState();
-}
-
 // リスト一覧画面用Widget
-class _MySqlPageState extends State<ListPage> {
-  List<Todo> _todoList = [];
-
-  Future<void> initializeList() async {
-    _todoList = await Todo.getTodos();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +54,7 @@ class _MySqlPageState extends State<ListPage> {
       body: Container(
         padding: EdgeInsets.all(8),
         child: FutureBuilder(
-          future: initializeList(),
+          future: context.read<TodoListState>().initializeList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 非同期処理未完了 = 通信中
@@ -72,18 +63,20 @@ class _MySqlPageState extends State<ListPage> {
               );
             }
             return ListView.builder(
-                itemCount: _todoList.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      leading: Text(
-                        'ID ${_todoList[index].id}',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      title: Text('${_todoList[index].title}'),
+              itemCount: context.read<TodoListState>()._todoList.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    leading: Text(
+                      'ID ${context.read<TodoListState>()._todoList[index].id}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  );
-                });
+                    title: Text(
+                        '${context.read<TodoListState>()._todoList[index].title}'),
+                  ),
+                );
+              },
+            );
           },
         ),
       ),
@@ -97,10 +90,7 @@ class _MySqlPageState extends State<ListPage> {
             }),
           ).then((value) async {
             // 画面遷移から戻ってきた時の処理
-            final List<Todo> todos = await Todo.getTodos();
-            setState(() {
-              _todoList = todos;
-            });
+            context.read<TodoListState>().initializeList();
           });
         },
         child: Icon(Icons.add),

@@ -100,39 +100,3 @@ class Todo {
     );
   }
 }
-//   var memo = Memo(
-//     id: 0,
-//     title: 'Flutterで遊ぶ',
-//     memo: 'メモ',
-//     price: 0,
-//     release: 0,
-//     releaseDay: DateTime.now(),
-//     isSum: 0,
-//     konyuZumi: 0,
-//   );
-
-//   await insertMemo(memo);
-
-//   print(await getMemos());
-
-//   memo = Memo(
-//     id: memo.id,
-//     title: memo.title,
-//     memo: memo.memo,
-//     price: memo.price,
-//     release: memo.release,
-//     releaseDay: memo.releaseDay,
-//     isSum: memo.isSum,
-//     konyuZumi: memo.konyuZumi,
-//   );
-//   await updateMemo(memo);
-
-//   // Print Fido's updated information.
-//   print(await getMemos());
-
-//   // Delete Fido from the database.
-//   await deleteMemo(memo.id!);
-
-//   // Print the list of dogs (empty).
-//   print(await getMemos());
-// }
