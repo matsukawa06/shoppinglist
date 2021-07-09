@@ -9,17 +9,21 @@ class TodoListState with ChangeNotifier {
   List<Todo> _todoList = [];
 
   Future<void> initializeList() async {
-    _todoList = await Todo.getTodos();
+    _todoList = await Todo.getAllTodos();
     notifyListeners();
+  }
+
+  Future<void> delete(int? id) async {
+    Todo.deleteTodo(id!);
   }
 }
 
 void main() {
   // 最初に表示するWidget
-  runApp(ShoppingList());
+  runApp(HomeScreen());
 }
 
-class ShoppingList extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,20 +66,43 @@ class ListPage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
-              itemCount: context.read<TodoListState>()._todoList.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    leading: Text(
-                      'ID ${context.read<TodoListState>()._todoList[index].id}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+            return ReorderableListView(
+              onReorder: (oldIndex, newIndex) {},
+              children: context.read<TodoListState>()._todoList.map(
+                (Todo todo) {
+                  return Dismissible(
+                    key: Key(todo.id.toString()),
+                    background: Container(
+                      padding: EdgeInsets.only(
+                        right: 10,
+                      ),
+                      alignment: AlignmentDirectional.centerEnd,
+                      color: Colors.red,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
                     ),
-                    title: Text(
-                        '${context.read<TodoListState>()._todoList[index].title}'),
-                  ),
-                );
-              },
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      // スワイプ後に実行される削除処理
+                      context.read<TodoListState>().delete(todo.id);
+                    },
+                    // 一覧に表示する内容
+                    child: Card(
+                      elevation: 2.0,
+                      key: Key(todo.id.toString()),
+                      child: ListTile(
+                        title: Text(todo.title),
+                        subtitle: Text('${todo.price.toString()} 円'),
+                        onTap: () {
+                          // 一覧をタップした時の詳細画面遷移
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
             );
           },
         ),

@@ -62,7 +62,7 @@ class Todo {
     );
   }
 
-  static Future<List<Todo>> getTodos() async {
+  static Future<List<Todo>> getAllTodos() async {
     final Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query('todo');
     return List.generate(maps.length, (i) {
