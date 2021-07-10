@@ -92,6 +92,11 @@ class ListPage extends StatelessWidget {
                         subtitle: Text('${todo.price.toString()} 円'),
                         onTap: () {
                           // 一覧をタップした時の詳細画面遷移
+                          context.read<ProviderStore>().setRowInfo(todo);
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            return EditPage();
+                          }));
                         },
                       ),
                     ),
