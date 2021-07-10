@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'title_textField.dart';
 import 'memo_textField.dart';
+import 'price_textField.dart';
 import '../../Models/provider_store.dart';
 import '../../Models/todo_store.dart';
 import '../../Cotrollers/todo_controller.dart';
@@ -13,7 +14,7 @@ import '../../Common/common_util.dart';
 class EditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prvStore = context.watch<ProviderStore>();
+    final providerStore = context.watch<ProviderStore>();
     Intl.defaultLocale = 'ja';
     initializeDateFormatting('ja');
     return Scaffold(
@@ -39,32 +40,19 @@ class EditPage extends StatelessWidget {
               child: Column(
                 children: [
                   // 価格
-                  TextField(
-                    controller: prvStore.priceController,
-                    enabled: true,
-                    // maxLength: 8,
-                    style: TextStyle(color: Colors.black),
-                    // obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: '価格を入力してください',
-                      enabledBorder: new OutlineInputBorder(
-                          borderSide: new BorderSide(color: Colors.blue)),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange),
-                      ),
-                    ),
-                  ),
+                  PriceTextField(),
+
                   // 発売予定日
                   SwitchListTile(
-                    value: prvStore.switchReleaseDay,
+                    value: providerStore.switchReleaseDay,
                     title: Text('発売日'),
                     onChanged: (bool value) {
-                      prvStore.changeReleaseDay(value);
+                      providerStore.changeReleaseDay(value);
                     },
                   ),
                   Container(
                     child: Visibility(
-                      visible: prvStore.switchReleaseDay,
+                      visible: providerStore.switchReleaseDay,
                       child: Container(
                         padding: const EdgeInsets.only(left: 15),
                         decoration: BoxDecoration(
@@ -78,7 +66,7 @@ class EditPage extends StatelessWidget {
                           children: <Widget>[
                             const SizedBox(height: 15),
                             Text(
-                              prvStore.labelDate,
+                              providerStore.labelDate,
                               style: TextStyle(fontSize: 16),
                             ),
                             IconButton(
@@ -109,20 +97,20 @@ class EditPage extends StatelessWidget {
                     ),
                     // 金額計算チェック
                     child: SwitchListTile(
-                      value: prvStore.switchIsSum,
+                      value: providerStore.switchIsSum,
                       title: Text('計算対象に含める'),
                       onChanged: (bool value) {
-                        prvStore.changeIsSum(value);
+                        providerStore.changeIsSum(value);
                       },
                     ),
                   ),
 
                   // 購入済みチェック
                   SwitchListTile(
-                    value: prvStore.switchKonyuZumi,
+                    value: providerStore.switchKonyuZumi,
                     title: Text('購入済み'),
                     onChanged: (bool value) {
-                      prvStore.changeKonyuZumi(value);
+                      providerStore.changeKonyuZumi(value);
                     },
                   ),
                 ],
@@ -138,17 +126,17 @@ class EditPage extends StatelessWidget {
                 onPressed: () async {
                   // DBに登録する
                   var _todo = TodoStore(
-                    title: prvStore.titleController.text,
-                    memo: prvStore.memoController.text,
-                    price: int.parse(prvStore.priceController.text),
-                    release: boolToInt(prvStore.switchReleaseDay),
+                    title: providerStore.titleController.text,
+                    memo: providerStore.memoController.text,
+                    price: int.parse(providerStore.priceController.text),
+                    release: boolToInt(providerStore.switchReleaseDay),
                     releaseDay: DateTime.now(),
-                    isSum: boolToInt(prvStore.switchIsSum),
-                    konyuZumi: boolToInt(prvStore.switchKonyuZumi),
+                    isSum: boolToInt(providerStore.switchIsSum),
+                    konyuZumi: boolToInt(providerStore.switchKonyuZumi),
                   );
                   await TodoController.insertTodo(_todo);
                   // 各Controllerのクリア
-                  prvStore.clearControllers();
+                  providerStore.clearControllers();
                   // 前の画面に戻る
                   Navigator.pop(context);
                 },
