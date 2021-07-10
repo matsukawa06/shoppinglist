@@ -1,40 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'edit_page.dart';
-import 'dbManager.dart';
-
-// ChangeNotifierを継承すると変更可能なデータを渡せる
-class TodoListState with ChangeNotifier {
-  List<Todo> _todoList = [];
-
-  Future<void> initializeList() async {
-    _todoList = await Todo.getAllTodos();
-    notifyListeners();
-  }
-
-  Future<void> delete(int? id) async {
-    Todo.deleteTodo(id!);
-  }
-}
+import 'Views/edit_page/edit_page.dart';
+import 'Models/todo_store.dart';
+import 'Models/provider_store.dart';
 
 void main() {
   // 最初に表示するWidget
-  runApp(HomeScreen());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProviderStore()),
+      ],
+      child: HomeScreen(),
+    ),
+  );
 }
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: ListPage(),
       title: 'ShoppingList',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ChangeNotifierProvider(
-        create: (context) => TodoListState(),
-        child: ListPage(),
-      ),
+      // home: ChangeNotifierProvider<ProviderStore>(
+      //   create: (context) => ProviderStore(),
+      //   child: ListPage(),
+      // ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -58,7 +53,7 @@ class ListPage extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(8),
         child: FutureBuilder(
-          future: context.read<TodoListState>().initializeList(),
+          future: context.read<ProviderStore>().initializeList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 非同期処理未完了 = 通信中
@@ -68,8 +63,8 @@ class ListPage extends StatelessWidget {
             }
             return ReorderableListView(
               onReorder: (oldIndex, newIndex) {},
-              children: context.read<TodoListState>()._todoList.map(
-                (Todo todo) {
+              children: context.watch<ProviderStore>().todoList.map(
+                (TodoStore todo) {
                   return Dismissible(
                     key: Key(todo.id.toString()),
                     background: Container(
@@ -86,7 +81,7 @@ class ListPage extends StatelessWidget {
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) {
                       // スワイプ後に実行される削除処理
-                      context.read<TodoListState>().delete(todo.id);
+                      context.read<ProviderStore>().delete(todo.id);
                     },
                     // 一覧に表示する内容
                     child: Card(
@@ -117,7 +112,7 @@ class ListPage extends StatelessWidget {
             }),
           ).then((value) async {
             // 画面遷移から戻ってきた時の処理
-            context.read<TodoListState>().initializeList();
+            context.read<ProviderStore>().initializeList();
           });
         },
         child: Icon(Icons.add),

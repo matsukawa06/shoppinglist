@@ -1,45 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
+import '../Models/todo_store.dart';
 
-class Todo {
-  final int? id;
-  final String title;
-  final String memo;
-  final int price;
-  final int release;
-  final DateTime releaseDay;
-  final int isSum;
-  final int konyuZumi;
-
-  Todo(
-      {this.id,
-      required this.title,
-      required this.memo,
-      required this.price,
-      required this.release,
-      required this.releaseDay,
-      required this.isSum,
-      required this.konyuZumi});
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'memo': memo,
-      'price': price,
-      'release': release,
-      'releaseDay': releaseDay.toUtc().toIso8601String(),
-      'isSum': isSum,
-      'konyuZumi': konyuZumi,
-    };
-  }
-
-  @override
-  String toString() {
-    return 'Todo{id: $id, title: $title, memo: $memo, price: $price}';
-  }
-
+class TodoController {
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(
       join(await getDatabasesPath(), 'todo_database.db'),
@@ -53,7 +17,7 @@ class Todo {
     return _database;
   }
 
-  static Future<void> insertTodo(Todo todo) async {
+  static Future<void> insertTodo(TodoStore todo) async {
     final Database db = await database;
     await db.insert(
       'todo',
@@ -62,11 +26,11 @@ class Todo {
     );
   }
 
-  static Future<List<Todo>> getAllTodos() async {
+  static Future<List<TodoStore>> getAllTodos() async {
     final Database db = await database;
     final List<Map<String, dynamic>> maps = await db.query('todo');
     return List.generate(maps.length, (i) {
-      return Todo(
+      return TodoStore(
         id: maps[i]['id'],
         title: maps[i]['title'],
         memo: maps[i]['memo'],
@@ -79,7 +43,7 @@ class Todo {
     });
   }
 
-  static Future<void> updateTodo(Todo todo) async {
+  static Future<void> updateTodo(TodoStore todo) async {
     // Get a reference to the database.
     final db = await database;
     await db.update(
