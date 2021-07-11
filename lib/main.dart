@@ -26,10 +26,6 @@ class HomeScreen extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: ChangeNotifierProvider<ProviderStore>(
-      //   create: (context) => ProviderStore(),
-      //   child: ListPage(),
-      // ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -62,7 +58,11 @@ class ListPage extends StatelessWidget {
               );
             }
             return ReorderableListView(
-              onReorder: (oldIndex, newIndex) {},
+              onReorder: (oldIndex, newIndex) {
+                if (oldIndex < newIndex) {
+                  newIndex -= 1;
+                }
+              },
               children: context.watch<ProviderStore>().todoList.map(
                 (TodoStore todo) {
                   return Dismissible(
@@ -88,15 +88,24 @@ class ListPage extends StatelessWidget {
                       elevation: 2.0,
                       key: Key(todo.id.toString()),
                       child: ListTile(
-                        title: Text(todo.title),
+                        title: Text(todo.id.toString() + todo.title),
                         subtitle: Text('${todo.price.toString()} 円'),
                         onTap: () {
                           // 一覧をタップした時の詳細画面遷移
                           context.read<ProviderStore>().setRowInfo(todo);
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (context) {
-                            return EditPage();
-                          }));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return EditPage();
+                              },
+                            ),
+                          ).then(
+                            (value) async {
+                              // 画面遷移から戻ってきた時の処理
+                              context.read<ProviderStore>().clearItems();
+                              context.read<ProviderStore>().initializeList();
+                            },
+                          );
                         },
                       ),
                     ),
@@ -111,14 +120,19 @@ class ListPage extends StatelessWidget {
         onPressed: () {
           // "push"で新規画面に遷移
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              // 遷移先の画面として編集用画面を指定
-              return EditPage();
-            }),
-          ).then((value) async {
-            // 画面遷移から戻ってきた時の処理
-            context.read<ProviderStore>().initializeList();
-          });
+            MaterialPageRoute(
+              builder: (context) {
+                // 遷移先の画面として編集用画面を指定
+                return EditPage();
+              },
+            ),
+          ).then(
+            (value) async {
+              // 画面遷移から戻ってきた時の処理
+              context.read<ProviderStore>().clearItems();
+              context.read<ProviderStore>().initializeList();
+            },
+          );
         },
         child: Icon(Icons.add),
       ),

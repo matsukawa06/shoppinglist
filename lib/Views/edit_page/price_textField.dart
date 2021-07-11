@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../Models/provider_store.dart';
 
@@ -11,7 +12,12 @@ class PriceTextField extends StatelessWidget {
       enabled: true,
       // maxLength: 8,
       style: TextStyle(color: Colors.black),
-      // obscureText: false,
+      obscureText: false,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(8),
+      ],
       decoration: InputDecoration(
         hintText: '価格を入力してください',
         enabledBorder: new OutlineInputBorder(

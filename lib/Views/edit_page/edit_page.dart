@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'title_textField.dart';
 import 'memo_textField.dart';
 import 'price_textField.dart';
+import 'release_container.dart';
 import '../../Models/provider_store.dart';
 import '../../Models/todo_store.dart';
 import '../../Cotrollers/todo_controller.dart';
@@ -20,6 +20,39 @@ class EditPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('詳細'),
+        // 右側のアイコン一覧
+        actions: <Widget>[
+          Visibility(
+            visible: providerStore.id == 0 ? false : true,
+            child: IconButton(
+              onPressed: () async {
+                var result = await showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('確認'),
+                      content: Text('削除します。よろしいですか？'),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          child: Text('Cansel'),
+                          onPressed: () => Navigator.of(context).pop(0),
+                        ),
+                        ElevatedButton(
+                          child: Text('OK'),
+                          onPressed: () => Navigator.of(context).pop(1),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                print('dialog result: $result');
+                // providerStore.delete(providerStore.id);
+              },
+              icon: Icon(Icons.delete),
+            ),
+          )
+        ],
       ),
       body: Container(
         // 余白をつける
@@ -43,40 +76,7 @@ class EditPage extends StatelessWidget {
                   PriceTextField(),
 
                   // 発売予定日
-                  SwitchListTile(
-                    value: providerStore.switchReleaseDay,
-                    title: Text('発売日'),
-                    onChanged: (bool value) {
-                      providerStore.changeReleaseDay(value);
-                    },
-                  ),
-                  Container(
-                    child: Visibility(
-                      visible: providerStore.switchReleaseDay,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 15),
-                        decoration: BoxDecoration(
-                          border: const Border(
-                            top: const BorderSide(
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            const SizedBox(height: 15),
-                            Text(
-                              providerStore.labelDate,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            IconButton(
-                                onPressed: () => _selectDate(context),
-                                icon: Icon(Icons.date_range))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  ReleaseContainer(),
                 ],
               ),
             ),
@@ -125,23 +125,40 @@ class EditPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   // DBに登録する
-                  var _todo = TodoStore(
-                    title: providerStore.titleController.text,
-                    memo: providerStore.memoController.text,
-                    price: int.parse(providerStore.priceController.text),
-                    release: boolToInt(providerStore.switchReleaseDay),
-                    releaseDay: DateTime.now(),
-                    isSum: boolToInt(providerStore.switchIsSum),
-                    konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                  );
-                  await TodoController.insertTodo(_todo);
-                  // 各Controllerのクリア
-                  providerStore.clearControllers();
+                  if (providerStore.id == 0) {
+                    // 新規
+                    var _todo = TodoStore(
+                      title: providerStore.titleController.text,
+                      memo: providerStore.memoController.text,
+                      price: int.parse(providerStore.priceController.text),
+                      release: boolToInt(providerStore.switchReleaseDay),
+                      releaseDay: DateTime.now(),
+                      isSum: boolToInt(providerStore.switchIsSum),
+                      konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                    );
+
+                    await TodoController.insertTodo(_todo);
+                  } else {
+                    // 修正
+                    var _todo = TodoStore(
+                      id: providerStore.id,
+                      title: providerStore.titleController.text,
+                      memo: providerStore.memoController.text,
+                      price: int.parse(providerStore.priceController.text),
+                      release: boolToInt(providerStore.switchReleaseDay),
+                      releaseDay: DateTime.now(),
+                      isSum: boolToInt(providerStore.switchIsSum),
+                      konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                    );
+
+                    await TodoController.updateTodo(_todo);
+                  }
+                  // await TodoController.insertTodo(_todo);
                   // 前の画面に戻る
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'リスト追加',
+                  providerStore.id == 0 ? 'リスト追加' : '修正',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -150,20 +167,5 @@ class EditPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  // 選択した発売日
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? selected = await showDatePicker(
-      context: context,
-      locale: const Locale('ja'),
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime(2024),
-    );
-    if (selected != null) {
-      var formatter = new DateFormat('yyyy/MM/dd(E)', "ja_JP");
-      context.read<ProviderStore>().changeLabelDate(formatter.format(selected));
-    }
   }
 }

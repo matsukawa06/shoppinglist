@@ -25,6 +25,18 @@ class ProviderStore with ChangeNotifier {
     _priceController.text = todo.price.toString();
     _switchReleaseDay = intToBool(todo.release);
     _switchIsSum = intToBool(todo.isSum);
+    _switchKonyuZumi = intToBool(todo.konyuZumi);
+  }
+
+  // 各Controllerのクリア
+  void clearItems() {
+    _id = 0;
+    _titleController.clear();
+    _memoController.clear();
+    _priceController.clear();
+    _switchReleaseDay = false;
+    _switchIsSum = false;
+    _switchKonyuZumi = false;
   }
 
   // ID
@@ -60,27 +72,21 @@ class ProviderStore with ChangeNotifier {
 
   void changeReleaseDay(bool value) {
     _switchReleaseDay = value;
+    notifyListeners();
   }
 
   void changeIsSum(bool value) {
     _switchIsSum = value;
+    notifyListeners();
   }
 
   void changeKonyuZumi(bool value) {
     _switchKonyuZumi = value;
+    notifyListeners();
   }
 
   void changeLabelDate(String value) {
     _labelDate = value;
-  }
-
-  // 各Controllerのクリア
-  void clearControllers() {
-    _titleController.clear();
-    _memoController.clear();
-    _priceController.clear();
-    _switchReleaseDay = false;
-    _switchIsSum = false;
-    _switchKonyuZumi = false;
+    notifyListeners();
   }
 }
