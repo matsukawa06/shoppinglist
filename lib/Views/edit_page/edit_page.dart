@@ -40,7 +40,13 @@ class EditPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           child: Text('OK'),
-                          onPressed: () => Navigator.of(context).pop(1),
+                          onPressed: () {
+                            providerStore.delete(providerStore.id);
+                            // ダイアログを閉じる
+                            Navigator.pop(context);
+                            // 編集画面を閉じる
+                            Navigator.pop(context);
+                          },
                         ),
                       ],
                     );
@@ -135,6 +141,7 @@ class EditPage extends StatelessWidget {
                       releaseDay: DateTime.now(),
                       isSum: boolToInt(providerStore.switchIsSum),
                       konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                      sortNo: 0,
                     );
 
                     await TodoController.insertTodo(_todo);
@@ -149,6 +156,7 @@ class EditPage extends StatelessWidget {
                       releaseDay: DateTime.now(),
                       isSum: boolToInt(providerStore.switchIsSum),
                       konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                      sortNo: 0,
                     );
 
                     await TodoController.updateTodo(_todo);

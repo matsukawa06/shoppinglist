@@ -60,8 +60,11 @@ class ListPage extends StatelessWidget {
             return ReorderableListView(
               onReorder: (oldIndex, newIndex) {
                 if (oldIndex < newIndex) {
+                  // 下に移動した場合
                   newIndex -= 1;
                 }
+                final TodoStore todoStore =
+                    context.watch<ProviderStore>().todoList.removeAt(oldIndex);
               },
               children: context.watch<ProviderStore>().todoList.map(
                 (TodoStore todo) {
@@ -88,7 +91,8 @@ class ListPage extends StatelessWidget {
                       elevation: 2.0,
                       key: Key(todo.id.toString()),
                       child: ListTile(
-                        title: Text(todo.id.toString() + todo.title),
+                        title: Text(
+                            '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
                         subtitle: Text('${todo.price.toString()} 円'),
                         onTap: () {
                           // 一覧をタップした時の詳細画面遷移

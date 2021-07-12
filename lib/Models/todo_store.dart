@@ -7,6 +7,7 @@ class TodoStore {
   final DateTime releaseDay;
   final int isSum;
   final int konyuZumi;
+  final int? sortNo;
 
   TodoStore(
       {this.id,
@@ -16,7 +17,8 @@ class TodoStore {
       required this.release,
       required this.releaseDay,
       required this.isSum,
-      required this.konyuZumi});
+      required this.konyuZumi,
+      required this.sortNo});
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +30,7 @@ class TodoStore {
       'releaseDay': releaseDay.toUtc().toIso8601String(),
       'isSum': isSum,
       'konyuZumi': konyuZumi,
+      'sortNo': sortNo,
     };
   }
 

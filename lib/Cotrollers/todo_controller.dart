@@ -9,7 +9,7 @@ class TodoController {
       join(await getDatabasesPath(), 'todo_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE todo(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, memo TEXT, price INTEGER,release INTEGER,releaseDay TEXT, isSum INTEGER, konyuZumi INTEGER)",
+          "CREATE TABLE todo(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, memo TEXT, price INTEGER,release INTEGER,releaseDay TEXT, isSum INTEGER, konyuZumi INTEGER, sortNo INTEGER)",
         );
       },
       version: 1,
@@ -39,6 +39,7 @@ class TodoController {
         releaseDay: DateTime.now(), //maps[i]['releaseDay'],
         isSum: maps[i]['isSum'],
         konyuZumi: maps[i]['konyuZumi'],
+        sortNo: maps[i]['sortNo'],
       );
     });
   }
@@ -53,6 +54,14 @@ class TodoController {
       whereArgs: [todo.id],
       conflictAlgorithm: ConflictAlgorithm.fail,
     );
+  }
+
+  static Future<void> updateSotrNo(int sortNo) async {
+    final db = await database;
+    // await db.update('todo',
+    // todo.toMap(),
+    //       where: "id = ?",
+    //   whereArgs: [todo.id],);
   }
 
   static Future<void> deleteTodo(int id) async {
