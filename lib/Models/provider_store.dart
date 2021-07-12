@@ -17,6 +17,11 @@ class ProviderStore with ChangeNotifier {
     TodoController.deleteTodo(id!);
   }
 
+  Future<void> updateSortNo(int? id, int sortNo) async {
+    TodoController.updateSotrNo(id!, sortNo);
+    notifyListeners();
+  }
+
   // 明細を選択した時の情報保持
   void setRowInfo(TodoStore todo) {
     _id = todo.id!;
@@ -26,6 +31,7 @@ class ProviderStore with ChangeNotifier {
     _switchReleaseDay = intToBool(todo.release);
     _switchIsSum = intToBool(todo.isSum);
     _switchKonyuZumi = intToBool(todo.konyuZumi);
+    _sortNo = todo.sortNo!;
   }
 
   // 各Controllerのクリア
@@ -37,6 +43,7 @@ class ProviderStore with ChangeNotifier {
     _switchReleaseDay = false;
     _switchIsSum = false;
     _switchKonyuZumi = false;
+    _sortNo = 0;
   }
 
   // ID
@@ -67,6 +74,10 @@ class ProviderStore with ChangeNotifier {
   var _switchKonyuZumi = false;
   get switchKonyuZumi => _switchKonyuZumi;
 
+  // 並び順
+  int _sortNo = 0;
+  get sortNo => _sortNo;
+
   var _labelDate = '日付を選択してください';
   get labelDate => _labelDate;
 
@@ -88,5 +99,14 @@ class ProviderStore with ChangeNotifier {
   void changeLabelDate(String value) {
     _labelDate = value;
     notifyListeners();
+  }
+}
+
+class ProviderPrice with ChangeNotifier {
+  int _sumPrice = 0;
+  get sumPrice => _sumPrice;
+
+  void addPrice(int value) {
+    _sumPrice += value;
   }
 }

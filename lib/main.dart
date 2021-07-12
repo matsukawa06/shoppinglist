@@ -51,72 +51,111 @@ class ListPage extends StatelessWidget {
         child: FutureBuilder(
           future: context.read<ProviderStore>().initializeList(),
           builder: (context, snapshot) {
+            final providerStore = context.watch<ProviderStore>();
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 非同期処理未完了 = 通信中
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-            return ReorderableListView(
-              onReorder: (oldIndex, newIndex) {
-                if (oldIndex < newIndex) {
-                  // 下に移動した場合
-                  newIndex -= 1;
-                }
-                final TodoStore todoStore =
-                    context.watch<ProviderStore>().todoList.removeAt(oldIndex);
-              },
-              children: context.watch<ProviderStore>().todoList.map(
-                (TodoStore todo) {
-                  return Dismissible(
-                    key: Key(todo.id.toString()),
-                    background: Container(
-                      padding: EdgeInsets.only(
-                        right: 10,
-                      ),
-                      alignment: AlignmentDirectional.centerEnd,
-                      color: Colors.red,
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      // スワイプ後に実行される削除処理
-                      context.read<ProviderStore>().delete(todo.id);
-                    },
-                    // 一覧に表示する内容
-                    child: Card(
-                      elevation: 2.0,
-                      key: Key(todo.id.toString()),
-                      child: ListTile(
-                        title: Text(
-                            '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
-                        subtitle: Text('${todo.price.toString()} 円'),
-                        onTap: () {
-                          // 一覧をタップした時の詳細画面遷移
-                          context.read<ProviderStore>().setRowInfo(todo);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return EditPage();
-                              },
-                            ),
-                          ).then(
-                            (value) async {
-                              // 画面遷移から戻ってきた時の処理
-                              context.read<ProviderStore>().clearItems();
-                              context.read<ProviderStore>().initializeList();
-                            },
-                          );
+            // // 合計金額の算出
+            // for (var i = 0; i < providerStore.todoList.length; i++) {
+            //   providerStore.addPrice(providerStore.todoList[i].price);
+            // }
+            return Column(children: <Widget>[
+              Expanded(
+                child: ReorderableListView(
+                  onReorder: (oldIndex, newIndex) {
+                    if (oldIndex < newIndex) {
+                      // 下に移動した場合
+                      newIndex -= 1;
+                    }
+                    final TodoStore todoStore =
+                        providerStore.todoList.removeAt(oldIndex);
+
+                    providerStore.todoList.insert(newIndex, todoStore);
+
+                    // リストのソート番号を全件更新
+                    for (var i = 0; i < providerStore.todoList.length; i++) {
+                      providerStore.updateSortNo(
+                          providerStore.todoList[i].id, i);
+                    }
+                    context.read<ProviderStore>().initializeList();
+                  },
+                  children: providerStore.todoList.map(
+                    (TodoStore todo) {
+                      return Dismissible(
+                        key: Key(todo.id.toString()),
+                        background: Container(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                          ),
+                          alignment: AlignmentDirectional.centerEnd,
+                          color: Colors.red,
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          // まずリストから削除する
+                          providerStore.todoList.removeAt(todo.sortNo!);
+                          // スワイプ後に実行される削除処理
+                          context.read<ProviderStore>().delete(todo.id);
                         },
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
-            );
+                        // 一覧に表示する内容
+                        child: Card(
+                          elevation: 2.0,
+                          key: Key(todo.id.toString()),
+                          child: ListTile(
+                            title: Text(
+                                '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
+                            subtitle: Text('${todo.price.toString()} 円'),
+                            onTap: () {
+                              // 一覧をタップした時の詳細画面遷移
+                              context.read<ProviderStore>().setRowInfo(todo);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return EditPage();
+                                  },
+                                ),
+                              ).then(
+                                (value) async {
+                                  // 画面遷移から戻ってきた時の処理
+                                  context.read<ProviderStore>().clearItems();
+                                  context
+                                      .read<ProviderStore>()
+                                      .initializeList();
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              // 合計金額表示
+              Container(
+                // 左寄せ
+                width: double.infinity,
+                margin: EdgeInsets.only(
+                  left: 20,
+                  bottom: 50,
+                ),
+                // child: Text(
+                //   '合計：${context.read<ProviderStore>().sumPrice.toString()} 円',
+                //   textAlign: TextAlign.left,
+                //   style: TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //     fontSize: 24,
+                //   ),
+                // ),
+              ),
+            ]);
           },
         ),
       ),

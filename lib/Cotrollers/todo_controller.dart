@@ -28,7 +28,8 @@ class TodoController {
 
   static Future<List<TodoStore>> getAllTodos() async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('todo');
+    final List<Map<String, dynamic>> maps =
+        await db.query('todo', orderBy: "sortNo ASC");
     return List.generate(maps.length, (i) {
       return TodoStore(
         id: maps[i]['id'],
@@ -44,6 +45,30 @@ class TodoController {
     });
   }
 
+  static Future<int> getListCount() async {
+    final Database db = await database;
+    var result1 = await db.rawQuery(
+      'SELECT EXISTS(SELECT 1 FROM todo)',
+    );
+    var result2 = await db.rawQuery(
+      'SELECT COUNT(*) FROM todo',
+    );
+    int? exists = Sqflite.firstIntValue(result1);
+    return exists == 1 ? Sqflite.firstIntValue(result2)! : 0;
+  }
+
+  static Future<int> getSumPrice() async {
+    final Database db = await database;
+    var result1 = await db.rawQuery(
+      'SELECT EXISTS(SELECT 1 FROM todo)',
+    );
+    var result2 = await db.rawQuery(
+      'SELECT SUM(price) FROM todo',
+    );
+    int? exists = Sqflite.firstIntValue(result1);
+    return exists == 1 ? Sqflite.firstIntValue(result2)! : 0;
+  }
+
   static Future<void> updateTodo(TodoStore todo) async {
     // Get a reference to the database.
     final db = await database;
@@ -56,12 +81,10 @@ class TodoController {
     );
   }
 
-  static Future<void> updateSotrNo(int sortNo) async {
+  static Future<void> updateSotrNo(int id, int sortNo) async {
+    var values = <String, dynamic>{"sortNo": sortNo};
     final db = await database;
-    // await db.update('todo',
-    // todo.toMap(),
-    //       where: "id = ?",
-    //   whereArgs: [todo.id],);
+    await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
 
   static Future<void> deleteTodo(int id) async {

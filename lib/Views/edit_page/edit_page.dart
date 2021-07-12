@@ -141,7 +141,7 @@ class EditPage extends StatelessWidget {
                       releaseDay: DateTime.now(),
                       isSum: boolToInt(providerStore.switchIsSum),
                       konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                      sortNo: 0,
+                      sortNo: await TodoController.getListCount(),
                     );
 
                     await TodoController.insertTodo(_todo);
@@ -156,7 +156,7 @@ class EditPage extends StatelessWidget {
                       releaseDay: DateTime.now(),
                       isSum: boolToInt(providerStore.switchIsSum),
                       konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                      sortNo: 0,
+                      sortNo: providerStore.sortNo,
                     );
 
                     await TodoController.updateTodo(_todo);
