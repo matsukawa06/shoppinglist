@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'Views/edit_page/edit_page.dart';
 import 'Models/todo_store.dart';
 import 'Models/provider_store.dart';
+import 'Common/common_util.dart';
 
 void main() {
   // 最初に表示するWidget
@@ -42,6 +43,8 @@ class HomeScreen extends StatelessWidget {
 class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    int sumPrice = 0;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('買い物リスト'),
@@ -77,13 +80,20 @@ class ListPage extends StatelessWidget {
 
                     // リストのソート番号を全件更新
                     for (var i = 0; i < providerStore.todoList.length; i++) {
-                      providerStore.updateSortNo(
-                          providerStore.todoList[i].id, i);
+                      if (providerStore.todoList[i].sortNo != i) {
+                        // 登録されているソート番号が現在のインデックスと異なる場合更新
+                        providerStore.updateSortNo(
+                            providerStore.todoList[i].id, i);
+                      }
                     }
                     context.read<ProviderStore>().initializeList();
                   },
                   children: providerStore.todoList.map(
                     (TodoStore todo) {
+                      if (todo.sortNo == 0) {
+                        sumPrice = 0;
+                      }
+                      sumPrice += todo.price;
                       return Dismissible(
                         key: Key(todo.id.toString()),
                         background: Container(
@@ -101,8 +111,19 @@ class ListPage extends StatelessWidget {
                         onDismissed: (direction) {
                           // まずリストから削除する
                           providerStore.todoList.removeAt(todo.sortNo!);
+                          // リストのソート番号を全件更新
+                          for (var i = 0;
+                              i < providerStore.todoList.length;
+                              i++) {
+                            if (providerStore.todoList[i].sortNo != i) {
+                              // 登録されているソート番号が現在のインデックスと異なる場合更新
+                              providerStore.updateSortNo(
+                                  providerStore.todoList[i].id, i);
+                            }
+                          }
                           // スワイプ後に実行される削除処理
                           context.read<ProviderStore>().delete(todo.id);
+                          context.read<ProviderStore>().initializeList();
                         },
                         // 一覧に表示する内容
                         child: Card(
@@ -111,7 +132,7 @@ class ListPage extends StatelessWidget {
                           child: ListTile(
                             title: Text(
                                 '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
-                            subtitle: Text('${todo.price.toString()} 円'),
+                            subtitle: Text('${formatPrice(todo.price)} 円'),
                             onTap: () {
                               // 一覧をタップした時の詳細画面遷移
                               context.read<ProviderStore>().setRowInfo(todo);
@@ -146,14 +167,14 @@ class ListPage extends StatelessWidget {
                   left: 20,
                   bottom: 50,
                 ),
-                // child: Text(
-                //   '合計：${context.read<ProviderStore>().sumPrice.toString()} 円',
-                //   textAlign: TextAlign.left,
-                //   style: TextStyle(
-                //     fontWeight: FontWeight.bold,
-                //     fontSize: 24,
-                //   ),
-                // ),
+                child: Text(
+                  '合計：${formatPrice(sumPrice)} 円',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
               ),
             ]);
           },
