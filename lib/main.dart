@@ -55,128 +55,113 @@ class ListPage extends StatelessWidget {
           future: context.read<ProviderStore>().initializeList(),
           builder: (context, snapshot) {
             final providerStore = context.watch<ProviderStore>();
+            // 合計金額初期化
+            sumPrice = 0;
             if (snapshot.connectionState == ConnectionState.waiting) {
               // 非同期処理未完了 = 通信中
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
-            // // 合計金額の算出
-            // for (var i = 0; i < providerStore.todoList.length; i++) {
-            //   providerStore.addPrice(providerStore.todoList[i].price);
-            // }
-            return Column(children: <Widget>[
-              Expanded(
-                child: ReorderableListView(
-                  onReorder: (oldIndex, newIndex) {
-                    if (oldIndex < newIndex) {
-                      // 下に移動した場合
-                      newIndex -= 1;
-                    }
-                    final TodoStore todoStore =
-                        providerStore.todoList.removeAt(oldIndex);
-
-                    providerStore.todoList.insert(newIndex, todoStore);
-
-                    // リストのソート番号を全件更新
-                    for (var i = 0; i < providerStore.todoList.length; i++) {
-                      if (providerStore.todoList[i].sortNo != i) {
-                        // 登録されているソート番号が現在のインデックスと異なる場合更新
-                        providerStore.updateSortNo(
-                            providerStore.todoList[i].id, i);
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  child: ReorderableListView(
+                    onReorder: (oldIndex, newIndex) {
+                      if (oldIndex < newIndex) {
+                        // 下に移動した場合
+                        newIndex -= 1;
                       }
-                    }
-                    context.read<ProviderStore>().initializeList();
-                  },
-                  children: providerStore.todoList.map(
-                    (TodoStore todo) {
-                      if (todo.sortNo == 0) {
-                        sumPrice = 0;
-                      }
-                      sumPrice += todo.price;
-                      return Dismissible(
-                        key: Key(todo.id.toString()),
-                        background: Container(
-                          padding: EdgeInsets.only(
-                            right: 10,
-                          ),
-                          alignment: AlignmentDirectional.centerEnd,
-                          color: Colors.red,
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
-                        ),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          // まずリストから削除する
-                          providerStore.todoList.removeAt(todo.sortNo!);
-                          // リストのソート番号を全件更新
-                          for (var i = 0;
-                              i < providerStore.todoList.length;
-                              i++) {
-                            if (providerStore.todoList[i].sortNo != i) {
-                              // 登録されているソート番号が現在のインデックスと異なる場合更新
-                              providerStore.updateSortNo(
-                                  providerStore.todoList[i].id, i);
-                            }
-                          }
-                          // スワイプ後に実行される削除処理
-                          context.read<ProviderStore>().delete(todo.id);
-                          context.read<ProviderStore>().initializeList();
-                        },
-                        // 一覧に表示する内容
-                        child: Card(
-                          elevation: 2.0,
-                          key: Key(todo.id.toString()),
-                          child: ListTile(
-                            title: Text(
-                                '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
-                            subtitle: Text('${formatPrice(todo.price)} 円'),
-                            onTap: () {
-                              // 一覧をタップした時の詳細画面遷移
-                              context.read<ProviderStore>().setRowInfo(todo);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return EditPage();
-                                  },
-                                ),
-                              ).then(
-                                (value) async {
-                                  // 画面遷移から戻ってきた時の処理
-                                  context.read<ProviderStore>().clearItems();
-                                  context
-                                      .read<ProviderStore>()
-                                      .initializeList();
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      );
+                      final TodoStore todoStore =
+                          providerStore.todoList.removeAt(oldIndex);
+
+                      providerStore.todoList.insert(newIndex, todoStore);
+
+                      // リストのソート番号を全件更新
+                      updateSortNo(context);
+                      context.read<ProviderStore>().initializeList();
                     },
-                  ).toList(),
-                ),
-              ),
-              // 合計金額表示
-              Container(
-                // 左寄せ
-                width: double.infinity,
-                margin: EdgeInsets.only(
-                  left: 20,
-                  bottom: 50,
-                ),
-                child: Text(
-                  '合計：${formatPrice(sumPrice)} 円',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    children: providerStore.todoList.map(
+                      (TodoStore todo) {
+                        // 合計金額に明細の金額を加算
+                        sumPrice += todo.price;
+                        return Dismissible(
+                          key: Key(todo.id.toString()),
+                          background: Container(
+                            padding: EdgeInsets.only(
+                              right: 10,
+                            ),
+                            alignment: AlignmentDirectional.centerEnd,
+                            color: Colors.red,
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            // まずリストから削除する
+                            providerStore.todoList.removeAt(todo.sortNo!);
+                            // DBからも削除
+                            context.read<ProviderStore>().delete(todo.id);
+                            // リストのソート番号を全件更新
+                            updateSortNo(context);
+                            // スワイプ後に実行される削除処理
+                            context.read<ProviderStore>().initializeList();
+                          },
+                          // 一覧に表示する内容
+                          child: Card(
+                            elevation: 2.0,
+                            key: Key(todo.id.toString()),
+                            child: ListTile(
+                              title: Text(
+                                  '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
+                              subtitle: Text('${formatPrice(todo.price)} 円'),
+                              onTap: () {
+                                // 一覧をタップした時の詳細画面遷移
+                                context.read<ProviderStore>().setRowInfo(todo);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return EditPage();
+                                    },
+                                  ),
+                                ).then(
+                                  (value) async {
+                                    // 画面遷移から戻ってきた時の処理
+                                    context.read<ProviderStore>().clearItems();
+                                    context
+                                        .read<ProviderStore>()
+                                        .initializeList();
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
                   ),
                 ),
-              ),
-            ]);
+                // 合計金額表示
+                Container(
+                  // 左寄せ
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                    left: 20,
+                    bottom: 50,
+                  ),
+                  child: Text(
+                    '合計：${formatPrice(sumPrice)} 円',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
@@ -201,5 +186,17 @@ class ListPage extends StatelessWidget {
         child: Icon(Icons.add),
       ),
     );
+  }
+}
+
+void updateSortNo(BuildContext context) {
+  final providerStore = context.read<ProviderStore>();
+
+  // リストのソート番号を全件更新
+  for (var i = 0; i < providerStore.todoList.length; i++) {
+    if (providerStore.todoList[i].sortNo != i) {
+      // 登録されているソート番号が現在のインデックスと異なる場合更新
+      providerStore.updateSortNo(providerStore.todoList[i].id, i);
+    }
   }
 }

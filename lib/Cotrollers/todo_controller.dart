@@ -9,7 +9,18 @@ class TodoController {
       join(await getDatabasesPath(), 'todo_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE todo(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, memo TEXT, price INTEGER,release INTEGER,releaseDay TEXT, isSum INTEGER, konyuZumi INTEGER, sortNo INTEGER)",
+          '''
+          CREATE TABLE todo(
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            title TEXT, 
+            memo TEXT, 
+            price INTEGER,
+            release INTEGER,
+            releaseDay TEXT, 
+            isSum INTEGER, 
+            konyuZumi INTEGER, 
+            sortNo INTEGER
+          )''',
         );
       },
       version: 1,
@@ -17,6 +28,7 @@ class TodoController {
     return _database;
   }
 
+  // Todoテーブルに1件追加
   static Future<void> insertTodo(TodoStore todo) async {
     final Database db = await database;
     await db.insert(
@@ -26,49 +38,40 @@ class TodoController {
     );
   }
 
+  // Todoテーブルから全件取得
   static Future<List<TodoStore>> getAllTodos() async {
     final Database db = await database;
     final List<Map<String, dynamic>> maps =
         await db.query('todo', orderBy: "sortNo ASC");
-    return List.generate(maps.length, (i) {
-      return TodoStore(
-        id: maps[i]['id'],
-        title: maps[i]['title'],
-        memo: maps[i]['memo'],
-        price: maps[i]['price'],
-        release: maps[i]['release'],
-        releaseDay: DateTime.now(), //maps[i]['releaseDay'],
-        isSum: maps[i]['isSum'],
-        konyuZumi: maps[i]['konyuZumi'],
-        sortNo: maps[i]['sortNo'],
-      );
-    });
+    return List.generate(
+      maps.length,
+      (i) {
+        return TodoStore(
+          id: maps[i]['id'],
+          title: maps[i]['title'],
+          memo: maps[i]['memo'],
+          price: maps[i]['price'],
+          release: maps[i]['release'],
+          releaseDay: DateTime.now(), //maps[i]['releaseDay'],
+          isSum: maps[i]['isSum'],
+          konyuZumi: maps[i]['konyuZumi'],
+          sortNo: maps[i]['sortNo'],
+        );
+      },
+    );
   }
 
+  // Todoテーブルから件数を取得
   static Future<int> getListCount() async {
     final Database db = await database;
-    var result1 = await db.rawQuery(
-      'SELECT EXISTS(SELECT 1 FROM todo)',
-    );
-    var result2 = await db.rawQuery(
+    var result = await db.rawQuery(
       'SELECT COUNT(*) FROM todo',
     );
-    int? exists = Sqflite.firstIntValue(result1);
-    return exists == 1 ? Sqflite.firstIntValue(result2)! : 0;
+    int? exists = Sqflite.firstIntValue(result);
+    return exists == null ? 0 : Sqflite.firstIntValue(result)!;
   }
 
-  static Future<int> getSumPrice() async {
-    final Database db = await database;
-    var result1 = await db.rawQuery(
-      'SELECT EXISTS(SELECT 1 FROM todo)',
-    );
-    var result2 = await db.rawQuery(
-      'SELECT SUM(price) FROM todo',
-    );
-    int? exists = Sqflite.firstIntValue(result1);
-    return exists == 1 ? Sqflite.firstIntValue(result2)! : 0;
-  }
-
+  // Todoテーブルの1件を更新
   static Future<void> updateTodo(TodoStore todo) async {
     // Get a reference to the database.
     final db = await database;
@@ -81,12 +84,14 @@ class TodoController {
     );
   }
 
+  // Todoテーブルソート番号を更新
   static Future<void> updateSotrNo(int id, int sortNo) async {
     var values = <String, dynamic>{"sortNo": sortNo};
     final db = await database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
 
+  // Todoテーブルから1件を削除
   static Future<void> deleteTodo(int id) async {
     final db = await database;
     await db.delete(

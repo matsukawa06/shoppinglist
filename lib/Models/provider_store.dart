@@ -66,6 +66,8 @@ class ProviderStore with ChangeNotifier {
   var _switchReleaseDay = false;
   get switchReleaseDay => _switchReleaseDay;
 
+  // 発売日
+
   // 金額計算対象チェックの状態
   var _switchIsSum = false;
   get switchIsSum => _switchIsSum;
@@ -102,11 +104,11 @@ class ProviderStore with ChangeNotifier {
   }
 }
 
-class ProviderPrice with ChangeNotifier {
-  int _sumPrice = 0;
-  get sumPrice => _sumPrice;
+// class ProviderPrice with ChangeNotifier {
+//   int _sumPrice = 0;
+//   get sumPrice => _sumPrice;
 
-  void addPrice(int value) {
-    _sumPrice += value;
-  }
-}
+//   void addPrice(int value) {
+//     _sumPrice += value;
+//   }
+// }
