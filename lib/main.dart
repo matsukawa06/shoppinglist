@@ -113,30 +113,40 @@ class ListPage extends StatelessWidget {
                           child: Card(
                             elevation: 2.0,
                             key: Key(todo.id.toString()),
-                            child: ListTile(
-                              title: Text(
-                                  '${todo.id.toString()} ${todo.title} sortNo:${todo.sortNo}'),
-                              subtitle: Text('${formatPrice(todo.price)} 円'),
-                              onTap: () {
-                                // 一覧をタップした時の詳細画面遷移
-                                context.read<ProviderStore>().setRowInfo(todo);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return EditPage();
-                                    },
-                                  ),
-                                ).then(
-                                  (value) async {
-                                    // 画面遷移から戻ってきた時の処理
-                                    context.read<ProviderStore>().clearItems();
-                                    context
-                                        .read<ProviderStore>()
-                                        .initializeList();
-                                  },
-                                );
-                              },
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.delete),
+                                Column(
+                                  children: <Widget>[
+                                    Text('${todo.title}'),
+                                    Text('${formatPrice(todo.price)} 円'),
+                                  ],
+                                ),
+                              ],
                             ),
+                            // child: ListTile(
+                            //   title: Text('${todo.title}'),
+                            //   subtitle: Text('${formatPrice(todo.price)} 円'),
+                            //   onTap: () {
+                            //     // 一覧をタップした時の詳細画面遷移
+                            //     context.read<ProviderStore>().setRowInfo(todo);
+                            //     Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (context) {
+                            //           return EditPage();
+                            //         },
+                            //       ),
+                            //     ).then(
+                            //       (value) async {
+                            //         // 画面遷移から戻ってきた時の処理
+                            //         context.read<ProviderStore>().clearItems();
+                            //         context
+                            //             .read<ProviderStore>()
+                            //             .initializeList();
+                            //       },
+                            //     );
+                            //   },
+                            // ),
                           ),
                         );
                       },

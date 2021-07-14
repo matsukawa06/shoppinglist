@@ -85,6 +85,7 @@ class ProviderStore with ChangeNotifier {
 
   void changeReleaseDay(bool value) {
     _switchReleaseDay = value;
+    _labelDate = '日付を選択してください';
     notifyListeners();
   }
 

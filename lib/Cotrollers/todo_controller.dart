@@ -52,7 +52,7 @@ class TodoController {
           memo: maps[i]['memo'],
           price: maps[i]['price'],
           release: maps[i]['release'],
-          releaseDay: DateTime.now(), //maps[i]['releaseDay'],
+          releaseDay: DateTime.parse(maps[i]['releaseDay']).toLocal(),
           isSum: maps[i]['isSum'],
           konyuZumi: maps[i]['konyuZumi'],
           sortNo: maps[i]['sortNo'],
