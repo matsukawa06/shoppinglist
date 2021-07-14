@@ -47,7 +47,7 @@ class ListPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('買い物リスト'),
+        title: Text('買い物計画リスト'),
       ),
       body: Container(
         padding: EdgeInsets.all(8),
@@ -84,7 +84,9 @@ class ListPage extends StatelessWidget {
                     children: providerStore.todoList.map(
                       (TodoStore todo) {
                         // 合計金額に明細の金額を加算
-                        sumPrice += todo.price;
+                        if (todo.isSum == 1) {
+                          sumPrice += todo.price;
+                        }
                         return Dismissible(
                           key: Key(todo.id.toString()),
                           background: Container(
@@ -113,40 +115,128 @@ class ListPage extends StatelessWidget {
                           child: Card(
                             elevation: 2.0,
                             key: Key(todo.id.toString()),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(Icons.delete),
-                                Column(
+                            child: SizedBox(
+                              height: 70,
+                              child: InkWell(
+                                onTap: () {
+                                  // 一覧をタップした時の詳細画面遷移
+                                  context
+                                      .read<ProviderStore>()
+                                      .setRowInfo(todo);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return EditPage();
+                                      },
+                                    ),
+                                  ).then(
+                                    (value) async {
+                                      // 画面遷移から戻ってきた時の処理
+                                      context
+                                          .read<ProviderStore>()
+                                          .clearItems();
+                                      context
+                                          .read<ProviderStore>()
+                                          .initializeList();
+                                    },
+                                  );
+                                },
+                                child: Row(
                                   children: <Widget>[
-                                    Text('${todo.title}'),
-                                    Text('${formatPrice(todo.price)} 円'),
+                                    InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<ProviderStore>()
+                                            .updateIsSum(
+                                                todo.id,
+                                                intToBool(todo.isSum)
+                                                    ? false
+                                                    : true);
+                                        context
+                                            .read<ProviderStore>()
+                                            .initializeList();
+                                      },
+                                      child: SizedBox(
+                                        width: 60,
+                                        child: Icon(
+                                          isSumIcon(todo.isSum),
+                                          size: 45,
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 250,
+                                          height: 40,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              '${todo.title}',
+                                              style: TextStyle(fontSize: 18),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                          child: Row(
+                                            children: <Widget>[
+                                              SizedBox(
+                                                width: 100,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    '${formatPrice(todo.price)} 円',
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 150,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    strReleaseDay(todo.release,
+                                                        todo.releaseDay),
+                                                    style:
+                                                        TextStyle(fontSize: 14),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<ProviderStore>()
+                                            .updateKonyuZumi(
+                                                todo.id,
+                                                intToBool(todo.konyuZumi)
+                                                    ? false
+                                                    : true);
+                                        context
+                                            .read<ProviderStore>()
+                                            .initializeList();
+                                      },
+                                      child: SizedBox(
+                                        width: 40,
+                                        child: Icon(
+                                          konyuZumiIcon(todo.konyuZumi),
+                                          size: 40,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
-                            // child: ListTile(
-                            //   title: Text('${todo.title}'),
-                            //   subtitle: Text('${formatPrice(todo.price)} 円'),
-                            //   onTap: () {
-                            //     // 一覧をタップした時の詳細画面遷移
-                            //     context.read<ProviderStore>().setRowInfo(todo);
-                            //     Navigator.of(context).push(
-                            //       MaterialPageRoute(
-                            //         builder: (context) {
-                            //           return EditPage();
-                            //         },
-                            //       ),
-                            //     ).then(
-                            //       (value) async {
-                            //         // 画面遷移から戻ってきた時の処理
-                            //         context.read<ProviderStore>().clearItems();
-                            //         context
-                            //             .read<ProviderStore>()
-                            //             .initializeList();
-                            //       },
-                            //     );
-                            //   },
-                            // ),
                           ),
                         );
                       },
@@ -209,4 +299,16 @@ void updateSortNo(BuildContext context) {
       providerStore.updateSortNo(providerStore.todoList[i].id, i);
     }
   }
+}
+
+IconData isSumIcon(int value) {
+  return value == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined;
+}
+
+String strReleaseDay(int isRelease, DateTime value) {
+  return isRelease == 1 ? '${dateToString(value)} 発売' : '';
+}
+
+IconData konyuZumiIcon(int value) {
+  return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;
 }

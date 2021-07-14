@@ -22,6 +22,16 @@ class ProviderStore with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateIsSum(int? id, bool value) async {
+    TodoController.updateReleaseDay(id!, value);
+    notifyListeners();
+  }
+
+  Future<void> updateKonyuZumi(int? id, bool value) async {
+    TodoController.updateKonyuZumi(id!, value);
+    notifyListeners();
+  }
+
   // 明細を選択した時の情報保持
   void setRowInfo(TodoStore todo) {
     _id = todo.id!;
@@ -29,9 +39,13 @@ class ProviderStore with ChangeNotifier {
     _memoController.text = todo.memo;
     _priceController.text = todo.price.toString();
     _switchReleaseDay = intToBool(todo.release);
+    _releaseDay = todo.releaseDay;
     _switchIsSum = intToBool(todo.isSum);
     _switchKonyuZumi = intToBool(todo.konyuZumi);
     _sortNo = todo.sortNo!;
+    if (_switchReleaseDay == true) {
+      _labelDate = dateToString(todo.releaseDay);
+    }
   }
 
   // 各Controllerのクリア
@@ -41,6 +55,7 @@ class ProviderStore with ChangeNotifier {
     _memoController.clear();
     _priceController.clear();
     _switchReleaseDay = false;
+    _releaseDay = DateTime.now();
     _switchIsSum = false;
     _switchKonyuZumi = false;
     _sortNo = 0;
@@ -67,6 +82,8 @@ class ProviderStore with ChangeNotifier {
   get switchReleaseDay => _switchReleaseDay;
 
   // 発売日
+  DateTime _releaseDay = DateTime.now();
+  get releaseDay => _releaseDay;
 
   // 金額計算対象チェックの状態
   var _switchIsSum = false;
@@ -83,7 +100,7 @@ class ProviderStore with ChangeNotifier {
   var _labelDate = '日付を選択してください';
   get labelDate => _labelDate;
 
-  void changeReleaseDay(bool value) {
+  void changeRelease(bool value) {
     _switchReleaseDay = value;
     _labelDate = '日付を選択してください';
     notifyListeners();
@@ -99,17 +116,9 @@ class ProviderStore with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeLabelDate(String value) {
-    _labelDate = value;
+  void changeReleaseDay(DateTime value) {
+    _releaseDay = value;
+    _labelDate = dateToString(value);
     notifyListeners();
   }
 }
-
-// class ProviderPrice with ChangeNotifier {
-//   int _sumPrice = 0;
-//   get sumPrice => _sumPrice;
-
-//   void addPrice(int value) {
-//     _sumPrice += value;
-//   }
-// }

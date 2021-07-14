@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../Models/provider_store.dart';
 import 'package:intl/intl.dart';
+import '../../Common/common_util.dart';
 
 class ReleaseContainer extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class ReleaseContainer extends StatelessWidget {
             value: providerStore.switchReleaseDay,
             title: Text('発売日'),
             onChanged: (bool value) {
-              providerStore.changeReleaseDay(value);
+              providerStore.changeRelease(value);
             },
           ),
           // 日付表示（switchReleaseDayで表示・非表示切替）
@@ -60,8 +61,7 @@ class ReleaseContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      var formatter = new DateFormat('yyyy/MM/dd(E)', "ja_JP");
-      context.read<ProviderStore>().changeLabelDate(formatter.format(selected));
+      context.read<ProviderStore>().changeReleaseDay(selected);
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:shoppinglist/Common/common_util.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
@@ -87,6 +88,20 @@ class TodoController {
   // Todoテーブルソート番号を更新
   static Future<void> updateSotrNo(int id, int sortNo) async {
     var values = <String, dynamic>{"sortNo": sortNo};
+    final db = await database;
+    await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Todoテーブルの金額合計対象フラグを更新
+  static Future<void> updateReleaseDay(int id, bool isSum) async {
+    var values = <String, dynamic>{"isSum": boolToInt(isSum)};
+    final db = await database;
+    await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Todoテーブルの購入済みフラグを更新
+  static Future<void> updateKonyuZumi(int id, bool konyuZumi) async {
+    var values = <String, dynamic>{"konyuZumi": boolToInt(konyuZumi)};
     final db = await database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
