@@ -9,7 +9,7 @@ class ProviderStore with ChangeNotifier {
   List<TodoStore> get todoList => _todoList;
 
   Future<void> initializeList() async {
-    _todoList = await TodoController.getAllTodos();
+    _todoList = await TodoController.getTodos(2);
     notifyListeners();
   }
 

@@ -48,6 +48,8 @@ class ListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('買い物計画リスト'),
+        // 右側ボタン
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.delete))],
       ),
       body: Container(
         padding: EdgeInsets.all(8),

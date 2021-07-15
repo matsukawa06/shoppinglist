@@ -40,10 +40,10 @@ class TodoController {
   }
 
   // Todoテーブルから全件取得
-  static Future<List<TodoStore>> getAllTodos() async {
+  static Future<List<TodoStore>> getTodos(int konyuZumi) async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps =
-        await db.query('todo', orderBy: "sortNo ASC");
+    final List<Map<String, dynamic>> maps = await db.query('todo',
+        where: "konyuZumi<>?", whereArgs: [konyuZumi], orderBy: "sortNo ASC");
     return List.generate(
       maps.length,
       (i) {
