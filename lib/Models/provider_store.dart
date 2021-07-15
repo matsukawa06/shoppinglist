@@ -122,3 +122,16 @@ class ProviderStore with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class ProviderPrice with ChangeNotifier {
+  int _sumPrice = 0;
+  get sumPrice => _sumPrice;
+
+  void init() {
+    _sumPrice = 0;
+  }
+
+  void addPrice(int value) {
+    _sumPrice += value;
+  }
+}

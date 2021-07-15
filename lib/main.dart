@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shoppinglist/Views/setting_page/setting_page.dart';
 import 'Views/edit_page/edit_page.dart';
 import 'Models/todo_store.dart';
 import 'Models/provider_store.dart';
@@ -12,6 +13,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderStore()),
+        ChangeNotifierProvider(create: (_) => ProviderPrice()),
       ],
       child: HomeScreen(),
     ),
@@ -49,7 +51,29 @@ class ListPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('買い物計画リスト'),
         // 右側ボタン
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.delete))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return SettingPage();
+                  },
+                ),
+              ).then(
+                (value) async {
+                  // 画面遷移から戻ってきた時の処理
+                  context.read<ProviderStore>().clearItems();
+                  context.read<ProviderStore>().initializeList();
+                },
+              );
+            },
+            icon: Icon(
+              Icons.settings, //dehaze_sharp,
+              size: 30,
+            ),
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(8),
