@@ -14,10 +14,11 @@ class MemoTextField extends StatelessWidget {
       obscureText: false,
       maxLines: 3,
       decoration: InputDecoration(
-        hintText: 'メモを入力してください',
-        enabledBorder: new OutlineInputBorder(
+        labelText: 'メモ',
+        // hintText: 'メモを入力してください',
+        enabledBorder: new UnderlineInputBorder(
             borderSide: new BorderSide(color: Colors.blue)),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.orange),
         ),
       ),

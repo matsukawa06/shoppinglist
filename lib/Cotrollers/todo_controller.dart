@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
 import '../Models/todo_store.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoController {
   static Future<Database> get database async {
@@ -39,11 +40,18 @@ class TodoController {
     );
   }
 
-  // Todoテーブルから全件取得
-  static Future<List<TodoStore>> getTodos(int konyuZumi) async {
+  // Todoテーブルから対象のデータ取得
+  static Future<List<TodoStore>> getTodos() async {
     final Database db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('todo',
-        where: "konyuZumi<>?", whereArgs: [konyuZumi], orderBy: "sortNo ASC");
+    var prefs = await SharedPreferences.getInstance();
+    var konyuZumiView = prefs.getBool('konyuZumiView') ?? false;
+    var konyuZumi = konyuZumiView ? 2 : 1;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'todo',
+      where: "konyuZumi <> ?",
+      whereArgs: [konyuZumi],
+      orderBy: "sortNo ASC",
+    );
     return List.generate(
       maps.length,
       (i) {

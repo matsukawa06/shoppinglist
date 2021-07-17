@@ -15,6 +15,8 @@ class EditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerStore = context.watch<ProviderStore>();
+    final providerForm = context.read<ProviderForm>();
+
     Intl.defaultLocale = 'ja';
     initializeDateFormatting('ja');
     return Scaffold(
@@ -60,118 +62,265 @@ class EditPage extends StatelessWidget {
           )
         ],
       ),
-      body: Container(
-        // 余白をつける
-        padding: EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // タイトル
-            TitleTextField(),
-            // メモ
-            MemoTextField(),
+      body: SingleChildScrollView(
+        child: Container(
+          // 余白をつける
+          padding: EdgeInsets.all(18),
+          child: Form(
+            key: providerForm.formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                // タイトル
+                TitleTextField(),
+                SpaceBox.height(1),
+                // メモ
+                MemoTextField(),
+                SpaceBox.height(1),
+                // 価格
+                PriceTextField(),
+                SpaceBox.height(24),
 
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Column(
-                children: [
-                  // 価格
-                  PriceTextField(),
+                // ====================================
+                // 発売日
+                // ====================================
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    children: [
+                      // 発売予定日
+                      ReleaseContainer(),
+                    ],
+                  ),
+                ),
+                SpaceBox.height(24),
 
-                  // 発売予定日
-                  ReleaseContainer(),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: const Border(
-                        bottom: const BorderSide(
-                          color: Colors.blue,
+                // ====================================
+                // 計算チェックと購入済みチェック
+                // ====================================
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: const Border(
+                            bottom: const BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        // 金額計算チェック
+                        child: SwitchListTile(
+                          value: providerStore.switchIsSum,
+                          title: Text('計算対象に含める'),
+                          onChanged: (bool value) {
+                            providerStore.changeIsSum(value);
+                          },
                         ),
                       ),
-                    ),
-                    // 金額計算チェック
-                    child: SwitchListTile(
-                      value: providerStore.switchIsSum,
-                      title: Text('計算対象に含める'),
-                      onChanged: (bool value) {
-                        providerStore.changeIsSum(value);
-                      },
-                    ),
+
+                      // 購入済みチェック
+                      SwitchListTile(
+                        value: providerStore.switchKonyuZumi,
+                        title: Text('購入済み'),
+                        onChanged: (bool value) {
+                          providerStore.changeKonyuZumi(value);
+                        },
+                      ),
+                    ],
                   ),
-
-                  // 購入済みチェック
-                  SwitchListTile(
-                    value: providerStore.switchKonyuZumi,
-                    title: Text('購入済み'),
-                    onChanged: (bool value) {
-                      providerStore.changeKonyuZumi(value);
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              // 横幅いっぱいに広げる
-              width: double.infinity,
-              height: 50,
-              // リスト追加ボタン
-              child: ElevatedButton(
-                onPressed: () async {
-                  // DBに登録する
-                  if (providerStore.id == 0) {
-                    // 新規
-                    var _todo = TodoStore(
-                      title: providerStore.titleController.text,
-                      memo: providerStore.memoController.text,
-                      price: int.parse(providerStore.priceController.text),
-                      release: boolToInt(providerStore.switchReleaseDay),
-                      releaseDay: providerStore.releaseDay,
-                      isSum: boolToInt(providerStore.switchIsSum),
-                      konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                      sortNo: await TodoController.getListCount(),
-                    );
-
-                    await TodoController.insertTodo(_todo);
-                  } else {
-                    // 修正
-                    var _todo = TodoStore(
-                      id: providerStore.id,
-                      title: providerStore.titleController.text,
-                      memo: providerStore.memoController.text,
-                      price: int.parse(providerStore.priceController.text),
-                      release: boolToInt(providerStore.switchReleaseDay),
-                      releaseDay: providerStore.releaseDay,
-                      isSum: boolToInt(providerStore.switchIsSum),
-                      konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                      sortNo: providerStore.sortNo,
-                    );
-
-                    await TodoController.updateTodo(_todo);
-                  }
-                  // await TodoController.insertTodo(_todo);
-                  // 前の画面に戻る
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  providerStore.id == 0 ? 'リスト追加' : '修正',
-                  style: TextStyle(color: Colors.white),
                 ),
-              ),
+                SpaceBox.height(24),
+
+                // ====================================
+                // ボタン
+                // ====================================
+                Container(
+                  // 横幅いっぱいに広げる
+                  width: double.infinity,
+                  height: 50,
+                  // リスト追加ボタン
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (providerForm.formVallidate()) {
+                        Text('エラー');
+                      }
+                      // DBに登録する
+                      if (providerStore.id == 0) {
+                        // 新規
+                        var _todo = TodoStore(
+                          title: providerStore.titleController.text,
+                          memo: providerStore.memoController.text,
+                          price: int.parse(providerStore.priceController.text),
+                          release: boolToInt(providerStore.switchReleaseDay),
+                          releaseDay: providerStore.releaseDay,
+                          isSum: boolToInt(providerStore.switchIsSum),
+                          konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                          sortNo: await TodoController.getListCount(),
+                        );
+
+                        await TodoController.insertTodo(_todo);
+                      } else {
+                        // 修正
+                        var _todo = TodoStore(
+                          id: providerStore.id,
+                          title: providerStore.titleController.text,
+                          memo: providerStore.memoController.text,
+                          price: int.parse(providerStore.priceController.text),
+                          release: boolToInt(providerStore.switchReleaseDay),
+                          releaseDay: providerStore.releaseDay,
+                          isSum: boolToInt(providerStore.switchIsSum),
+                          konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                          sortNo: providerStore.sortNo,
+                        );
+
+                        await TodoController.updateTodo(_todo);
+                      }
+                      // await TodoController.insertTodo(_todo);
+                      // 前の画面に戻る
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      providerStore.id == 0 ? 'リスト追加' : '修正',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: <Widget>[
+          //     // タイトル
+          //     TitleTextField(),
+          //     SpaceBox.height(16),
+          //     // メモ
+          //     MemoTextField(),
+          //     SpaceBox.height(16),
+          //     // 価格
+          //     PriceTextField(),
+          //     SpaceBox.height(24),
+
+          //     // ====================================
+          //     // 発売日
+          //     // ====================================
+          //     Container(
+          //       decoration: BoxDecoration(
+          //         border: Border.all(color: Colors.blue),
+          //         borderRadius: BorderRadius.circular(5),
+          //       ),
+          //       child: Column(
+          //         children: [
+          //           // 発売予定日
+          //           ReleaseContainer(),
+          //         ],
+          //       ),
+          //     ),
+          //     SpaceBox.height(24),
+
+          //     // ====================================
+          //     // 計算チェックと購入済みチェック
+          //     // ====================================
+          //     Container(
+          //       decoration: BoxDecoration(
+          //         border: Border.all(color: Colors.blue),
+          //         borderRadius: BorderRadius.circular(5),
+          //       ),
+          //       child: Column(
+          //         children: [
+          //           Container(
+          //             decoration: BoxDecoration(
+          //               border: const Border(
+          //                 bottom: const BorderSide(
+          //                   color: Colors.blue,
+          //                 ),
+          //               ),
+          //             ),
+          //             // 金額計算チェック
+          //             child: SwitchListTile(
+          //               value: providerStore.switchIsSum,
+          //               title: Text('計算対象に含める'),
+          //               onChanged: (bool value) {
+          //                 providerStore.changeIsSum(value);
+          //               },
+          //             ),
+          //           ),
+
+          //           // 購入済みチェック
+          //           SwitchListTile(
+          //             value: providerStore.switchKonyuZumi,
+          //             title: Text('購入済み'),
+          //             onChanged: (bool value) {
+          //               providerStore.changeKonyuZumi(value);
+          //             },
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //     SpaceBox.height(24),
+
+          //     // ====================================
+          //     // ボタン
+          //     // ====================================
+          //     Container(
+          //       // 横幅いっぱいに広げる
+          //       width: double.infinity,
+          //       height: 50,
+          //       // リスト追加ボタン
+          //       child: ElevatedButton(
+          //         onPressed: () async {
+          //           // DBに登録する
+          //           if (providerStore.id == 0) {
+          //             // 新規
+          //             var _todo = TodoStore(
+          //               title: providerStore.titleController.text,
+          //               memo: providerStore.memoController.text,
+          //               price: int.parse(providerStore.priceController.text),
+          //               release: boolToInt(providerStore.switchReleaseDay),
+          //               releaseDay: providerStore.releaseDay,
+          //               isSum: boolToInt(providerStore.switchIsSum),
+          //               konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+          //               sortNo: await TodoController.getListCount(),
+          //             );
+
+          //             await TodoController.insertTodo(_todo);
+          //           } else {
+          //             // 修正
+          //             var _todo = TodoStore(
+          //               id: providerStore.id,
+          //               title: providerStore.titleController.text,
+          //               memo: providerStore.memoController.text,
+          //               price: int.parse(providerStore.priceController.text),
+          //               release: boolToInt(providerStore.switchReleaseDay),
+          //               releaseDay: providerStore.releaseDay,
+          //               isSum: boolToInt(providerStore.switchIsSum),
+          //               konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+          //               sortNo: providerStore.sortNo,
+          //             );
+
+          //             await TodoController.updateTodo(_todo);
+          //           }
+          //           // await TodoController.insertTodo(_todo);
+          //           // 前の画面に戻る
+          //           Navigator.pop(context);
+          //         },
+          //         child: Text(
+          //           providerStore.id == 0 ? 'リスト追加' : '修正',
+          //           style: TextStyle(color: Colors.white),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ),
       ),
     );

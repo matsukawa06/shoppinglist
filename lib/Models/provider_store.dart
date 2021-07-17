@@ -9,7 +9,7 @@ class ProviderStore with ChangeNotifier {
   List<TodoStore> get todoList => _todoList;
 
   Future<void> initializeList() async {
-    _todoList = await TodoController.getTodos(2);
+    _todoList = await TodoController.getTodos();
     notifyListeners();
   }
 
@@ -143,5 +143,14 @@ class ProviderSharedPreferences with ChangeNotifier {
   void setKonyuZumiView(bool value) {
     _isKonyuZumiView = value;
     notifyListeners();
+  }
+}
+
+class ProviderForm with ChangeNotifier {
+  final _formKey = GlobalKey<FormState>();
+  get formKey => _formKey;
+
+  bool formVallidate() {
+    return _formKey.currentState!.validate();
   }
 }

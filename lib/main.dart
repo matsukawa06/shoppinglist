@@ -14,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderStore()),
         ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
+        ChangeNotifierProvider(create: (_) => ProviderForm()),
       ],
       child: HomeScreen(),
     ),
@@ -46,12 +47,31 @@ class ListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int sumPrice = 0;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('買い物計画リスト'),
         // 右側ボタン
         actions: [
+          IconButton(
+            onPressed: () {
+              // "push"で新規画面に遷移
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    // 遷移先の画面として編集用画面を指定
+                    return EditPage();
+                  },
+                ),
+              ).then(
+                (value) async {
+                  // 画面遷移から戻ってきた時の処理
+                  context.read<ProviderStore>().clearItems();
+                  context.read<ProviderStore>().initializeList();
+                },
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
@@ -76,7 +96,6 @@ class ListPage extends StatelessWidget {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.all(8),
         child: FutureBuilder(
           future: context.read<ProviderStore>().initializeList(),
           builder: (context, snapshot) {
@@ -139,6 +158,13 @@ class ListPage extends StatelessWidget {
                           },
                           // 一覧に表示する内容
                           child: Card(
+                            // margin: const EdgeInsets.all(4),
+                            margin: const EdgeInsets.only(
+                              left: 8,
+                              right: 8,
+                              top: 4,
+                              bottom: 4,
+                            ),
                             elevation: 2.0,
                             key: Key(todo.id.toString()),
                             child: SizedBox(
@@ -238,25 +264,23 @@ class ListPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        context
-                                            .read<ProviderStore>()
-                                            .updateKonyuZumi(
-                                                todo.id,
-                                                intToBool(todo.konyuZumi)
-                                                    ? false
-                                                    : true);
-                                        context
-                                            .read<ProviderStore>()
-                                            .initializeList();
-                                      },
-                                      child: SizedBox(
-                                        width: 40,
-                                        child: Icon(
-                                          konyuZumiIcon(todo.konyuZumi),
-                                          size: 40,
-                                        ),
+                                    SizedBox(
+                                      width: 40,
+                                      child: Checkbox(
+                                        activeColor: Colors.blue,
+                                        value: intToBool(todo.konyuZumi),
+                                        onChanged: (bool? value) {
+                                          context
+                                              .read<ProviderStore>()
+                                              .updateKonyuZumi(
+                                                  todo.id,
+                                                  intToBool(todo.konyuZumi)
+                                                      ? false
+                                                      : true);
+                                          context
+                                              .read<ProviderStore>()
+                                              .initializeList();
+                                        },
                                       ),
                                     ),
                                   ],
@@ -271,18 +295,23 @@ class ListPage extends StatelessWidget {
                 ),
                 // 合計金額表示
                 Container(
+                  color: Colors.blue.shade600,
                   // 左寄せ
                   width: double.infinity,
-                  margin: EdgeInsets.only(
-                    left: 20,
-                    bottom: 50,
-                  ),
-                  child: Text(
-                    '合計：${formatPrice(sumPrice)} 円',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                  padding: EdgeInsets.all(16),
+                  // margin: EdgeInsets.only(
+                  //   left: 20,
+                  //   bottom: 35,
+                  // ),
+                  child: Center(
+                    child: Text(
+                      '合計：${formatPrice(sumPrice)} 円',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -291,26 +320,26 @@ class ListPage extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // "push"で新規画面に遷移
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                // 遷移先の画面として編集用画面を指定
-                return EditPage();
-              },
-            ),
-          ).then(
-            (value) async {
-              // 画面遷移から戻ってきた時の処理
-              context.read<ProviderStore>().clearItems();
-              context.read<ProviderStore>().initializeList();
-            },
-          );
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // "push"で新規画面に遷移
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (context) {
+      //           // 遷移先の画面として編集用画面を指定
+      //           return EditPage();
+      //         },
+      //       ),
+      //     ).then(
+      //       (value) async {
+      //         // 画面遷移から戻ってきた時の処理
+      //         context.read<ProviderStore>().clearItems();
+      //         context.read<ProviderStore>().initializeList();
+      //       },
+      //     );
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }

@@ -4,12 +4,34 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Models/provider_store.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _State();
+  }
+}
+
+class _State extends State<SettingPage> {
+  _saveBool(String key, bool value) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
+  }
+
+  _restoreValues(BuildContext context) async {
+    var provider = context.read<ProviderSharedPreferences>();
+    var prefs = await SharedPreferences.getInstance();
+    provider.setKonyuZumiView(prefs.getBool('konyuZumiView') ?? false);
+  }
+
+  @override
+  void initState() {
+    _restoreValues(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
-    // 設定の取得
-    _restoreValues(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('設定'),
@@ -23,6 +45,7 @@ class SettingPage extends StatelessWidget {
               value: prvSharedPreferences.isKonyuZumiView,
               title: Text('購入済みを表示する'),
               onChanged: (bool value) {
+                _saveBool('konyuZumiView', value);
                 prvSharedPreferences.setKonyuZumiView(value);
               },
             ),
@@ -30,16 +53,5 @@ class SettingPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  _saveBool(String key, bool value) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key, value);
-  }
-
-  _restoreValues(BuildContext context) async {
-    var provider = context.read<ProviderSharedPreferences>();
-    var prefs = await SharedPreferences.getInstance();
-    provider.setKonyuZumiView(prefs.getBool('konyuZumiView') ?? false);
   }
 }

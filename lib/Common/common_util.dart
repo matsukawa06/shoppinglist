@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 /*
@@ -28,4 +29,12 @@ String dateToString(DateTime value) {
 DateTime stringToDate(String value) {
   // 文字列を日付型に変換して返す
   return DateTime.parse(value).toLocal();
+}
+
+class SpaceBox extends SizedBox {
+  SpaceBox({double width = 8, double height = 8})
+      : super(width: width, height: height);
+
+  SpaceBox.width([double value = 8]) : super(width: value);
+  SpaceBox.height([double value = 8]) : super(height: value);
 }
