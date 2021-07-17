@@ -13,7 +13,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProviderStore()),
-        ChangeNotifierProvider(create: (_) => ProviderPrice()),
+        ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
       ],
       child: HomeScreen(),
     ),
