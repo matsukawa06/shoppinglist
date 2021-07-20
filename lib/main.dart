@@ -322,13 +322,14 @@ class ListPage extends StatelessWidget {
                 ),
                 // 広告表示
                 AdmobBanner(
-                  adUnitId: AdMobService().getBannerAdUnitId(),
+                  adUnitId: AdMobService().getBannerAdUnitId()!,
                   adSize: AdmobBannerSize(
                     width: MediaQuery.of(context).size.width.toInt(),
                     height: AdMobService().getHeight(context).toInt(),
                     name: 'SMART_BANNER',
                   ),
                 ),
+                SpaceBox.height(20),
               ],
             );
           },
