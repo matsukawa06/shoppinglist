@@ -9,7 +9,6 @@ import 'Models/provider_store.dart';
 import 'Common/common_util.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 
-// テスト
 void main() {
   // AdMob 用のプラグイン初期化
   WidgetsFlutterBinding.ensureInitialized();
