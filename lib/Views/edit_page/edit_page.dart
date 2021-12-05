@@ -37,7 +37,7 @@ class EditPage extends StatelessWidget {
                       content: Text('削除します。よろしいですか？'),
                       actions: <Widget>[
                         ElevatedButton(
-                          child: Text('Cansel'),
+                          child: Text('Cancel'),
                           onPressed: () => Navigator.of(context).pop(0),
                         ),
                         ElevatedButton(

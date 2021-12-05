@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Models/todo_store.dart';
 import '../Cotrollers/todo_controller.dart';
 import '../../Common/common_util.dart';
+import 'package:package_info/package_info.dart';
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
 class ProviderStore with ChangeNotifier {
@@ -152,5 +153,14 @@ class ProviderForm with ChangeNotifier {
 
   bool formVallidate() {
     return _formKey.currentState!.validate();
+  }
+}
+
+class ProviderPackage with ChangeNotifier {
+  PackageInfo? _packageInfo;
+  get packageInfo => _packageInfo;
+
+  Future<void> getPackageInfo() async {
+    _packageInfo = await PackageInfo.fromPlatform();
   }
 }

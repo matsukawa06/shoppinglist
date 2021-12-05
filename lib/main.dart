@@ -21,6 +21,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProviderStore()),
         ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
         ChangeNotifierProvider(create: (_) => ProviderForm()),
+        ChangeNotifierProvider(create: (_) => ProviderPackage()),
       ],
       child: HomeScreen(),
     ),
@@ -31,6 +32,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
       home: ListPage(),
       title: 'ShoppingList',
       theme: ThemeData(
