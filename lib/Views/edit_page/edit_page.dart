@@ -84,16 +84,15 @@ class EditPage extends StatelessWidget {
                 // ====================================
                 // 発売日
                 // ====================================
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    children: [
-                      // 発売予定日
-                      ReleaseContainer(),
-                    ],
+                Card(
+                  elevation: 5,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        // 発売予定日
+                        ReleaseContainer(),
+                      ],
+                    ),
                   ),
                 ),
                 SpaceBox.height(24),
@@ -101,40 +100,39 @@ class EditPage extends StatelessWidget {
                 // ====================================
                 // 計算チェックと購入済みチェック
                 // ====================================
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: const Border(
-                            bottom: const BorderSide(
-                              color: Colors.blue,
+                Card(
+                  elevation: 5,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: const Border(
+                              bottom: const BorderSide(
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
+                          // 金額計算チェック
+                          child: SwitchListTile(
+                            value: providerStore.switchIsSum,
+                            title: Text('計算対象に含める'),
+                            onChanged: (bool value) {
+                              providerStore.changeIsSum(value);
+                            },
+                          ),
                         ),
-                        // 金額計算チェック
-                        child: SwitchListTile(
-                          value: providerStore.switchIsSum,
-                          title: Text('計算対象に含める'),
+
+                        // 購入済みチェック
+                        SwitchListTile(
+                          value: providerStore.switchKonyuZumi,
+                          title: Text('購入済み'),
                           onChanged: (bool value) {
-                            providerStore.changeIsSum(value);
+                            providerStore.changeKonyuZumi(value);
                           },
                         ),
-                      ),
-
-                      // 購入済みチェック
-                      SwitchListTile(
-                        value: providerStore.switchKonyuZumi,
-                        title: Text('購入済み'),
-                        onChanged: (bool value) {
-                          providerStore.changeKonyuZumi(value);
-                        },
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 SpaceBox.height(24),

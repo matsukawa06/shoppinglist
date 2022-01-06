@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Models/provider_store.dart';
 import '../../Common/common_util.dart';
 import 'package:package_info/package_info.dart';
@@ -55,10 +56,21 @@ class _State extends State<SettingPage> {
       ),
       body: Container(
         // 余白をつける
-        padding: EdgeInsets.all(32),
-        child:  Column(
-              children: <Widget>[
-                SwitchListTile(
+        padding: EdgeInsets.all(28),
+        child: Column(
+          children: <Widget>[
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.only(left: 10),
+            //   child: Text(
+            //     '各種設定',
+            //   ),
+            // ),
+            Card(
+              elevation: 5,
+              child: Container(
+                // 購入済み表示チェック
+                child: SwitchListTile(
                   value: prvSharedPreferences.isKonyuZumiView,
                   title: Text('購入済みを表示する'),
                   onChanged: (bool value) {
@@ -66,29 +78,63 @@ class _State extends State<SettingPage> {
                     prvSharedPreferences.setKonyuZumiView(value);
                   },
                 ),
-                SpaceBox.height(32),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  padding: EdgeInsets.only(left: 10),
-                  width: double.infinity,
-                  height: 50,
-                  alignment: Alignment.centerLeft,
-                  child: InkWell(
-                    onTap: () =>
-                        showAboutDialog(
+              ),
+            ),
+            SpaceBox.height(32),
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.only(left: 10),
+            //   child: Text('情報'),
+            // ),
+            Card(
+              elevation: 5, // 影のサイズ
+              child: Container(
+                child: Column(
+                  children: [
+                    // アプリ情報
+                    Container(
+                      decoration: BoxDecoration(
+                        border: const Border(
+                          bottom: const BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      child: InkWell(
+                        onTap: () => showAboutDialog(
                           context: context,
                           applicationName: "買い物計画",
-                          applicationVersion: _version,
+                          applicationVersion: "Ver. " + _version,
                         ),
-                  ),
+                        child: ListTile(
+                          title: Text("アプリ情報"),
+                        ),
+                      ),
+                    ),
+                    // 利用規約
+                    InkWell(
+                      onTap: _launchURL,
+                      child: ListTile(
+                        title: Text("利用規約・プライバシーポリシー"),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
+          ],
         ),
-      );
+      ),
+    );
+  }
+}
 
+// 利用規約のページをブラウザで表示する
+void _launchURL() async {
+  const url = "https://naonari.com/kiyaku.html";
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not Launch $url';
   }
 }

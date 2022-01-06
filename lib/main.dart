@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import 'package:shoppinglist/services/admob.dart';
+// import 'package:shoppinglist/services/admob.dart';
 import 'Views/edit_page/edit_page.dart';
 import 'Models/todo_store.dart';
 import 'Models/provider_store.dart';
 import 'Common/common_util.dart';
-import 'package:admob_flutter/admob_flutter.dart';
+// import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
   WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize();
+  // Admob.initialize();
   // 最初に表示するWidget
   runApp(
     MultiProvider(
@@ -172,7 +172,7 @@ class ListPage extends StatelessWidget {
                               top: 4,
                               bottom: 4,
                             ),
-                            elevation: 2.0,
+                            elevation: 5.0,
                             key: Key(todo.id.toString()),
                             child: SizedBox(
                               height: 70,
@@ -323,14 +323,14 @@ class ListPage extends StatelessWidget {
                   ),
                 ),
                 // 広告表示
-                AdmobBanner(
-                  adUnitId: AdMobService().getBannerAdUnitId()!,
-                  adSize: AdmobBannerSize(
-                    width: MediaQuery.of(context).size.width.toInt(),
-                    height: AdMobService().getHeight(context).toInt(),
-                    name: 'SMART_BANNER',
-                  ),
-                ),
+                // AdmobBanner(
+                //   adUnitId: AdMobService().getBannerAdUnitId()!,
+                //   adSize: AdmobBannerSize(
+                //     width: MediaQuery.of(context).size.width.toInt(),
+                //     height: AdMobService().getHeight(context).toInt(),
+                //     name: 'SMART_BANNER',
+                //   ),
+                // ),
                 SpaceBox.height(20),
               ],
             );
