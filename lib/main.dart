@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
-import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-// import 'package:shoppinglist/services/admob.dart';
+import 'Common/importer.dart';
+// import 'package:shoppinglist/Views/setting_page/setting_page.dart';
 import 'Views/edit_page/edit_page.dart';
-import 'Models/todo_store.dart';
-import 'Models/provider_store.dart';
-import 'Common/common_util.dart';
-// import 'package:admob_flutter/admob_flutter.dart';
+
+import 'Views/main_page/appbar.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
@@ -55,53 +50,7 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int sumPrice = 0;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('買い物計画リスト'),
-        // 右側ボタン
-        actions: [
-          IconButton(
-            onPressed: () {
-              // "push"で新規画面に遷移
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    // 遷移先の画面として編集用画面を指定
-                    return EditPage();
-                  },
-                ),
-              ).then(
-                (value) async {
-                  // 画面遷移から戻ってきた時の処理
-                  context.read<ProviderStore>().clearItems();
-                  context.read<ProviderStore>().initializeList();
-                },
-              );
-            },
-            icon: Icon(Icons.add),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SettingPage();
-                  },
-                ),
-              ).then(
-                (value) async {
-                  // 画面遷移から戻ってきた時の処理
-                  context.read<ProviderStore>().clearItems();
-                  context.read<ProviderStore>().initializeList();
-                },
-              );
-            },
-            icon: Icon(
-              Icons.settings, //dehaze_sharp,
-              size: 30,
-            ),
-          )
-        ],
-      ),
+      appBar: MyAppBar(),
       body: Container(
         child: FutureBuilder(
           future: context.read<ProviderStore>().initializeList(),

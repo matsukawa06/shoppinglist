@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../Models/provider_store.dart';
+import '../../Common/importer.dart';
 
 class TitleTextField extends StatelessWidget {
   @override

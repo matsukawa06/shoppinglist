@@ -1,15 +1,11 @@
-import 'package:flutter/material.dart';
+import '../../Common/importer.dart';
+
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:provider/provider.dart';
 import 'title_textField.dart';
 import 'memo_textField.dart';
 import 'price_textField.dart';
 import 'release_container.dart';
-import '../../Models/provider_store.dart';
-import '../../Models/todo_store.dart';
-import '../../Cotrollers/todo_controller.dart';
-import '../../Common/common_util.dart';
 
 class EditPage extends StatelessWidget {
   @override

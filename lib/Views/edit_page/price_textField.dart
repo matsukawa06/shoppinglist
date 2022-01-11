@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import '../../Models/provider_store.dart';
+import '../../Common/importer.dart';
 
 class PriceTextField extends StatelessWidget {
   @override

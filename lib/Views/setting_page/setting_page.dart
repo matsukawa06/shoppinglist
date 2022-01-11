@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import '../../Common/importer.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../Models/provider_store.dart';
-import '../../Common/common_util.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingPage extends StatefulWidget {

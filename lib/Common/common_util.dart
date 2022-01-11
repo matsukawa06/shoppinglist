@@ -31,6 +31,9 @@ DateTime stringToDate(String value) {
   return DateTime.parse(value).toLocal();
 }
 
+/*
+Widget間のスペース（マージン）をSpaceBoxで調整する
+*/
 class SpaceBox extends SizedBox {
   SpaceBox({double width = 8, double height = 8})
       : super(width: width, height: height);
