@@ -111,11 +111,11 @@ class ProviderStore with ChangeNotifier {
   get isDelete => _isDelete;
 
   // 削除日（物理削除する日）
-  late var _deleteDay;
+  late var _deleteDay = DateTime.now();
   get deleteDay => _deleteDay;
 
   // グループID
-  var _groupId;
+  int _groupId = 0;
   get groupId => _groupId;
 
   // 並び順

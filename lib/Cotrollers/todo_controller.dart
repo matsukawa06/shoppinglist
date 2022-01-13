@@ -1,23 +1,49 @@
-import 'package:shoppinglist/Common/common_util.dart';
+import '../Common/importer.dart';
+
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
-import '../Models/todo_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoController {
   static Future<Database> get database async {
-    const scripts = {
-      '2': ['ALTER TABLE todo ADD COLUMN isDelete INTEGER;'],
-      '3': ['ALTER TABLE todo ADD COLUMN deleteDay TEXT;'],
-      '4': ['ALTER TABLE todo ADD COLUMN groupId INTEGER;'],
-    };
     final Future<Database> _database = openDatabase(
       join(await getDatabasesPath(), 'todo_database.db'),
-      version: 4,
-      onCreate: (db, version) {
-        return db.execute(
-          '''
+      version: 1,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
+    return _database;
+  }
+
+  static _onCreate(
+    Database database,
+    int version,
+  ) async {
+    await _migrate(database, 0, version);
+  }
+
+  static _onUpgrade(
+    Database database,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    await _migrate(database, oldVersion, newVersion);
+  }
+
+  static Future<void> _migrate(
+      Database db, int oldVersion, int newVersion) async {
+    for (var i = oldVersion + 1; i <= newVersion; i++) {
+      final queries = migrationScripts[i.toString()]!;
+      for (final query in queries) {
+        await db.execute(query);
+      }
+    }
+  }
+
+  static const migrationScripts = {
+    '1': [
+      '''
           CREATE TABLE todo(
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             title TEXT, 
@@ -27,21 +53,13 @@ class TodoController {
             releaseDay TEXT, 
             isSum INTEGER, 
             konyuZumi INTEGER, 
-            sortNo INTEGER,
-          )''',
-        );
-      },
-      onUpgrade: (Database db, int oldVersion, int newVersion) async {
-        for (var i = oldVersion + 1; i <= newVersion; i++) {
-          var queries = scripts[i.toString()];
-          for (String query in queries!) {
-            await db.execute(query);
-          }
-        }
-      },
-    );
-    return _database;
-  }
+            sortNo INTEGER
+          )'''
+    ],
+    '2': [
+      'ALTER TABLE todo ADD COLUMN isDelete INTEGER DEFALUT 0, deleteDay TEXT, groupId INTEGER DEFALUT 0;'
+    ],
+  };
 
   // Todoテーブルに1件追加
   static Future<void> insertTodo(TodoStore todo) async {
@@ -62,6 +80,7 @@ class TodoController {
     final List<Map<String, dynamic>> maps = await db.query(
       'todo',
       where: "konyuZumi <> ? AND isDelete = 0",
+      // where: "konyuZumi <> ?",
       whereArgs: [konyuZumi],
       orderBy: "sortNo ASC",
     );
