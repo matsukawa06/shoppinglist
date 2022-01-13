@@ -1,8 +1,7 @@
 import 'Common/importer.dart';
-// import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import 'Views/edit_page/edit_page.dart';
 
-import 'Views/main_page/appbar.dart';
+import 'package:shoppinglist/Views/setting_page/setting_page.dart';
+import 'Views/edit_page/edit_page.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
@@ -50,7 +49,55 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int sumPrice = 0;
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: AppBar(
+        title: Text('買い物計画リスト'),
+        // 右側ボタン
+        actions: [
+          // 新規追加アイコン
+          IconButton(
+            onPressed: () {
+              // "push"で新規画面に遷移
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    // 遷移先の画面として編集用画面を指定
+                    return EditPage();
+                  },
+                ),
+              ).then(
+                (value) async {
+                  // 画面遷移から戻ってきた時の処理
+                  context.read<ProviderStore>().clearItems();
+                  context.read<ProviderStore>().initializeList();
+                },
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
+          // 設定アイコン
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return SettingPage();
+                  },
+                ),
+              ).then(
+                (value) async {
+                  // 画面遷移から戻ってきた時の処理
+                  context.read<ProviderStore>().clearItems();
+                  context.read<ProviderStore>().initializeList();
+                },
+              );
+            },
+            icon: Icon(
+              Icons.settings, //dehaze_sharp,
+              size: 30,
+            ),
+          )
+        ],
+      ),
       body: Container(
         child: FutureBuilder(
           future: context.read<ProviderStore>().initializeList(),
@@ -89,6 +136,7 @@ class ListPage extends StatelessWidget {
                           sumPrice += todo.price;
                         }
                         return Dismissible(
+                          // 行削除
                           key: Key(todo.id.toString()),
                           background: Container(
                             padding: EdgeInsets.only(
@@ -105,16 +153,18 @@ class ListPage extends StatelessWidget {
                           onDismissed: (direction) {
                             // まずリストから削除する
                             providerStore.todoList.removeAt(todo.sortNo!);
-                            // DBからも削除
-                            context.read<ProviderStore>().delete(todo.id);
+                            // DBからも削除 ※DBから削除するのは一旦止めて、論理削除にする。
+                            // context.read<ProviderStore>().delete(todo.id);
+                            providerStore.updateIsDelete(todo.id, true);
                             // リストのソート番号を全件更新
                             updateSortNo(context);
                             // スワイプ後に実行される削除処理
                             context.read<ProviderStore>().initializeList();
                           },
+                          //================================
                           // 一覧に表示する内容
+                          //================================
                           child: Card(
-                            // margin: const EdgeInsets.all(4),
                             margin: const EdgeInsets.only(
                               left: 8,
                               right: 8,
@@ -151,6 +201,7 @@ class ListPage extends StatelessWidget {
                                 },
                                 child: Row(
                                   children: <Widget>[
+                                    // 購入対象アイコン
                                     InkWell(
                                       onTap: () {
                                         context
@@ -174,6 +225,8 @@ class ListPage extends StatelessWidget {
                                     ),
                                     Column(
                                       children: <Widget>[
+                                        // １カードの１行目
+                                        // タイトル
                                         SizedBox(
                                           width: 250,
                                           height: 40,
@@ -186,10 +239,12 @@ class ListPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
+                                        // １カードの２行目
                                         SizedBox(
                                           height: 20,
                                           child: Row(
                                             children: <Widget>[
+                                              // 価格
                                               SizedBox(
                                                 width: 100,
                                                 child: Align(
@@ -202,6 +257,7 @@ class ListPage extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
+                                              // 発売日
                                               SizedBox(
                                                 width: 150,
                                                 child: Align(
@@ -220,6 +276,7 @@ class ListPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+                                    // 購入済チェック
                                     SizedBox(
                                       width: 40,
                                       child: Checkbox(
@@ -255,10 +312,6 @@ class ListPage extends StatelessWidget {
                   // 左寄せ
                   width: double.infinity,
                   padding: EdgeInsets.all(16),
-                  // margin: EdgeInsets.only(
-                  //   left: 20,
-                  //   bottom: 35,
-                  // ),
                   child: Center(
                     child: Text(
                       '合計：${formatPrice(sumPrice)} 円',
@@ -286,26 +339,6 @@ class ListPage extends StatelessWidget {
           },
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // "push"で新規画面に遷移
-      //     Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (context) {
-      //           // 遷移先の画面として編集用画面を指定
-      //           return EditPage();
-      //         },
-      //       ),
-      //     ).then(
-      //       (value) async {
-      //         // 画面遷移から戻ってきた時の処理
-      //         context.read<ProviderStore>().clearItems();
-      //         context.read<ProviderStore>().initializeList();
-      //       },
-      //     );
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 }

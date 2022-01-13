@@ -8,6 +8,9 @@ class TodoStore {
   final int isSum;
   final int konyuZumi;
   final int? sortNo;
+  final int isDelete;
+  final DateTime deleteDay;
+  final int? groupId;
 
   TodoStore(
       {this.id,
@@ -18,7 +21,10 @@ class TodoStore {
       required this.releaseDay,
       required this.isSum,
       required this.konyuZumi,
-      required this.sortNo});
+      required this.sortNo,
+      required this.isDelete,
+      required this.deleteDay,
+      required this.groupId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +37,9 @@ class TodoStore {
       'isSum': isSum,
       'konyuZumi': konyuZumi,
       'sortNo': sortNo,
+      'isDelete': isDelete,
+      'deleteDay': deleteDay.toUtc().toIso8601String(),
+      'groupId': groupId,
     };
   }
 

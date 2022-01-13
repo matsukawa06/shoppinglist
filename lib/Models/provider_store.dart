@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import '../Models/todo_store.dart';
-import '../Cotrollers/todo_controller.dart';
-import '../../Common/common_util.dart';
-import 'package:package_info/package_info.dart';
+import '../Common/importer.dart';
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
 class ProviderStore with ChangeNotifier {
@@ -14,22 +10,32 @@ class ProviderStore with ChangeNotifier {
     notifyListeners();
   }
 
+  // 1レコード削除
   Future<void> delete(int? id) async {
     TodoController.deleteTodo(id!);
   }
 
+  // ソートNo.を更新
   Future<void> updateSortNo(int? id, int sortNo) async {
     TodoController.updateSotrNo(id!, sortNo);
     notifyListeners();
   }
 
+  // 計算対象区分の更新
   Future<void> updateIsSum(int? id, bool value) async {
     TodoController.updateReleaseDay(id!, value);
     notifyListeners();
   }
 
+  // 購入済区分の更新
   Future<void> updateKonyuZumi(int? id, bool value) async {
     TodoController.updateKonyuZumi(id!, value);
+    notifyListeners();
+  }
+
+  // 削除区分の更新
+  Future<void> updateIsDelete(int? id, bool value) async {
+    TodoController.updateIsDelete(id!, value);
     notifyListeners();
   }
 
@@ -47,6 +53,9 @@ class ProviderStore with ChangeNotifier {
     if (_switchReleaseDay == true) {
       _labelDate = dateToString(todo.releaseDay);
     }
+    _isDelete = intToBool(todo.isDelete);
+    _deleteDay = todo.deleteDay;
+    _groupId = todo.groupId!;
   }
 
   // 各Controllerのクリア
@@ -60,6 +69,9 @@ class ProviderStore with ChangeNotifier {
     _switchIsSum = false;
     _switchKonyuZumi = false;
     _sortNo = 0;
+    _isDelete = false;
+    _deleteDay = DateTime.now();
+    _groupId = 0;
   }
 
   // ID
@@ -93,6 +105,18 @@ class ProviderStore with ChangeNotifier {
   // 購入済みチェックの状態
   var _switchKonyuZumi = false;
   get switchKonyuZumi => _switchKonyuZumi;
+
+  // 削除区分の状態
+  var _isDelete = false;
+  get isDelete => _isDelete;
+
+  // 削除日（物理削除する日）
+  late var _deleteDay;
+  get deleteDay => _deleteDay;
+
+  // グループID
+  var _groupId;
+  get groupId => _groupId;
 
   // 並び順
   int _sortNo = 0;

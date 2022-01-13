@@ -39,7 +39,9 @@ class EditPage extends StatelessWidget {
                         ElevatedButton(
                           child: Text('OK'),
                           onPressed: () {
-                            providerStore.delete(providerStore.id);
+                            // 論理削除に変更
+                            // providerStore.delete(providerStore.id);
+                            providerStore.isDelete(providerStore.id, true);
                             // ダイアログを閉じる
                             Navigator.pop(context);
                             // 編集画面を閉じる
@@ -158,6 +160,9 @@ class EditPage extends StatelessWidget {
                           isSum: boolToInt(providerStore.switchIsSum),
                           konyuZumi: boolToInt(providerStore.switchKonyuZumi),
                           sortNo: await TodoController.getListCount(),
+                          isDelete: boolToInt(providerStore.isDelete),
+                          deleteDay: providerStore.deleteDay,
+                          groupId: providerStore.groupId,
                         );
 
                         await TodoController.insertTodo(_todo);
@@ -173,6 +178,9 @@ class EditPage extends StatelessWidget {
                           isSum: boolToInt(providerStore.switchIsSum),
                           konyuZumi: boolToInt(providerStore.switchKonyuZumi),
                           sortNo: providerStore.sortNo,
+                          isDelete: boolToInt(providerStore.isDelete),
+                          deleteDay: providerStore.deleteDay,
+                          groupId: providerStore.groupId,
                         );
 
                         await TodoController.updateTodo(_todo);

@@ -7,8 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoController {
   static Future<Database> get database async {
+    const scripts = {
+      '2': ['ALTER TABLE todo ADD COLUMN isDelete INTEGER;'],
+      '3': ['ALTER TABLE todo ADD COLUMN deleteDay TEXT;'],
+      '4': ['ALTER TABLE todo ADD COLUMN groupId INTEGER;'],
+    };
     final Future<Database> _database = openDatabase(
       join(await getDatabasesPath(), 'todo_database.db'),
+      version: 4,
       onCreate: (db, version) {
         return db.execute(
           '''
@@ -21,11 +27,18 @@ class TodoController {
             releaseDay TEXT, 
             isSum INTEGER, 
             konyuZumi INTEGER, 
-            sortNo INTEGER
+            sortNo INTEGER,
           )''',
         );
       },
-      version: 1,
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        for (var i = oldVersion + 1; i <= newVersion; i++) {
+          var queries = scripts[i.toString()];
+          for (String query in queries!) {
+            await db.execute(query);
+          }
+        }
+      },
     );
     return _database;
   }
@@ -48,7 +61,7 @@ class TodoController {
     var konyuZumi = konyuZumiView ? 2 : 1;
     final List<Map<String, dynamic>> maps = await db.query(
       'todo',
-      where: "konyuZumi <> ?",
+      where: "konyuZumi <> ? AND isDelete = 0",
       whereArgs: [konyuZumi],
       orderBy: "sortNo ASC",
     );
@@ -65,6 +78,9 @@ class TodoController {
           isSum: maps[i]['isSum'],
           konyuZumi: maps[i]['konyuZumi'],
           sortNo: maps[i]['sortNo'],
+          isDelete: maps[i]['isDelete'],
+          deleteDay: DateTime.parse(maps[i]['deleteDay']).toLocal(),
+          groupId: maps[i]['groupId'],
         );
       },
     );
@@ -110,6 +126,13 @@ class TodoController {
   // Todoテーブルの購入済みフラグを更新
   static Future<void> updateKonyuZumi(int id, bool konyuZumi) async {
     var values = <String, dynamic>{"konyuZumi": boolToInt(konyuZumi)};
+    final db = await database;
+    await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Todoテーブルの削除フラグを更新
+  static Future<void> updateIsDelete(int id, bool isDelete) async {
+    var values = <String, dynamic>{"isDelete": boolToInt(isDelete)};
     final db = await database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
