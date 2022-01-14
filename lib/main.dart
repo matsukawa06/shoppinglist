@@ -1,6 +1,7 @@
+import 'package:shoppinglist/Views/main_page/appbar.dart';
+
 import 'Common/importer.dart';
 
-import 'package:shoppinglist/Views/setting_page/setting_page.dart';
 import 'Views/edit_page/edit_page.dart';
 
 void main() {
@@ -49,55 +50,7 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int sumPrice = 0;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('買い物計画リスト'),
-        // 右側ボタン
-        actions: [
-          // 新規追加アイコン
-          IconButton(
-            onPressed: () {
-              // "push"で新規画面に遷移
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    // 遷移先の画面として編集用画面を指定
-                    return EditPage();
-                  },
-                ),
-              ).then(
-                (value) async {
-                  // 画面遷移から戻ってきた時の処理
-                  context.read<ProviderStore>().clearItems();
-                  context.read<ProviderStore>().initializeList();
-                },
-              );
-            },
-            icon: Icon(Icons.add),
-          ),
-          // 設定アイコン
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SettingPage();
-                  },
-                ),
-              ).then(
-                (value) async {
-                  // 画面遷移から戻ってきた時の処理
-                  context.read<ProviderStore>().clearItems();
-                  context.read<ProviderStore>().initializeList();
-                },
-              );
-            },
-            icon: Icon(
-              Icons.settings, //dehaze_sharp,
-              size: 30,
-            ),
-          )
-        ],
-      ),
+      appBar: MyAppBar(),
       body: Container(
         child: FutureBuilder(
           future: context.read<ProviderStore>().initializeList(),
