@@ -155,7 +155,9 @@ class ListPage extends StatelessWidget {
                             providerStore.todoList.removeAt(todo.sortNo!);
                             // DBからも削除 ※DBから削除するのは一旦止めて、論理削除にする。
                             // context.read<ProviderStore>().delete(todo.id);
-                            providerStore.updateIsDelete(todo.id, true);
+                            context
+                                .read<ProviderStore>()
+                                .updateIsDelete(todo.id, true);
                             // リストのソート番号を全件更新
                             updateSortNo(context);
                             // スワイプ後に実行される削除処理

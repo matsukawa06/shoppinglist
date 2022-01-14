@@ -109,7 +109,7 @@ class TodoController {
   static Future<int> getListCount() async {
     final Database db = await database;
     var result = await db.rawQuery(
-      'SELECT COUNT(*) FROM todo',
+      'SELECT COUNT(*) FROM todo where isDelete = 0',
     );
     int? exists = Sqflite.firstIntValue(result);
     return exists == null ? 0 : Sqflite.firstIntValue(result)!;

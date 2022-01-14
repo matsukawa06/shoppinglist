@@ -41,7 +41,8 @@ class EditPage extends StatelessWidget {
                           onPressed: () {
                             // 論理削除に変更
                             // providerStore.delete(providerStore.id);
-                            providerStore.isDelete(providerStore.id, true);
+                            providerStore.updateIsDelete(
+                                providerStore.id, true);
                             // ダイアログを閉じる
                             Navigator.pop(context);
                             // 編集画面を閉じる
