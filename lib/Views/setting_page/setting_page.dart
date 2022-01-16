@@ -2,7 +2,7 @@ import '../../Common/importer.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:package_info/package_info.dart';
+// import 'package:package_info/package_info.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -12,15 +12,15 @@ class SettingPage extends StatefulWidget {
 }
 
 class _State extends State<SettingPage> {
-  String _appName = "";
-  String _packageName = "";
+  // String _appName = "";
+  // String _packageName = "";
   String _version = "";
-  String _buildNumber = "";
+  // String _buildNumber = "";
 
   _saveBool(String key, bool value) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setBool(key, value);
-    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+    // PackageInfo _packageInfo = await PackageInfo.fromPlatform();
   }
 
   _restoreValues(BuildContext context) async {
@@ -34,10 +34,10 @@ class _State extends State<SettingPage> {
     _restoreValues(context);
 
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      _appName = packageInfo.appName;
-      _packageName = packageInfo.packageName;
+      // _appName = packageInfo.appName;
+      // _packageName = packageInfo.packageName;
       _version = packageInfo.version;
-      _buildNumber = packageInfo.buildNumber;
+      // _buildNumber = packageInfo.buildNumber;
     });
 
     super.initState();

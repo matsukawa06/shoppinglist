@@ -1,8 +1,8 @@
-import 'package:shoppinglist/Views/main_page/appbar.dart';
-
 import 'Common/importer.dart';
 
+import 'package:shoppinglist/Views/main_page/appbar.dart';
 import 'Views/edit_page/edit_page.dart';
+import 'Views/main_page/menulist_icon.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
@@ -261,24 +261,36 @@ class ListPage extends StatelessWidget {
                     ).toList(),
                   ),
                 ),
-                // 合計金額表示
                 Container(
-                  color: Colors.blue.shade600,
-                  // 左寄せ
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16),
-                  child: Center(
-                    child: Text(
-                      '合計：${formatPrice(sumPrice)} 円',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Colors.white,
+                  child: Stack(
+                    children: [
+                      // 合計金額表示
+                      Container(
+                        color: Colors.blue.shade600,
+                        // 左寄せ
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: Text(
+                            '合計：${formatPrice(sumPrice)} 円',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      // メニューアイコン
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: MenuListIcon(),
+                      ),
+                    ],
                   ),
                 ),
+
                 // 広告表示
                 // AdmobBanner(
                 //   adUnitId: AdMobService().getBannerAdUnitId()!,

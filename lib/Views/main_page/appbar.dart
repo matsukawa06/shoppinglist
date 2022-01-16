@@ -4,11 +4,14 @@ import 'package:shoppinglist/Views/setting_page/setting_page.dart';
 import '../edit_page/edit_page.dart';
 
 // ignore: camel_case_types
+///
+/// メインページのAppBar設定
+///
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: _listMenuIcon(context),
+      // タイトル
       title: Text('買い物計画リスト'),
       // 右側ボタン
       actions: [
@@ -24,16 +27,21 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-Widget _listMenuIcon(BuildContext context) {
-  return IconButton(
-    onPressed: () {},
-    icon: Icon(Icons.add),
-  );
+class Choice {
+  const Choice({required this.title, this.icon, this.addFlg});
+  final String title;
+  final IconData? icon;
+  final bool? addFlg;
 }
 
-/*
-　新規追加アイコン
- */
+const List<Choice> choices = const <Choice>[
+  const Choice(title: "テスト", icon: null, addFlg: false),
+  const Choice(title: "リストを新規作成", icon: Icons.add, addFlg: true),
+];
+
+///
+/// 新規追加アイコン
+/// 新規登録ページへ遷移する
 Widget _newAddIcon(BuildContext context) {
   return IconButton(
     onPressed: () {
@@ -57,9 +65,9 @@ Widget _newAddIcon(BuildContext context) {
   );
 }
 
-/*
-　設定画面遷移アイコン
-*/
+///
+/// 設定アイコン
+/// 設定画面へ遷移する
 Widget _settingIcon(BuildContext context) {
   return IconButton(
     onPressed: () {

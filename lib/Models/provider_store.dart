@@ -4,9 +4,12 @@ import '../Common/importer.dart';
 class ProviderStore with ChangeNotifier {
   List<TodoStore> _todoList = [];
   List<TodoStore> get todoList => _todoList;
+  List<GroupStore> _groupList = [];
+  List<GroupStore> get groupList => _groupList;
 
   Future<void> initializeList() async {
     _todoList = await TodoController.getTodos();
+    _groupList = await GroupController.getGroup();
     notifyListeners();
   }
 
