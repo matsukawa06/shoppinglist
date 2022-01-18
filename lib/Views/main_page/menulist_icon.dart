@@ -11,11 +11,15 @@ class MenuListIcon extends StatelessWidget {
       color: Colors.white,
       iconSize: 40,
       onPressed: () {
-        showBottomSheet(
+        showModalBottomSheet(
           context: context,
+          isScrollControlled: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
           builder: (BuildContext context) {
             return Container(
-              height: (100 + (55 * 3)),
+              // height: (100 + (55 * 0)),
               alignment: Alignment.center,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -53,17 +57,15 @@ Widget _menuList(BuildContext context) {
         //   },
         // ).toList(),
         children: [
-          _menuItem("メニュー１"),
-          _menuItem("メニュー2"),
-          _menuItem("メニュー3"),
+          // _menuItem("メニュー１"),
+          // _menuItem("メニュー2"),
+          // _menuItem("メニュー3"),
         ],
       ),
       _menuItemAdd("リストを新しく作成"),
     ],
   );
 }
-
-final listItems = ['item1', 'item2'];
 
 Widget _menuItem(String title) {
   return Container(
@@ -81,6 +83,7 @@ Widget _menuItem(String title) {
 
 Widget _menuItemAdd(String title) {
   return Container(
+    height: 100.0,
     decoration: new BoxDecoration(
       border: new Border(
         top: BorderSide(
