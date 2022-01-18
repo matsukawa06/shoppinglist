@@ -15,23 +15,18 @@ class MenuListIcon extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           builder: (BuildContext context) {
-            return Container(
-              // height: (100 + (55 * 0)),
-              alignment: Alignment.center,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 20,
-                  )
-                ],
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                // minHeight: 100.0,
+                maxHeight: 600.0,
               ),
-              child: _menuList(context),
+              child: Container(
+                // height: (100 + (55 * 0)),
+                child: _menuList(context),
+              ),
             );
           },
         );
@@ -44,6 +39,7 @@ Widget _menuList(BuildContext context) {
   final providerStore = context.watch<ProviderStore>();
   return Column(
     children: [
+      _menuItemAdd("リストを新しく作成"),
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
@@ -57,12 +53,11 @@ Widget _menuList(BuildContext context) {
         //   },
         // ).toList(),
         children: [
-          // _menuItem("メニュー１"),
-          // _menuItem("メニュー2"),
-          // _menuItem("メニュー3"),
+          _menuItem("日用品リスト"),
+          _menuItem("電化製品"),
+          _menuItem("スーパー○○のリスト"),
         ],
       ),
-      _menuItemAdd("リストを新しく作成"),
     ],
   );
 }
@@ -83,23 +78,27 @@ Widget _menuItem(String title) {
 
 Widget _menuItemAdd(String title) {
   return Container(
-    height: 100.0,
+    margin: EdgeInsets.only(top: 18),
+    height: 60.0,
     decoration: new BoxDecoration(
       border: new Border(
-        top: BorderSide(
+        bottom: BorderSide(
           width: 0.8,
           color: Colors.grey,
         ),
       ),
     ),
-    child: ListTile(
-        leading: Icon(Icons.add),
-        title: Text(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(padding: EdgeInsets.only(left: 15.0)),
+        Icon(Icons.add),
+        Padding(padding: EdgeInsets.only(left: 15.0)),
+        Text(
           title,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18.0,
-          ),
-        )),
+          style: TextStyle(fontSize: 18),
+        ),
+      ],
+    ),
   );
 }
