@@ -10,6 +10,10 @@ export 'package:package_info/package_info.dart';
 export 'common_util.dart';
 
 export '../Models/provider_store.dart';
+export '../Models/provider_shared.dart';
+export '../Models/provider_form.dart';
+export '../Models/provider_package.dart';
+
 export '../Models/todo_store.dart';
 export '../Cotrollers/todo_controller.dart';
 export '../Models/group_store.dart';

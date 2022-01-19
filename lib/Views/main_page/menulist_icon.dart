@@ -1,6 +1,5 @@
-import 'package:shoppinglist/Views/edit_page/edit_page.dart';
-
 import '../../Common/importer.dart';
+import '../newlist_page/newlist_page.dart';
 
 ///
 /// メニューリスト
@@ -95,7 +94,7 @@ Widget _menuItemAdd(BuildContext context, String title) {
           MaterialPageRoute(
             builder: (context) {
               // 遷移先の画面として編集用画面を指定
-              return EditPage();
+              return NewListPage();
             },
           ),
         ).then(
