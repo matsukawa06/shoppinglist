@@ -3,21 +3,21 @@ import '../../Common/importer.dart';
 class ReleaseContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerStore = context.watch<ProviderStore>();
+    final providerTodo = context.watch<ProviderTodo>();
     return Container(
       child: Column(
         children: [
           SwitchListTile(
-            value: providerStore.switchReleaseDay,
+            value: providerTodo.switchReleaseDay,
             title: Text('発売日'),
             onChanged: (bool value) {
-              providerStore.changeRelease(value);
+              providerTodo.changeRelease(value);
             },
           ),
           // 日付表示（switchReleaseDayで表示・非表示切替）
           Container(
             child: Visibility(
-              visible: providerStore.switchReleaseDay,
+              visible: providerTodo.switchReleaseDay,
               child: Container(
                 padding: const EdgeInsets.only(left: 15),
                 decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class ReleaseContainer extends StatelessWidget {
                   children: <Widget>[
                     const SizedBox(height: 15),
                     Text(
-                      providerStore.labelDate,
+                      providerTodo.labelDate,
                       style: TextStyle(fontSize: 16),
                     ),
                     IconButton(
@@ -57,7 +57,7 @@ class ReleaseContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      context.read<ProviderStore>().changeReleaseDay(selected);
+      context.read<ProviderTodo>().changeReleaseDay(selected);
     }
   }
 }

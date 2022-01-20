@@ -1,15 +1,12 @@
 import '../Common/importer.dart';
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
-class ProviderStore with ChangeNotifier {
+class ProviderTodo with ChangeNotifier {
   List<TodoStore> _todoList = [];
   List<TodoStore> get todoList => _todoList;
-  List<GroupStore> _groupList = [];
-  List<GroupStore> get groupList => _groupList;
 
   Future<void> initializeList() async {
     _todoList = await TodoController.getTodos();
-    _groupList = await GroupController.getGroup();
     notifyListeners();
   }
 
@@ -69,7 +66,7 @@ class ProviderStore with ChangeNotifier {
     _priceController.clear();
     _switchReleaseDay = false;
     _releaseDay = DateTime.now();
-    _switchIsSum = false;
+    _switchIsSum = true;
     _switchKonyuZumi = false;
     _sortNo = 0;
     _isDelete = false;
@@ -102,7 +99,7 @@ class ProviderStore with ChangeNotifier {
   get releaseDay => _releaseDay;
 
   // 金額計算対象チェックの状態
-  var _switchIsSum = false;
+  var _switchIsSum = true;
   get switchIsSum => _switchIsSum;
 
   // 購入済みチェックの状態

@@ -3,9 +3,9 @@ import '../../Common/importer.dart';
 class PriceTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerStore = context.watch<ProviderStore>();
+    final providerTodo = context.watch<ProviderTodo>();
     return new TextFormField(
-      controller: providerStore.priceController,
+      controller: providerTodo.priceController,
       enabled: true,
       style: TextStyle(color: Colors.black),
       obscureText: false,

@@ -60,14 +60,15 @@ class MyDataBase {
     ],
     '2': [
       'ALTER TABLE todo ADD COLUMN isDelete INTEGER DEFAULT 0;',
-      'ALTER TABLE todo ADD COLUMN deleteDay TEXT;',
+      "ALTER TABLE todo ADD COLUMN deleteDay TEXT DEFAULT '2200-01-01';",
       'ALTER TABLE todo ADD COLUMN groupId INTEGER DEFAULT 0;'
     ],
     '3': [
       '''
         CREATE TABLE grouplist(
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          title TEXT
+          title TEXT,
+          defualtKbn TEXT
         )'''
     ],
   };

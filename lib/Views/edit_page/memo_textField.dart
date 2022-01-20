@@ -3,9 +3,9 @@ import '../../Common/importer.dart';
 class MemoTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerStore = context.watch<ProviderStore>();
+    final providerTodo = context.watch<ProviderTodo>();
     return TextField(
-      controller: providerStore.memoController,
+      controller: providerTodo.memoController,
       enabled: true,
       maxLength: 300,
       style: TextStyle(color: Colors.black),

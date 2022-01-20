@@ -10,7 +10,7 @@ import 'release_container.dart';
 class EditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerStore = context.watch<ProviderStore>();
+    final providerTodo = context.watch<ProviderTodo>();
     final providerForm = context.read<ProviderForm>();
 
     Intl.defaultLocale = 'ja';
@@ -21,7 +21,7 @@ class EditPage extends StatelessWidget {
         // 右側のアイコン一覧
         actions: <Widget>[
           Visibility(
-            visible: providerStore.id == 0 ? false : true,
+            visible: providerTodo.id == 0 ? false : true,
             child: IconButton(
               onPressed: () async {
                 var result = await showDialog(
@@ -41,8 +41,7 @@ class EditPage extends StatelessWidget {
                           onPressed: () {
                             // 論理削除に変更
                             // providerStore.delete(providerStore.id);
-                            providerStore.updateIsDelete(
-                                providerStore.id, true);
+                            providerTodo.updateIsDelete(providerTodo.id, true);
                             // ダイアログを閉じる
                             Navigator.pop(context);
                             // 編集画面を閉じる
@@ -114,20 +113,20 @@ class EditPage extends StatelessWidget {
                           ),
                           // 金額計算チェック
                           child: SwitchListTile(
-                            value: providerStore.switchIsSum,
+                            value: providerTodo.switchIsSum,
                             title: Text('計算対象に含める'),
                             onChanged: (bool value) {
-                              providerStore.changeIsSum(value);
+                              providerTodo.changeIsSum(value);
                             },
                           ),
                         ),
 
                         // 購入済みチェック
                         SwitchListTile(
-                          value: providerStore.switchKonyuZumi,
+                          value: providerTodo.switchKonyuZumi,
                           title: Text('購入済み'),
                           onChanged: (bool value) {
-                            providerStore.changeKonyuZumi(value);
+                            providerTodo.changeKonyuZumi(value);
                           },
                         ),
                       ],
@@ -150,38 +149,38 @@ class EditPage extends StatelessWidget {
                         Text('エラー');
                       }
                       // DBに登録する
-                      if (providerStore.id == 0) {
+                      if (providerTodo.id == 0) {
                         // 新規
                         var _todo = TodoStore(
-                          title: providerStore.titleController.text,
-                          memo: providerStore.memoController.text,
-                          price: int.parse(providerStore.priceController.text),
-                          release: boolToInt(providerStore.switchReleaseDay),
-                          releaseDay: providerStore.releaseDay,
-                          isSum: boolToInt(providerStore.switchIsSum),
-                          konyuZumi: boolToInt(providerStore.switchKonyuZumi),
+                          title: providerTodo.titleController.text,
+                          memo: providerTodo.memoController.text,
+                          price: int.parse(providerTodo.priceController.text),
+                          release: boolToInt(providerTodo.switchReleaseDay),
+                          releaseDay: providerTodo.releaseDay,
+                          isSum: boolToInt(providerTodo.switchIsSum),
+                          konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
                           sortNo: await TodoController.getListCount(),
-                          isDelete: boolToInt(providerStore.isDelete),
-                          deleteDay: providerStore.deleteDay,
-                          groupId: providerStore.groupId,
+                          isDelete: boolToInt(providerTodo.isDelete),
+                          deleteDay: providerTodo.deleteDay,
+                          groupId: providerTodo.groupId,
                         );
 
                         await TodoController.insertTodo(_todo);
                       } else {
                         // 修正
                         var _todo = TodoStore(
-                          id: providerStore.id,
-                          title: providerStore.titleController.text,
-                          memo: providerStore.memoController.text,
-                          price: int.parse(providerStore.priceController.text),
-                          release: boolToInt(providerStore.switchReleaseDay),
-                          releaseDay: providerStore.releaseDay,
-                          isSum: boolToInt(providerStore.switchIsSum),
-                          konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-                          sortNo: providerStore.sortNo,
-                          isDelete: boolToInt(providerStore.isDelete),
-                          deleteDay: providerStore.deleteDay,
-                          groupId: providerStore.groupId,
+                          id: providerTodo.id,
+                          title: providerTodo.titleController.text,
+                          memo: providerTodo.memoController.text,
+                          price: int.parse(providerTodo.priceController.text),
+                          release: boolToInt(providerTodo.switchReleaseDay),
+                          releaseDay: providerTodo.releaseDay,
+                          isSum: boolToInt(providerTodo.switchIsSum),
+                          konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+                          sortNo: providerTodo.sortNo,
+                          isDelete: boolToInt(providerTodo.isDelete),
+                          deleteDay: providerTodo.deleteDay,
+                          groupId: providerTodo.groupId,
                         );
 
                         await TodoController.updateTodo(_todo);
@@ -191,7 +190,7 @@ class EditPage extends StatelessWidget {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      providerStore.id == 0 ? 'リスト追加' : '修正',
+                      providerTodo.id == 0 ? 'リスト追加' : '修正',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

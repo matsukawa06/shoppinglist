@@ -56,8 +56,8 @@ Widget _newAddIcon(BuildContext context) {
       ).then(
         (value) async {
           // 画面遷移から戻ってきた時の処理
-          context.read<ProviderStore>().clearItems();
-          context.read<ProviderStore>().initializeList();
+          context.read<ProviderTodo>().clearItems();
+          context.read<ProviderTodo>().initializeList();
         },
       );
     },
@@ -80,8 +80,8 @@ Widget _settingIcon(BuildContext context) {
       ).then(
         (value) async {
           // 画面遷移から戻ってきた時の処理
-          context.read<ProviderStore>().clearItems();
-          context.read<ProviderStore>().initializeList();
+          context.read<ProviderTodo>().clearItems();
+          context.read<ProviderTodo>().initializeList();
         },
       );
     },

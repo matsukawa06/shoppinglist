@@ -12,10 +12,11 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ProviderStore()),
+        ChangeNotifierProvider(create: (_) => ProviderTodo()),
         ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
         ChangeNotifierProvider(create: (_) => ProviderForm()),
         ChangeNotifierProvider(create: (_) => ProviderPackage()),
+        ChangeNotifierProvider(create: (_) => ProviderGroup()),
       ],
       child: HomeScreen(),
     ),
@@ -53,9 +54,9 @@ class ListPage extends StatelessWidget {
       appBar: MyAppBar(),
       body: Container(
         child: FutureBuilder(
-          future: context.read<ProviderStore>().initializeList(),
+          future: context.read<ProviderTodo>().initializeList(),
           builder: (context, snapshot) {
-            final providerStore = context.watch<ProviderStore>();
+            final providerTodo = context.watch<ProviderTodo>();
             // 合計金額初期化
             sumPrice = 0;
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,15 +75,15 @@ class ListPage extends StatelessWidget {
                         newIndex -= 1;
                       }
                       final TodoStore todoStore =
-                          providerStore.todoList.removeAt(oldIndex);
+                          providerTodo.todoList.removeAt(oldIndex);
 
-                      providerStore.todoList.insert(newIndex, todoStore);
+                      providerTodo.todoList.insert(newIndex, todoStore);
 
                       // リストのソート番号を全件更新
                       updateSortNo(context);
-                      context.read<ProviderStore>().initializeList();
+                      context.read<ProviderTodo>().initializeList();
                     },
-                    children: providerStore.todoList.map(
+                    children: providerTodo.todoList.map(
                       (TodoStore todo) {
                         // 合計金額に明細の金額を加算
                         if (todo.isSum == 1) {
@@ -105,16 +106,16 @@ class ListPage extends StatelessWidget {
                           direction: DismissDirection.endToStart,
                           onDismissed: (direction) {
                             // まずリストから削除する
-                            providerStore.todoList.removeAt(todo.sortNo!);
+                            providerTodo.todoList.removeAt(todo.sortNo!);
                             // DBからも削除 ※DBから削除するのは一旦止めて、論理削除にする。
                             // context.read<ProviderStore>().delete(todo.id);
                             context
-                                .read<ProviderStore>()
+                                .read<ProviderTodo>()
                                 .updateIsDelete(todo.id, true);
                             // リストのソート番号を全件更新
                             updateSortNo(context);
                             // スワイプ後に実行される削除処理
-                            context.read<ProviderStore>().initializeList();
+                            context.read<ProviderTodo>().initializeList();
                           },
                           //================================
                           // 一覧に表示する内容
@@ -133,9 +134,7 @@ class ListPage extends StatelessWidget {
                               child: InkWell(
                                 onTap: () {
                                   // 一覧をタップした時の詳細画面遷移
-                                  context
-                                      .read<ProviderStore>()
-                                      .setRowInfo(todo);
+                                  context.read<ProviderTodo>().setRowInfo(todo);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) {
@@ -145,11 +144,9 @@ class ListPage extends StatelessWidget {
                                   ).then(
                                     (value) async {
                                       // 画面遷移から戻ってきた時の処理
+                                      context.read<ProviderTodo>().clearItems();
                                       context
-                                          .read<ProviderStore>()
-                                          .clearItems();
-                                      context
-                                          .read<ProviderStore>()
+                                          .read<ProviderTodo>()
                                           .initializeList();
                                     },
                                   );
@@ -160,14 +157,14 @@ class ListPage extends StatelessWidget {
                                     InkWell(
                                       onTap: () {
                                         context
-                                            .read<ProviderStore>()
+                                            .read<ProviderTodo>()
                                             .updateIsSum(
                                                 todo.id,
                                                 intToBool(todo.isSum)
                                                     ? false
                                                     : true);
                                         context
-                                            .read<ProviderStore>()
+                                            .read<ProviderTodo>()
                                             .initializeList();
                                       },
                                       child: SizedBox(
@@ -239,14 +236,14 @@ class ListPage extends StatelessWidget {
                                         value: intToBool(todo.konyuZumi),
                                         onChanged: (bool? value) {
                                           context
-                                              .read<ProviderStore>()
+                                              .read<ProviderTodo>()
                                               .updateKonyuZumi(
                                                   todo.id,
                                                   intToBool(todo.konyuZumi)
                                                       ? false
                                                       : true);
                                           context
-                                              .read<ProviderStore>()
+                                              .read<ProviderTodo>()
                                               .initializeList();
                                         },
                                       ),
@@ -311,7 +308,7 @@ class ListPage extends StatelessWidget {
 }
 
 void updateSortNo(BuildContext context) {
-  final providerStore = context.read<ProviderStore>();
+  final providerStore = context.read<ProviderTodo>();
 
   // リストのソート番号を全件更新
   for (var i = 0; i < providerStore.todoList.length; i++) {

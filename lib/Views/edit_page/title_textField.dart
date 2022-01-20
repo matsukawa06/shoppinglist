@@ -3,9 +3,9 @@ import '../../Common/importer.dart';
 class TitleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerStore = context.watch<ProviderStore>();
+    final providerTodo = context.watch<ProviderTodo>();
     return new TextFormField(
-      controller: providerStore.titleController,
+      controller: providerTodo.titleController,
       enabled: true,
       maxLength: 30,
       style: TextStyle(color: Colors.black),
@@ -15,7 +15,8 @@ class TitleTextField extends StatelessWidget {
         labelText: 'タイトル',
         //hintText: 'タイトルを入力してください',
         enabledBorder: new UnderlineInputBorder(
-            borderSide: new BorderSide(color: Colors.blue)),
+          borderSide: new BorderSide(color: Colors.blue),
+        ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.orange),
         ),

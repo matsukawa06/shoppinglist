@@ -7,25 +7,36 @@ import '../newlist_page/newlist_page.dart';
 class MenuListIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.menu),
-      color: Colors.white,
-      iconSize: 40,
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (BuildContext context) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 600.0,
+    return FutureBuilder(
+      future: context.read<ProviderGroup>().initializeList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // 非同期処理未完了 = 処理中
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return IconButton(
+          icon: Icon(Icons.menu),
+          color: Colors.white,
+          iconSize: 40,
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              child: Container(
-                child: _menuList(context),
-              ),
+              builder: (BuildContext context) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 600.0,
+                  ),
+                  child: Container(
+                    child: _menuList(context),
+                  ),
+                );
+              },
             );
           },
         );
@@ -35,7 +46,7 @@ class MenuListIcon extends StatelessWidget {
 }
 
 Widget _menuList(BuildContext context) {
-  final providerStore = context.watch<ProviderStore>();
+  final providerGroup = context.watch<ProviderGroup>();
   return Column(
     children: [
       _menuItemAdd(context, "リストを新しく作成"),
@@ -43,7 +54,7 @@ Widget _menuList(BuildContext context) {
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        children: providerStore.groupList.map(
+        children: providerGroup.groupList.map(
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
@@ -51,30 +62,36 @@ Widget _menuList(BuildContext context) {
             );
           },
         ).toList(),
-        // children: [
-        //   _menuItem("日用品リスト"),
-        //   _menuItem("電化製品"),
-        //   _menuItem("スーパー○○のリスト"),
-        // ],
       ),
     ],
   );
 }
 
+///
+/// grouplistテーブルに登録されているデータを表示するアイテム
+///
 Widget _menuItem(String title) {
   return Container(
-    child: ListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-        ),
+    margin: EdgeInsets.only(left: 40),
+    height: 60.0,
+    child: InkWell(
+      onTap: () {},
+      child: Row(
+        children: [
+          Padding(padding: EdgeInsets.only(left: 15.0)),
+          Text(
+            title,
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
       ),
     ),
   );
 }
 
+///
+/// リストを新規作成する画面へ遷移するアイテム
+///
 Widget _menuItemAdd(BuildContext context, String title) {
   return Container(
     margin: EdgeInsets.only(top: 18),
@@ -99,9 +116,12 @@ Widget _menuItemAdd(BuildContext context, String title) {
           ),
         ).then(
           (value) async {
-            // 画面遷移から戻ってきた時の処理
-            context.read<ProviderStore>().clearItems();
-            context.read<ProviderStore>().initializeList();
+            // storeの初期化
+            context.read<ProviderGroup>().clearItems();
+            // グループリストの再読み込み
+            context.read<ProviderGroup>().initializeList();
+            // メニューリストを閉じる
+            Navigator.pop(context);
           },
         );
       },
