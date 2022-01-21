@@ -5,6 +5,7 @@ export 'package:provider/provider.dart';
 export 'package:sqflite/sqflite.dart';
 export 'package:flutter/services.dart';
 export 'package:package_info/package_info.dart';
+export 'package:shared_preferences/shared_preferences.dart';
 // import 'package:shoppinglist/services/admob.dart';
 
 export 'common_util.dart';

@@ -45,6 +45,9 @@ class MenuListIcon extends StatelessWidget {
   }
 }
 
+///
+/// showModalBottomSheetの表示内容
+///
 Widget _menuList(BuildContext context) {
   final providerGroup = context.watch<ProviderGroup>();
   return Column(
@@ -58,7 +61,7 @@ Widget _menuList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: _menuItem(store.title),
+              child: _menuItem(context, store.id, store.title),
             );
           },
         ).toList(),
@@ -70,12 +73,24 @@ Widget _menuList(BuildContext context) {
 ///
 /// grouplistテーブルに登録されているデータを表示するアイテム
 ///
-Widget _menuItem(String title) {
+Widget _menuItem(BuildContext context, int? id, String title) {
+  final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
+
+  _saveValue(String key, int value) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
+  }
+
   return Container(
     margin: EdgeInsets.only(left: 40),
     height: 60.0,
     child: InkWell(
-      onTap: () {},
+      onTap: () {
+        // 選択したリストを選択中にする
+        _saveValue('selectedId', id!);
+        prvSharedPreferences.setSelectedGroupId(id);
+        Navigator.pop(context);
+      },
       child: Row(
         children: [
           Padding(padding: EdgeInsets.only(left: 15.0)),
