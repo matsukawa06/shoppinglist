@@ -75,6 +75,7 @@ Widget _menuList(BuildContext context) {
 ///
 Widget _menuItem(BuildContext context, int? id, String title) {
   final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
+  final providerGroup = context.watch<ProviderGroup>();
 
   _saveValue(String key, int value) async {
     var prefs = await SharedPreferences.getInstance();
@@ -89,6 +90,8 @@ Widget _menuItem(BuildContext context, int? id, String title) {
         // 選択したリストを選択中にする
         _saveValue('selectedId', id!);
         prvSharedPreferences.setSelectedGroupId(id);
+        // タイトルを反映させる
+        providerGroup.getSelectedTitle();
         Navigator.pop(context);
       },
       child: Row(

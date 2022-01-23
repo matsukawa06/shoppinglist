@@ -4,6 +4,9 @@ class ProviderGroup with ChangeNotifier {
   List<GroupStore> _groupList = [];
   List<GroupStore> get groupList => _groupList;
 
+  String _selectedTitle = "";
+  String get selectedTitle => _selectedTitle;
+
   Future<void> initializeList() async {
     _groupList = await GroupController.getGroup();
     if (_groupList.length == 0) {
@@ -18,6 +21,31 @@ class ProviderGroup with ChangeNotifier {
     notifyListeners();
   }
 
+  ///
+  /// select中のデータを取得
+  Future<void> getSelectedTitle() async {
+    var prefs = await SharedPreferences.getInstance();
+    var selectedId = prefs.getInt('selectedId');
+    List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
+    for (var i = 0; i < list.length; i++) {
+      _selectedTitle = list[i].title;
+      break;
+    }
+    notifyListeners();
+  }
+
+  ///
+  /// 指定したidのデータを取得
+  ///
+  Future<void> getSelectedIdTitle(int? id) async {
+    List<GroupStore> list = await GroupController.getGroupSelect(id);
+    for (var i = 0; i < list.length; i++) {
+      _selectedTitle = list[i].title;
+      break;
+    }
+    notifyListeners();
+  }
+
   // 1レコード削除
   Future<void> delete(int? id) async {
     GroupController.deleteGroup(id!);
@@ -28,6 +56,9 @@ class ProviderGroup with ChangeNotifier {
     _id = store.id!;
     _titleController.text = store.title;
     _defualtKbnController.text = store.defualtKbn;
+
+    _selectedGroupId = store.id!;
+    _selectedGroupTitle.text = store.title;
   }
 
   // 各Controllerのクリア
@@ -48,4 +79,10 @@ class ProviderGroup with ChangeNotifier {
   // デフォルト区分 追加登録するリストは"1"
   final _defualtKbnController = TextEditingController();
   get defualtController => _defualtKbnController;
+
+  int _selectedGroupId = 0;
+  get selectedGroupId => _selectedGroupId;
+
+  final _selectedGroupTitle = TextEditingController();
+  get selectedGroupTitle => _selectedGroupTitle;
 }

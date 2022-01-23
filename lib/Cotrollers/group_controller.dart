@@ -33,6 +33,50 @@ class GroupController {
     );
   }
 
+  ///
+  /// grouplistからselect中のデータを取得
+  ///
+  static Future<List<GroupStore>> getGroupSelect(int? id) async {
+    final Database db = await MyDataBase.database;
+    // var prefs = await SharedPreferences.getInstance();
+    // var selectedId = prefs.getInt('selectedId');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'grouplist',
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    return List.generate(
+      maps.length,
+      (i) {
+        return GroupStore(
+          title: maps[i]['title'],
+          defualtKbn: maps[i]['defualtKbn'],
+        );
+      },
+    );
+  }
+
+  ///
+  /// grouplistからIDを指定してデータ取得
+  ///
+  static Future<List<GroupStore>> getGroupId(int? id) async {
+    final Database db = await MyDataBase.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'grouplist',
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    return List.generate(
+      maps.length,
+      (i) {
+        return GroupStore(
+          title: maps[i]['title'],
+          defualtKbn: maps[i]['defualtKbn'],
+        );
+      },
+    );
+  }
+
   // Groupテーブルの1件を更新
   static Future<void> updateGroup(GroupStore store) async {
     final db = await MyDataBase.database;

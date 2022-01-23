@@ -22,41 +22,7 @@ class EditPage extends StatelessWidget {
         actions: <Widget>[
           Visibility(
             visible: providerTodo.id == 0 ? false : true,
-            child: IconButton(
-              onPressed: () async {
-                var result = await showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('確認'),
-                      content: Text('削除します。よろしいですか？'),
-                      actions: <Widget>[
-                        ElevatedButton(
-                          child: Text('Cancel'),
-                          onPressed: () => Navigator.of(context).pop(0),
-                        ),
-                        ElevatedButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            // 論理削除に変更
-                            // providerStore.delete(providerStore.id);
-                            providerTodo.updateIsDelete(providerTodo.id, true);
-                            // ダイアログを閉じる
-                            Navigator.pop(context);
-                            // 編集画面を閉じる
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-                print('dialog result: $result');
-                // providerStore.delete(providerStore.id);
-              },
-              icon: Icon(Icons.delete),
-            ),
+            child: _iconButton(context),
           )
         ],
       ),
@@ -69,6 +35,8 @@ class EditPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
+                // グループリスト選択
+
                 // タイトル
                 TitleTextField(),
                 SpaceBox.height(1),
@@ -138,193 +106,120 @@ class EditPage extends StatelessWidget {
                 // ====================================
                 // ボタン
                 // ====================================
-                Container(
-                  // 横幅いっぱいに広げる
-                  width: double.infinity,
-                  height: 50,
-                  // リスト追加ボタン
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (providerForm.formVallidate()) {
-                        Text('エラー');
-                      }
-                      // DBに登録する
-                      if (providerTodo.id == 0) {
-                        // 新規
-                        var _todo = TodoStore(
-                          title: providerTodo.titleController.text,
-                          memo: providerTodo.memoController.text,
-                          price: int.parse(providerTodo.priceController.text),
-                          release: boolToInt(providerTodo.switchReleaseDay),
-                          releaseDay: providerTodo.releaseDay,
-                          isSum: boolToInt(providerTodo.switchIsSum),
-                          konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-                          sortNo: await TodoController.getListCount(),
-                          isDelete: boolToInt(providerTodo.isDelete),
-                          deleteDay: providerTodo.deleteDay,
-                          groupId: providerTodo.groupId,
-                        );
-
-                        await TodoController.insertTodo(_todo);
-                      } else {
-                        // 修正
-                        var _todo = TodoStore(
-                          id: providerTodo.id,
-                          title: providerTodo.titleController.text,
-                          memo: providerTodo.memoController.text,
-                          price: int.parse(providerTodo.priceController.text),
-                          release: boolToInt(providerTodo.switchReleaseDay),
-                          releaseDay: providerTodo.releaseDay,
-                          isSum: boolToInt(providerTodo.switchIsSum),
-                          konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-                          sortNo: providerTodo.sortNo,
-                          isDelete: boolToInt(providerTodo.isDelete),
-                          deleteDay: providerTodo.deleteDay,
-                          groupId: providerTodo.groupId,
-                        );
-
-                        await TodoController.updateTodo(_todo);
-                      }
-                      // await TodoController.insertTodo(_todo);
-                      // 前の画面に戻る
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      providerTodo.id == 0 ? 'リスト追加' : '修正',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
+                _bottomButton(context),
               ],
             ),
           ),
-
-          // Column(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: <Widget>[
-          //     // タイトル
-          //     TitleTextField(),
-          //     SpaceBox.height(16),
-          //     // メモ
-          //     MemoTextField(),
-          //     SpaceBox.height(16),
-          //     // 価格
-          //     PriceTextField(),
-          //     SpaceBox.height(24),
-
-          //     // ====================================
-          //     // 発売日
-          //     // ====================================
-          //     Container(
-          //       decoration: BoxDecoration(
-          //         border: Border.all(color: Colors.blue),
-          //         borderRadius: BorderRadius.circular(5),
-          //       ),
-          //       child: Column(
-          //         children: [
-          //           // 発売予定日
-          //           ReleaseContainer(),
-          //         ],
-          //       ),
-          //     ),
-          //     SpaceBox.height(24),
-
-          //     // ====================================
-          //     // 計算チェックと購入済みチェック
-          //     // ====================================
-          //     Container(
-          //       decoration: BoxDecoration(
-          //         border: Border.all(color: Colors.blue),
-          //         borderRadius: BorderRadius.circular(5),
-          //       ),
-          //       child: Column(
-          //         children: [
-          //           Container(
-          //             decoration: BoxDecoration(
-          //               border: const Border(
-          //                 bottom: const BorderSide(
-          //                   color: Colors.blue,
-          //                 ),
-          //               ),
-          //             ),
-          //             // 金額計算チェック
-          //             child: SwitchListTile(
-          //               value: providerStore.switchIsSum,
-          //               title: Text('計算対象に含める'),
-          //               onChanged: (bool value) {
-          //                 providerStore.changeIsSum(value);
-          //               },
-          //             ),
-          //           ),
-
-          //           // 購入済みチェック
-          //           SwitchListTile(
-          //             value: providerStore.switchKonyuZumi,
-          //             title: Text('購入済み'),
-          //             onChanged: (bool value) {
-          //               providerStore.changeKonyuZumi(value);
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     SpaceBox.height(24),
-
-          //     // ====================================
-          //     // ボタン
-          //     // ====================================
-          //     Container(
-          //       // 横幅いっぱいに広げる
-          //       width: double.infinity,
-          //       height: 50,
-          //       // リスト追加ボタン
-          //       child: ElevatedButton(
-          //         onPressed: () async {
-          //           // DBに登録する
-          //           if (providerStore.id == 0) {
-          //             // 新規
-          //             var _todo = TodoStore(
-          //               title: providerStore.titleController.text,
-          //               memo: providerStore.memoController.text,
-          //               price: int.parse(providerStore.priceController.text),
-          //               release: boolToInt(providerStore.switchReleaseDay),
-          //               releaseDay: providerStore.releaseDay,
-          //               isSum: boolToInt(providerStore.switchIsSum),
-          //               konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-          //               sortNo: await TodoController.getListCount(),
-          //             );
-
-          //             await TodoController.insertTodo(_todo);
-          //           } else {
-          //             // 修正
-          //             var _todo = TodoStore(
-          //               id: providerStore.id,
-          //               title: providerStore.titleController.text,
-          //               memo: providerStore.memoController.text,
-          //               price: int.parse(providerStore.priceController.text),
-          //               release: boolToInt(providerStore.switchReleaseDay),
-          //               releaseDay: providerStore.releaseDay,
-          //               isSum: boolToInt(providerStore.switchIsSum),
-          //               konyuZumi: boolToInt(providerStore.switchKonyuZumi),
-          //               sortNo: providerStore.sortNo,
-          //             );
-
-          //             await TodoController.updateTodo(_todo);
-          //           }
-          //           // await TodoController.insertTodo(_todo);
-          //           // 前の画面に戻る
-          //           Navigator.pop(context);
-          //         },
-          //         child: Text(
-          //           providerStore.id == 0 ? 'リスト追加' : '修正',
-          //           style: TextStyle(color: Colors.white),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
       ),
     );
   }
+}
+
+///
+/// AppBarの右側
+///
+Widget _iconButton(BuildContext context) {
+  final providerTodo = context.watch<ProviderTodo>();
+  return IconButton(
+    onPressed: () async {
+      var result = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('確認'),
+            content: Text('削除します。よろしいですか？'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(0),
+              ),
+              ElevatedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  // 論理削除に変更
+                  // providerStore.delete(providerStore.id);
+                  providerTodo.updateIsDelete(providerTodo.id, true);
+                  // ダイアログを閉じる
+                  Navigator.pop(context);
+                  // 編集画面を閉じる
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+      print('dialog result: $result');
+      // providerStore.delete(providerStore.id);
+    },
+    icon: Icon(Icons.delete),
+  );
+}
+
+///
+/// 登録、修正ボタン部
+///
+Widget _bottomButton(BuildContext context) {
+  final providerTodo = context.watch<ProviderTodo>();
+  final providerForm = context.read<ProviderForm>();
+
+  return Container(
+    // 横幅いっぱいに広げる
+    width: double.infinity,
+    height: 50,
+    // リスト追加ボタン
+    child: ElevatedButton(
+      onPressed: () async {
+        if (providerForm.formVallidate()) {
+          Text('エラー');
+        }
+        // DBに登録する
+        if (providerTodo.id == 0) {
+          // 新規
+          var _todo = TodoStore(
+            title: providerTodo.titleController.text,
+            memo: providerTodo.memoController.text,
+            price: int.parse(providerTodo.priceController.text),
+            release: boolToInt(providerTodo.switchReleaseDay),
+            releaseDay: providerTodo.releaseDay,
+            isSum: boolToInt(providerTodo.switchIsSum),
+            konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+            sortNo: await TodoController.getListCount(),
+            isDelete: boolToInt(providerTodo.isDelete),
+            deleteDay: providerTodo.deleteDay,
+            groupId: providerTodo.groupId,
+          );
+
+          await TodoController.insertTodo(_todo);
+        } else {
+          // 修正
+          var _todo = TodoStore(
+            id: providerTodo.id,
+            title: providerTodo.titleController.text,
+            memo: providerTodo.memoController.text,
+            price: int.parse(providerTodo.priceController.text),
+            release: boolToInt(providerTodo.switchReleaseDay),
+            releaseDay: providerTodo.releaseDay,
+            isSum: boolToInt(providerTodo.switchIsSum),
+            konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+            sortNo: providerTodo.sortNo,
+            isDelete: boolToInt(providerTodo.isDelete),
+            deleteDay: providerTodo.deleteDay,
+            groupId: providerTodo.groupId,
+          );
+
+          await TodoController.updateTodo(_todo);
+        }
+        // await TodoController.insertTodo(_todo);
+        // 前の画面に戻る
+        Navigator.pop(context);
+      },
+      child: Text(
+        providerTodo.id == 0 ? 'リスト追加' : '修正',
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+  );
 }

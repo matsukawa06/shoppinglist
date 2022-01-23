@@ -10,34 +10,29 @@ import '../edit_page/edit_page.dart';
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      // タイトル
-      title: Text('買い物計画リスト'),
-      // 右側ボタン
-      actions: [
-        // 新規追加アイコン
-        _newAddIcon(context),
-        // 設定画面遷移アイコン
-        _settingIcon(context),
-      ],
+    final providerGroup = context.watch<ProviderGroup>();
+
+    return FutureBuilder(
+      future: providerGroup.getSelectedTitle(),
+      builder: (context, snapshot) {
+        return AppBar(
+          // タイトル
+          title: Text(providerGroup.selectedTitle),
+          // 右側ボタン
+          actions: [
+            // 新規追加アイコン
+            _newAddIcon(context),
+            // 設定画面遷移アイコン
+            _settingIcon(context),
+          ],
+        );
+      },
     );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
-class Choice {
-  const Choice({required this.title, this.icon, this.addFlg});
-  final String title;
-  final IconData? icon;
-  final bool? addFlg;
-}
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: "テスト", icon: null, addFlg: false),
-  const Choice(title: "リストを新規作成", icon: Icons.add, addFlg: true),
-];
 
 ///
 /// 新規追加アイコン
