@@ -16,7 +16,7 @@ class GroupTextButton extends StatelessWidget {
           },
         );
       },
-      child: Text("test"),
+      child: Text(providerGroup.selectedTitle + " ▼"),
     );
   }
 }

@@ -7,6 +7,9 @@ class ProviderGroup with ChangeNotifier {
   String _selectedTitle = "";
   String get selectedTitle => _selectedTitle;
 
+  String _selectListTitle = "";
+  String get selectListTitle => _selectListTitle;
+
   Future<void> initializeList() async {
     _groupList = await GroupController.getGroup();
     if (_groupList.length == 0) {
@@ -29,6 +32,7 @@ class ProviderGroup with ChangeNotifier {
     List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
     for (var i = 0; i < list.length; i++) {
       _selectedTitle = list[i].title;
+      _selectListTitle = list[i].title;
       break;
     }
     notifyListeners();
@@ -40,7 +44,7 @@ class ProviderGroup with ChangeNotifier {
   Future<void> getSelectedIdTitle(int? id) async {
     List<GroupStore> list = await GroupController.getGroupSelect(id);
     for (var i = 0; i < list.length; i++) {
-      _selectedTitle = list[i].title;
+      _selectListTitle = list[i].title;
       break;
     }
     notifyListeners();

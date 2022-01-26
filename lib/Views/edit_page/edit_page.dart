@@ -2,6 +2,7 @@ import '../../Common/importer.dart';
 
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'group_textButton.dart';
 import 'title_textField.dart';
 import 'memo_textField.dart';
 import 'price_textField.dart';
@@ -36,7 +37,8 @@ class EditPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 // グループリスト選択
-
+                GroupTextButton(),
+                SpaceBox.height(1),
                 // タイトル
                 TitleTextField(),
                 SpaceBox.height(1),
