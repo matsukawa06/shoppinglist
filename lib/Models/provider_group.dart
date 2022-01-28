@@ -62,7 +62,7 @@ class ProviderGroup with ChangeNotifier {
     _defualtKbnController.text = store.defualtKbn;
 
     _selectedGroupId = store.id!;
-    _selectedGroupTitle.text = store.title;
+    _selectListTitle = store.title;
   }
 
   // 各Controllerのクリア
@@ -87,6 +87,6 @@ class ProviderGroup with ChangeNotifier {
   int _selectedGroupId = 0;
   get selectedGroupId => _selectedGroupId;
 
-  final _selectedGroupTitle = TextEditingController();
-  get selectedGroupTitle => _selectedGroupTitle;
+  // final _selectedGroupTitle = TextEditingController();
+  // get selectedGroupTitle => _selectedGroupTitle;
 }

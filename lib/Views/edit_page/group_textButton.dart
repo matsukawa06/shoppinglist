@@ -4,19 +4,24 @@ class GroupTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerGroup = context.watch<ProviderGroup>();
-    return new TextButton(
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 600.0),
-              child: _menuList(context),
-            );
-          },
-        );
-      },
-      child: Text(providerGroup.selectedTitle + " ▼"),
+    return new Container(
+      alignment: Alignment.centerLeft,
+      child: TextButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: 600.0),
+                child: _menuList(context),
+              );
+            },
+          );
+        },
+        child: Text(
+          providerGroup.selectListTitle + " ▼",
+        ),
+      ),
     );
   }
 }
@@ -56,8 +61,9 @@ Widget _menuItem(BuildContext context, int? id, String title) {
     height: 60.0,
     child: InkWell(
       onTap: () {
-        // 選択したタイトルを
+        // 選択したタイトルを設定
         providerGroup.getSelectedIdTitle(id);
+        Navigator.pop(context);
       },
       child: Row(
         children: [
