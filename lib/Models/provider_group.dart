@@ -26,10 +26,12 @@ class ProviderGroup with ChangeNotifier {
 
   ///
   /// select中のデータを取得
+  ///
   Future<void> getSelectedTitle() async {
     var prefs = await SharedPreferences.getInstance();
     var selectedId = prefs.getInt('selectedId');
     List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
+    // 1件しか取得しないけどforでループしておく
     for (var i = 0; i < list.length; i++) {
       _selectedTitle = list[i].title;
       _selectListTitle = list[i].title;
@@ -42,10 +44,12 @@ class ProviderGroup with ChangeNotifier {
   /// 指定したidのデータを取得
   ///
   Future<void> getSelectedIdTitle(int? id) async {
-    List<GroupStore> list = await GroupController.getGroupSelect(id);
+    List<GroupStore> list = await GroupController.getGroup();
     for (var i = 0; i < list.length; i++) {
-      _selectListTitle = list[i].title;
-      break;
+      if (list[i].id == id) {
+        _selectListTitle = list[i].title;
+        break;
+      }
     }
     notifyListeners();
   }
