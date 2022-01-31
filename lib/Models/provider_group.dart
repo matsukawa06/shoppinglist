@@ -91,6 +91,11 @@ class ProviderGroup with ChangeNotifier {
   int _selectedGroupId = 0;
   get selectedGroupId => _selectedGroupId;
 
+  void changeSelectedGroupId(int? value) {
+    _selectedGroupId = value!;
+    notifyListeners();
+  }
+
   // final _selectedGroupTitle = TextEditingController();
   // get selectedGroupTitle => _selectedGroupTitle;
 }
