@@ -4,12 +4,17 @@ class ProviderGroup with ChangeNotifier {
   List<GroupStore> _groupList = [];
   List<GroupStore> get groupList => _groupList;
 
+  // SharedPreferences に登録されているリスト名を保持
   String _selectedTitle = "";
   String get selectedTitle => _selectedTitle;
 
+  // 登録・修正画面で選択されたリスト名を保持
   String _selectListTitle = "";
   String get selectListTitle => _selectListTitle;
 
+  ///
+  /// グループリストの初期処理
+  ///
   Future<void> initializeList() async {
     _groupList = await GroupController.getGroup();
     if (_groupList.length == 0) {
@@ -25,7 +30,7 @@ class ProviderGroup with ChangeNotifier {
   }
 
   ///
-  /// select中のデータを取得
+  /// SharedPreferences に登録されているリスト名を取得
   ///
   Future<void> getSelectedTitle() async {
     var prefs = await SharedPreferences.getInstance();
@@ -34,14 +39,14 @@ class ProviderGroup with ChangeNotifier {
     // 1件しか取得しないけどforでループしておく
     for (var i = 0; i < list.length; i++) {
       _selectedTitle = list[i].title;
-      _selectListTitle = list[i].title;
+      // _selectListTitle = list[i].title;
       break;
     }
     notifyListeners();
   }
 
   ///
-  /// 指定したidのデータを取得
+  /// 登録・修正画面で指定したidのリスト名称を取得
   ///
   Future<void> getSelectedIdTitle(int? id) async {
     List<GroupStore> list = await GroupController.getGroup();
@@ -54,26 +59,11 @@ class ProviderGroup with ChangeNotifier {
     notifyListeners();
   }
 
-  // 1レコード削除
+  ///
+  /// 1レコード削除
+  ///
   Future<void> delete(int? id) async {
     GroupController.deleteGroup(id!);
-  }
-
-  // グループを選択した時の情報保持
-  void setGroupInfo(GroupStore store) {
-    _id = store.id!;
-    _titleController.text = store.title;
-    _defualtKbnController.text = store.defualtKbn;
-
-    _selectedGroupId = store.id!;
-    _selectListTitle = store.title;
-  }
-
-  // 各Controllerのクリア
-  void clearItems() {
-    _id = 0;
-    _titleController.clear();
-    _defualtKbnController.clear();
   }
 
   // ID
@@ -96,6 +86,20 @@ class ProviderGroup with ChangeNotifier {
     notifyListeners();
   }
 
-  // final _selectedGroupTitle = TextEditingController();
-  // get selectedGroupTitle => _selectedGroupTitle;
+  // グループを選択した時の情報保持
+  void setGroupInfo(GroupStore store) {
+    _id = store.id!;
+    _titleController.text = store.title;
+    _defualtKbnController.text = store.defualtKbn;
+
+    _selectedGroupId = store.id!;
+    _selectListTitle = store.title;
+  }
+
+  // 各Controllerのクリア
+  void clearItems() {
+    _id = 0;
+    _titleController.clear();
+    _defualtKbnController.clear();
+  }
 }

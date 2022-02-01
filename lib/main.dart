@@ -3,6 +3,7 @@ import 'Common/importer.dart';
 import 'package:shoppinglist/Views/main_page/appbar.dart';
 import 'Views/edit_page/edit_page.dart';
 import 'Views/main_page/menulist_icon.dart';
+import 'Common/japanese_cupertino_localizations.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
@@ -34,6 +35,7 @@ class HomeScreen extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       localizationsDelegates: [
+        JapaneseCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],

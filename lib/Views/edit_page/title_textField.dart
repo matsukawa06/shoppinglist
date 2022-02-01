@@ -5,6 +5,7 @@ class TitleTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final providerTodo = context.watch<ProviderTodo>();
     return new TextFormField(
+      enableInteractiveSelection: true,
       controller: providerTodo.titleController,
       enabled: true,
       maxLength: 30,
