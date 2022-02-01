@@ -17,14 +17,19 @@ class TodoController {
   // Todoテーブルから対象のデータ取得
   static Future<List<TodoStore>> getTodos() async {
     final Database db = await MyDataBase.database;
+    // ローカル設定の取得
     var prefs = await SharedPreferences.getInstance();
+    // 購入済みを表示する区分
     var konyuZumiView = prefs.getBool('konyuZumiView') ?? false;
     var konyuZumi = konyuZumiView ? 2 : 1;
+    // 選択中のグループリストID
+    var selectedId = (prefs.getInt('selectedId') ?? 0);
+
     final List<Map<String, dynamic>> maps = await db.query(
       'todo',
-      where: "konyuZumi <> ? AND isDelete = 0",
+      where: "konyuZumi <> ? AND isDelete = 0 AND groupId = ?",
       // where: "konyuZumi <> ?",
-      whereArgs: [konyuZumi],
+      whereArgs: [konyuZumi, selectedId],
       orderBy: "sortNo ASC",
     );
     return List.generate(

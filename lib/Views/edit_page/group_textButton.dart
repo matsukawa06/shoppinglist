@@ -19,7 +19,7 @@ class GroupTextButton extends StatelessWidget {
           );
         },
         child: Text(
-          providerGroup.selectListTitle + " ▼",
+          providerGroup.selectedTitle + " ▼",
         ),
       ),
     );
@@ -41,40 +41,11 @@ Widget _menuList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: _menuItem(context, store.id, store.title),
+              child: menuItem(context, store.id, store.title),
             );
           },
         ).toList(),
       ),
     ],
-  );
-}
-
-///
-/// grouplistテーブルに登録されているデータを表示するアイテム
-///
-Widget _menuItem(BuildContext context, int? id, String title) {
-  final providerGroup = context.read<ProviderGroup>();
-
-  return Container(
-    margin: EdgeInsets.only(left: 40),
-    height: 60.0,
-    child: InkWell(
-      onTap: () {
-        // 選択したタイトルを設定
-        providerGroup.getSelectedIdTitle(id);
-        providerGroup.changeSelectedGroupId(id);
-        Navigator.pop(context);
-      },
-      child: Row(
-        children: [
-          Padding(padding: EdgeInsets.only(left: 15.0)),
-          Text(
-            title,
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
-      ),
-    ),
   );
 }

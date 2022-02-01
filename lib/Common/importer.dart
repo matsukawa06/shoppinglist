@@ -9,6 +9,7 @@ export 'package:shared_preferences/shared_preferences.dart';
 // import 'package:shoppinglist/services/admob.dart';
 
 export 'common_util.dart';
+export 'menu_item.dart';
 
 export '../Models/provider_todo.dart';
 export '../Models/provider_group.dart';

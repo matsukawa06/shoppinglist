@@ -174,6 +174,9 @@ Widget _bottomButton(BuildContext context) {
     // リスト追加ボタン
     child: ElevatedButton(
       onPressed: () async {
+        var prefs = await SharedPreferences.getInstance();
+        var selectedId = (prefs.getInt('selectedId') ?? 0);
+
         if (providerForm.formVallidate()) {
           Text('エラー');
         }
@@ -191,7 +194,7 @@ Widget _bottomButton(BuildContext context) {
             sortNo: await TodoController.getListCount(),
             isDelete: boolToInt(providerTodo.isDelete),
             deleteDay: providerTodo.deleteDay,
-            groupId: providerTodo.groupId,
+            groupId: selectedId,
           );
 
           await TodoController.insertTodo(_todo);
@@ -209,7 +212,7 @@ Widget _bottomButton(BuildContext context) {
             sortNo: providerTodo.sortNo,
             isDelete: boolToInt(providerTodo.isDelete),
             deleteDay: providerTodo.deleteDay,
-            groupId: providerTodo.groupId,
+            groupId: selectedId,
           );
 
           await TodoController.updateTodo(_todo);

@@ -13,7 +13,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
     final providerGroup = context.watch<ProviderGroup>();
 
     return FutureBuilder(
-      future: providerGroup.getSelectedTitle(),
+      future: providerGroup.getSelectedInfo(),
       builder: (context, snapshot) {
         return AppBar(
           // タイトル

@@ -71,7 +71,7 @@ class ProviderTodo with ChangeNotifier {
     _sortNo = 0;
     _isDelete = false;
     _deleteDay = DateTime.now();
-    _groupId = 0;
+    _groupId = 1;
   }
 
   // ID
@@ -115,7 +115,7 @@ class ProviderTodo with ChangeNotifier {
   get deleteDay => _deleteDay;
 
   // グループID
-  int _groupId = 0;
+  int _groupId = 1;
   get groupId => _groupId;
 
   // 並び順

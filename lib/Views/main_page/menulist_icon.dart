@@ -28,13 +28,15 @@ class MenuListIcon extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
               builder: (BuildContext context) {
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 600.0,
-                  ),
+                return SingleChildScrollView(
+                  // child: ConstrainedBox(
+                  //   constraints: BoxConstraints(
+                  //     maxHeight: 600.0,
+                  //   ),
                   child: Container(
                     child: _menuList(context),
                   ),
+                  // ),
                 );
               },
             );
@@ -52,7 +54,6 @@ Widget _menuList(BuildContext context) {
   final providerGroup = context.watch<ProviderGroup>();
   return Column(
     children: [
-      _menuItemAdd(context, "リストを新しく作成"),
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
@@ -61,49 +62,13 @@ Widget _menuList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: _menuItem(context, store.id, store.title),
+              child: menuItem(context, store.id, store.title),
             );
           },
         ).toList(),
       ),
+      _menuItemAdd(context, "リストを新しく作成"),
     ],
-  );
-}
-
-///
-/// grouplistテーブルに登録されているデータを表示するアイテム
-///
-Widget _menuItem(BuildContext context, int? id, String title) {
-  final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
-  final providerGroup = context.watch<ProviderGroup>();
-
-  _saveValue(String key, int value) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setInt(key, value);
-  }
-
-  return Container(
-    margin: EdgeInsets.only(left: 40),
-    height: 60.0,
-    child: InkWell(
-      onTap: () {
-        // 選択したリストを選択中にする
-        _saveValue('selectedId', id!);
-        prvSharedPreferences.setSelectedGroupId(id);
-        // タイトルを反映させる
-        providerGroup.getSelectedTitle();
-        Navigator.pop(context);
-      },
-      child: Row(
-        children: [
-          Padding(padding: EdgeInsets.only(left: 15.0)),
-          Text(
-            title,
-            style: TextStyle(fontSize: 18),
-          ),
-        ],
-      ),
-    ),
   );
 }
 
@@ -112,11 +77,11 @@ Widget _menuItem(BuildContext context, int? id, String title) {
 ///
 Widget _menuItemAdd(BuildContext context, String title) {
   return Container(
-    margin: EdgeInsets.only(top: 18),
+    margin: EdgeInsets.only(bottom: 25),
     height: 60.0,
     decoration: new BoxDecoration(
       border: new Border(
-        bottom: BorderSide(
+        top: BorderSide(
           width: 0.8,
           color: Colors.grey,
         ),
@@ -138,6 +103,8 @@ Widget _menuItemAdd(BuildContext context, String title) {
             context.read<ProviderGroup>().clearItems();
             // グループリストの再読み込み
             context.read<ProviderGroup>().initializeList();
+            // ToDoリストも再読み込みする
+            context.read<ProviderTodo>().initializeList();
             // メニューリストを閉じる
             Navigator.pop(context);
           },
