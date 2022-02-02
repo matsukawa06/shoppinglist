@@ -41,7 +41,7 @@ Widget _menuList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: menuItem(context, store.id, store.title),
+              child: groupItem(context, store.id, store.title),
             );
           },
         ).toList(),

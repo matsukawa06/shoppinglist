@@ -3,7 +3,7 @@ import 'importer.dart';
 ///
 /// grouplistテーブルに登録されているデータを表示するアイテム
 ///
-Widget menuItem(BuildContext context, int? id, String title) {
+Widget groupItem(BuildContext context, int? id, String title) {
   final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
   final providerGroup = context.watch<ProviderGroup>();
 

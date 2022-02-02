@@ -4,7 +4,7 @@ import '../newlist_page/newlist_page.dart';
 ///
 /// メニューリスト
 ///
-class MenuListIcon extends StatelessWidget {
+class GroupListIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -34,7 +34,7 @@ class MenuListIcon extends StatelessWidget {
                   //     maxHeight: 600.0,
                   //   ),
                   child: Container(
-                    child: _menuList(context),
+                    child: _groupList(context),
                   ),
                   // ),
                 );
@@ -50,7 +50,7 @@ class MenuListIcon extends StatelessWidget {
 ///
 /// showModalBottomSheetの表示内容
 ///
-Widget _menuList(BuildContext context) {
+Widget _groupList(BuildContext context) {
   final providerGroup = context.watch<ProviderGroup>();
   return Column(
     children: [
@@ -62,12 +62,12 @@ Widget _menuList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: menuItem(context, store.id, store.title),
+              child: groupItem(context, store.id, store.title),
             );
           },
         ).toList(),
       ),
-      _menuItemAdd(context, "リストを新しく作成"),
+      _groupItemAdd(context, "リストを新しく作成"),
     ],
   );
 }
@@ -75,7 +75,7 @@ Widget _menuList(BuildContext context) {
 ///
 /// リストを新規作成する画面へ遷移するアイテム
 ///
-Widget _menuItemAdd(BuildContext context, String title) {
+Widget _groupItemAdd(BuildContext context, String title) {
   return Container(
     margin: EdgeInsets.only(bottom: 25),
     height: 60.0,
