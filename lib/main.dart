@@ -3,6 +3,7 @@ import 'Common/importer.dart';
 import 'package:shoppinglist/Views/main_page/appbar.dart';
 import 'Views/edit_page/edit_page.dart';
 import 'Views/main_page/grouplist_icon.dart';
+import 'Views/main_page/menulist_icon.dart';
 import 'Common/japanese_cupertino_localizations.dart';
 
 void main() {
@@ -281,10 +282,15 @@ class ListPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // メニューアイコン
+                      // グループリストアイコン
                       Align(
                         alignment: Alignment.centerLeft,
                         child: GroupListIcon(),
+                      ),
+                      // メニューアイコン
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: MenuListIcon(),
                       ),
                     ],
                   ),

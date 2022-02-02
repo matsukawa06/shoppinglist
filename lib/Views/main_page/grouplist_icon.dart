@@ -2,7 +2,7 @@ import '../../Common/importer.dart';
 import '../newlist_page/newlist_page.dart';
 
 ///
-/// メニューリスト
+/// グループリスト
 ///
 class GroupListIcon extends StatelessWidget {
   @override
@@ -29,14 +29,9 @@ class GroupListIcon extends StatelessWidget {
               ),
               builder: (BuildContext context) {
                 return SingleChildScrollView(
-                  // child: ConstrainedBox(
-                  //   constraints: BoxConstraints(
-                  //     maxHeight: 600.0,
-                  //   ),
                   child: Container(
                     child: _groupList(context),
                   ),
-                  // ),
                 );
               },
             );

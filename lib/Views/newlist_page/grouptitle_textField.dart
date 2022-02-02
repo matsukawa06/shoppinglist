@@ -1,22 +1,21 @@
 import '../../Common/importer.dart';
 
-class PriceTextField extends StatelessWidget {
+class GroupTitleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final store = context.watch<ProviderGroup>();
     return new TextFormField(
-      controller: providerTodo.priceController,
+      // 入力エリアのセレクトアクション（コピペ、選択、削除など）の有効、無効
+      enableInteractiveSelection: true,
+      controller: store.titleController,
       enabled: true,
+      maxLength: 15,
       style: TextStyle(color: Colors.black),
+      // 入力内容のマスク表示の切り替え
       obscureText: false,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(8),
-      ],
+      maxLines: 1,
       decoration: InputDecoration(
-        labelText: '価格',
-        // hintText: '価格を入力してください',
+        labelText: 'リスト名',
         enabledBorder: new UnderlineInputBorder(
             borderSide: new BorderSide(color: Colors.blue)),
         focusedBorder: UnderlineInputBorder(
@@ -24,7 +23,7 @@ class PriceTextField extends StatelessWidget {
         ),
       ),
       validator: (String? value) {
-        return value!.isEmpty ? '価格を入力してください' : null;
+        return value!.isEmpty ? 'リスト名を入力してください' : null;
       },
     );
   }
