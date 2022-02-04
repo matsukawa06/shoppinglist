@@ -67,8 +67,7 @@ class MyDataBase {
       '''
         CREATE TABLE grouplist(
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          title TEXT,
-          defualtKbn TEXT
+          title TEXT
         )'''
     ],
   };

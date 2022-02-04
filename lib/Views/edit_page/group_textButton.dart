@@ -10,10 +10,15 @@ class GroupTextButton extends StatelessWidget {
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
             builder: (BuildContext context) {
-              return ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 600.0),
-                child: _menuList(context),
+              return SingleChildScrollView(
+                child: Container(
+                  child: _groupList(context),
+                ),
               );
             },
           );
@@ -29,7 +34,7 @@ class GroupTextButton extends StatelessWidget {
 ///
 /// showModalBottomSheetの表示内容
 ///
-Widget _menuList(BuildContext context) {
+Widget _groupList(BuildContext context) {
   final providerGroup = context.read<ProviderGroup>();
   return Column(
     children: [
@@ -46,6 +51,7 @@ Widget _menuList(BuildContext context) {
           },
         ).toList(),
       ),
+      SpaceBox.height(50),
     ],
   );
 }

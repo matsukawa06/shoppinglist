@@ -1,3 +1,5 @@
+import 'package:shoppinglist/Views/newlist_page/list_edit_page.dart';
+
 import '../../Common/importer.dart';
 
 ///
@@ -34,9 +36,43 @@ Widget _menuList(BuildContext context) {
   return Column(
     children: [
       // グループリスト名の変更
-      Container(),
+      Container(
+        margin: EdgeInsets.only(bottom: 25),
+        height: 60.0,
+        child: InkWell(
+          child: Text("リスト名を変更する"),
+          onTap: () {
+            // "push"で更新画面に遷移
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return ListEditPage(MODE_UPD);
+                },
+              ),
+            );
+          },
+        ),
+      ),
       // グループリストの削除
-      Container(),
+      Container(
+        margin: EdgeInsets.only(bottom: 25),
+        height: 60.0,
+        child: InkWell(
+          child: Text("リストを削除する"),
+          onTap: () async {
+            var result = await showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("確認"),
+                    content: Text("リストを削除します。よろしいですか？"),
+                  );
+                });
+            // "push"で確認ダイアログを表示
+          },
+        ),
+      ),
       // 下にスペース設ける
       SpaceBox.height(50),
     ],

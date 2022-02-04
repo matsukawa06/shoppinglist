@@ -1,5 +1,5 @@
 import '../../Common/importer.dart';
-import '../newlist_page/newlist_page.dart';
+import '../newlist_page/list_edit_page.dart';
 
 ///
 /// グループリスト
@@ -89,7 +89,7 @@ Widget _groupItemAdd(BuildContext context, String title) {
           MaterialPageRoute(
             builder: (context) {
               // 遷移先の画面として編集用画面を指定
-              return NewListPage();
+              return ListEditPage(MODE_INS);
             },
           ),
         ).then(

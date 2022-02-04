@@ -27,7 +27,6 @@ class GroupController {
         return GroupStore(
           id: maps[i]['id'],
           title: maps[i]['title'],
-          defualtKbn: maps[i]['defualtKbn'],
         );
       },
     );
@@ -50,7 +49,6 @@ class GroupController {
       (i) {
         return GroupStore(
           title: maps[i]['title'],
-          defualtKbn: maps[i]['defualtKbn'],
         );
       },
     );
@@ -71,7 +69,6 @@ class GroupController {
       (i) {
         return GroupStore(
           title: maps[i]['title'],
-          defualtKbn: maps[i]['defualtKbn'],
         );
       },
     );

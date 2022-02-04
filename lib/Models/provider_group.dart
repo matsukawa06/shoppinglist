@@ -5,7 +5,7 @@ class ProviderGroup with ChangeNotifier {
   List<GroupStore> get groupList => _groupList;
 
   // SharedPreferences に登録されている情報を保持
-  int? _selectedId = 0;
+  int? _selectedId = GROUPID_DEFUALT;
   int? get selectedId => _selectedId;
   String _selectedTitle = "";
   String get selectedTitle => _selectedTitle;
@@ -18,9 +18,8 @@ class ProviderGroup with ChangeNotifier {
     if (_groupList.length == 0) {
       // デフォルトのグループ（id=0）を登録する
       var _store = GroupStore(
-        id: 0,
+        id: GROUPID_DEFUALT,
         title: "マイリスト",
-        defualtKbn: "1",
       );
       await GroupController.insertGroup(_store);
       _groupList = await GroupController.getGroup();
@@ -33,7 +32,7 @@ class ProviderGroup with ChangeNotifier {
   ///
   Future<void> getSelectedInfo() async {
     var prefs = await SharedPreferences.getInstance();
-    var selectedId = (prefs.getInt('selectedId') ?? 0);
+    var selectedId = (prefs.getInt('selectedId') ?? GROUPID_DEFUALT);
     List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
     // 1件しか取得しないけどforでループしておく
     for (var i = 0; i < list.length; i++) {
@@ -52,21 +51,20 @@ class ProviderGroup with ChangeNotifier {
   }
 
   // ID
-  int _id = 0;
+  int _id = GROUPID_DEFUALT;
   get id => _id;
 
   // タイトル入力内容
   final _titleController = TextEditingController();
   get titleController => _titleController;
 
-  // デフォルト区分 追加登録するリストは"1"
-  final _defualtKbnController = TextEditingController();
-  get defualtController => _defualtKbnController;
+  void initTitleController(String title) {
+    _titleController.text = title;
+  }
 
   // 各Controllerのクリア
   void clearItems() {
-    _id = 0;
+    _id = GROUPID_DEFUALT;
     _titleController.clear();
-    _defualtKbnController.clear();
   }
 }
