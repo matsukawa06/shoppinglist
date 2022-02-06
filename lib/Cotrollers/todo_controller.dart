@@ -23,7 +23,7 @@ class TodoController {
     var konyuZumiView = prefs.getBool('konyuZumiView') ?? false;
     var konyuZumi = konyuZumiView ? 2 : 1;
     // 選択中のグループリストID
-    var selectedId = (prefs.getInt('selectedId') ?? 0);
+    var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
 
     final List<Map<String, dynamic>> maps = await db.query(
       'todo',

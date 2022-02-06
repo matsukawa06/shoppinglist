@@ -8,9 +8,7 @@ class ListEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerForm = context.read<ProviderForm>();
-    // グループリストタイトルを初期化
-    _initTitle(context, mode);
-
+    final store = context.watch<ProviderGroup>();
     return Form(
       key: providerForm.formKey,
       child: Scaffold(
@@ -34,7 +32,22 @@ class ListEditPage extends StatelessWidget {
                 onTap: () async {
                   if (providerForm.formVallidate()) {
                     // 入力チェックでエラーが無ければ、DBに登録する
-                    _dataInsUpd(context, mode);
+                    switch (mode) {
+                      case MODE_INS:
+                        var _providerStore = GroupStore(
+                          title: store.titleController.text,
+                        );
+                        await GroupController.insertGroup(_providerStore);
+                        break;
+                      case MODE_UPD:
+                        var _providerStore = GroupStore(
+                          id: store.selectedId,
+                          title: store.titleController.text,
+                        );
+                        await GroupController.updateGroup(_providerStore);
+                        break;
+                      default:
+                    }
                     // 前の画面に戻る
                     Navigator.pop(context);
                   }
@@ -70,47 +83,4 @@ String _setTitle(String mode) {
     default:
   }
   return strTitle;
-}
-
-///
-/// グループリストタイトル初期化
-///
-void _initTitle(BuildContext context, String mode) {
-  final store = context.watch<ProviderGroup>();
-
-  switch (mode) {
-    case MODE_INS:
-      store.initTitleController("");
-      break;
-    case MODE_UPD:
-      store.initTitleController(store.selectedTitle);
-      break;
-    default:
-  }
-}
-
-///
-/// グループリストテーブルの登録、更新処理
-///
-void _dataInsUpd(BuildContext context, String mode) async {
-  final store = context.watch<ProviderGroup>();
-
-  switch (mode) {
-    case MODE_INS:
-      var _providerStore = GroupStore(
-        title: store.titleController.text,
-      );
-
-      await GroupController.insertGroup(_providerStore);
-      break;
-    case MODE_UPD:
-      var _providerStore = GroupStore(
-        id: store.id,
-        title: store.titleController.text,
-      );
-
-      await GroupController.updateGroup(_providerStore);
-      break;
-    default:
-  }
 }

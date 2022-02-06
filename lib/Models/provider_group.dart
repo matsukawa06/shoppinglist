@@ -23,6 +23,9 @@ class ProviderGroup with ChangeNotifier {
       );
       await GroupController.insertGroup(_store);
       _groupList = await GroupController.getGroup();
+      // 選択中のグループリストIDを更新
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setInt(SELECT_ID_KEY, GROUPID_DEFUALT);
     }
     notifyListeners();
   }
@@ -32,7 +35,7 @@ class ProviderGroup with ChangeNotifier {
   ///
   Future<void> getSelectedInfo() async {
     var prefs = await SharedPreferences.getInstance();
-    var selectedId = (prefs.getInt('selectedId') ?? GROUPID_DEFUALT);
+    var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
     List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
     // 1件しか取得しないけどforでループしておく
     for (var i = 0; i < list.length; i++) {
@@ -50,9 +53,9 @@ class ProviderGroup with ChangeNotifier {
     GroupController.deleteGroup(id!);
   }
 
-  // ID
-  int _id = GROUPID_DEFUALT;
-  get id => _id;
+  // // ID
+  // int _id = GROUPID_DEFUALT;
+  // get id => _id;
 
   // タイトル入力内容
   final _titleController = TextEditingController();
@@ -64,7 +67,7 @@ class ProviderGroup with ChangeNotifier {
 
   // 各Controllerのクリア
   void clearItems() {
-    _id = GROUPID_DEFUALT;
+    // _id = GROUPID_DEFUALT;
     _titleController.clear();
   }
 }

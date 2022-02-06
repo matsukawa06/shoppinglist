@@ -175,7 +175,7 @@ Widget _bottomButton(BuildContext context) {
     child: ElevatedButton(
       onPressed: () async {
         var prefs = await SharedPreferences.getInstance();
-        var selectedId = (prefs.getInt('selectedId') ?? 0);
+        var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
 
         if (providerForm.formVallidate()) {
           // 入力チェックでエラーが無ければ、DBに登録する

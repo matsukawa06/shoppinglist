@@ -37,8 +37,6 @@ class GroupController {
   ///
   static Future<List<GroupStore>> getGroupSelect(int? id) async {
     final Database db = await MyDataBase.database;
-    // var prefs = await SharedPreferences.getInstance();
-    // var selectedId = prefs.getInt('selectedId');
     final List<Map<String, dynamic>> maps = await db.query(
       'grouplist',
       where: "id = ?",
@@ -48,6 +46,7 @@ class GroupController {
       maps.length,
       (i) {
         return GroupStore(
+          id: maps[i]['id'],
           title: maps[i]['title'],
         );
       },
