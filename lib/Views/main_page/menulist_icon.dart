@@ -36,6 +36,7 @@ class MenuListIcon extends StatelessWidget {
 /// showModalBottomSheet の表示内容
 ///
 Widget _menuList(BuildContext context) {
+  final prvShared = context.watch<ProviderSharedPreferences>();
   final store = context.watch<ProviderGroup>();
 
   return Column(
@@ -67,6 +68,8 @@ Widget _menuList(BuildContext context) {
             ).then((value) async {
               // storeの初期化
               context.read<ProviderGroup>().clearItems();
+              // タイトルを反映させる
+              store.getSelectedInfo();
               // グループリストの再読み込み
               context.read<ProviderGroup>().initializeList();
               // ToDoリストも再読み込みする
@@ -121,7 +124,14 @@ Widget _menuList(BuildContext context) {
                       child: Text("OK"),
                       onPressed: () {
                         // グループリストと紐づくTodoを物理削除
-
+                        store.delete(store.selectedId);
+                        // デフォルトリストを選択中にする
+                        prvShared.saveValue(SELECT_ID_KEY, GROUPID_DEFUALT);
+                        prvShared.setSelectedGroupId(GROUPID_DEFUALT);
+                        // タイトルを反映させる
+                        store.getSelectedInfo();
+                        // ToDoリストも再読み込みする
+                        context.read<ProviderTodo>().initializeList();
                         // ダイアログを閉じる
                         Navigator.pop(context);
                         // メニューリストを閉じる

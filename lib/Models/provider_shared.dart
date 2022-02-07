@@ -18,4 +18,12 @@ class ProviderSharedPreferences with ChangeNotifier {
     _selectedGroupId = value;
     notifyListeners();
   }
+
+  ///
+  /// ローカル設定を保存する
+  ///
+  Future saveValue(String key, int value) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setInt(key, value);
+  }
 }

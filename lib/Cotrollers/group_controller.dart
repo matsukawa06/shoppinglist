@@ -87,20 +87,12 @@ class GroupController {
 
   ///
   /// Groupテーブルから1件削除
-  /// TodoテーブルのgroupIdも更新する
+  ///
   static Future<void> deleteGroup(int id) async {
     final db = await MyDataBase.database;
     await db.delete(
       'grouplist',
       where: "id = ?",
-      whereArgs: [id],
-    );
-
-    var values = <String, dynamic>{"groupId": 0};
-    await db.update(
-      'grouplist',
-      values,
-      where: "groupId = ?",
       whereArgs: [id],
     );
   }

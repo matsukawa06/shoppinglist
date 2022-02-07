@@ -113,4 +113,14 @@ class TodoController {
       whereArgs: [id],
     );
   }
+
+  // Todoテーブルから対象グループIDのデータを削除
+  static Future<void> deleteTodoGroup(int groupId) async {
+    final db = await MyDataBase.database;
+    await db.delete(
+      'todo',
+      where: "groupId = ?",
+      whereArgs: [groupId],
+    );
+  }
 }

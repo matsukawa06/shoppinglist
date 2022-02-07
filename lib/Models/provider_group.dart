@@ -51,11 +51,8 @@ class ProviderGroup with ChangeNotifier {
   ///
   Future<void> delete(int? id) async {
     GroupController.deleteGroup(id!);
+    TodoController.deleteTodoGroup(id);
   }
-
-  // // ID
-  // int _id = GROUPID_DEFUALT;
-  // get id => _id;
 
   // タイトル入力内容
   final _titleController = TextEditingController();

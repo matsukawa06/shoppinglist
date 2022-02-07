@@ -44,7 +44,7 @@ class _State extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
+    final prvShared = context.watch<ProviderSharedPreferences>();
 
     return Scaffold(
       appBar: AppBar(
@@ -67,11 +67,11 @@ class _State extends State<SettingPage> {
               child: Container(
                 // 購入済み表示チェック
                 child: SwitchListTile(
-                  value: prvSharedPreferences.isKonyuZumiView,
+                  value: prvShared.isKonyuZumiView,
                   title: Text('購入済みを表示する'),
                   onChanged: (bool value) {
                     _saveBool('konyuZumiView', value);
-                    prvSharedPreferences.setKonyuZumiView(value);
+                    prvShared.setKonyuZumiView(value);
                   },
                 ),
               ),

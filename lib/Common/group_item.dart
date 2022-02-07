@@ -4,13 +4,8 @@ import 'importer.dart';
 /// grouplistテーブルに登録されているデータを表示するアイテム
 ///
 Widget groupItem(BuildContext context, int? id, String title) {
-  final prvSharedPreferences = context.watch<ProviderSharedPreferences>();
+  final prvShared = context.watch<ProviderSharedPreferences>();
   final providerGroup = context.watch<ProviderGroup>();
-
-  _saveValue(String key, int value) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setInt(key, value);
-  }
 
   return Container(
     margin: EdgeInsets.only(left: 40, top: 10),
@@ -18,8 +13,8 @@ Widget groupItem(BuildContext context, int? id, String title) {
     child: InkWell(
       onTap: () {
         // 選択したリストを選択中にする
-        _saveValue(SELECT_ID_KEY, id!);
-        prvSharedPreferences.setSelectedGroupId(id);
+        prvShared.saveValue(SELECT_ID_KEY, id!);
+        prvShared.setSelectedGroupId(id);
         // タイトルを反映させる
         providerGroup.getSelectedInfo();
         // ToDoリストも再読み込みする
