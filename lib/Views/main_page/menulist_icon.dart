@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:shoppinglist/Views/newlist_page/list_edit_page.dart';
 
 import '../../Common/importer.dart';
@@ -48,7 +50,7 @@ class ListUpdate extends StatelessWidget {
     final store = context.watch<ProviderGroup>();
 
     return Container(
-      margin: EdgeInsets.only(bottom: 25),
+      margin: EdgeInsets.only(top: 25, bottom: 5),
       height: 60.0,
       child: InkWell(
         child: Row(
@@ -96,69 +98,90 @@ class ListDelete extends StatelessWidget {
   Widget build(BuildContext context) {
     final prvShared = context.watch<ProviderSharedPreferences>();
     final store = context.watch<ProviderGroup>();
-
+    final _isDefualt = store.selectedId == GROUPID_DEFUALT ? true : false;
     return Container(
-      margin: EdgeInsets.only(bottom: 25),
-      height: 60.0,
+      margin: EdgeInsets.only(bottom: 35),
+      height: 70.0,
       child: InkWell(
-        child: Row(
-          children: [
-            Padding(padding: EdgeInsets.only(left: 15.0)),
-            Text(
-              "リストを削除する",
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
+        child: Container(
+          width: double.infinity,
+          alignment: Alignment.topLeft,
+          padding: EdgeInsets.only(left: 15.0),
+          child: Column(
+            children: [
+              Text(
+                "リストを削除する",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: _isDefualt ? Colors.grey : Colors.black,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(
+                height: 0.1,
+              ),
+              Text(
+                _isDefualt ? "\nデフォルトのリストは削除できません" : "",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: _isDefualt ? Colors.grey : Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
         onTap: () async {
-          var result = await showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("確認"),
-                content: Container(
-                  height: 90.0,
-                  child: Column(
-                    children: [
-                      Text("リストを削除します。よろしいですか？"),
-                      Text(
-                        "この操作は取り消しできません。",
-                        style: TextStyle(
-                          color: Colors.red,
+          if (store.selectedId != GROUPID_DEFUALT) {
+            // デフォルトのリストで無ければ、削除処理を行う
+            var result = await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("確認"),
+                  content: Container(
+                    height: 90.0,
+                    child: Column(
+                      children: [
+                        Text("リストを削除します。よろしいですか？"),
+                        Text(
+                          "この操作は取り消しできません。",
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    child: Text("Cancel"),
-                    onPressed: () => Navigator.of(context).pop(0),
-                  ),
-                  ElevatedButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      // グループリストと紐づくTodoを物理削除
-                      store.delete(store.selectedId);
-                      // デフォルトリストを選択中にする
-                      prvShared.saveValue(SELECT_ID_KEY, GROUPID_DEFUALT);
-                      prvShared.setSelectedGroupId(GROUPID_DEFUALT);
-                      // タイトルを反映させる
-                      store.getSelectedInfo();
-                      // ToDoリストも再読み込みする
-                      context.read<ProviderTodo>().initializeList();
-                      // ダイアログを閉じる
-                      Navigator.pop(context);
-                      // メニューリストを閉じる
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              );
-            },
-          );
-          print("dialog result: $result");
+                  actions: <Widget>[
+                    ElevatedButton(
+                      child: Text("Cancel"),
+                      onPressed: () => Navigator.of(context).pop(0),
+                    ),
+                    ElevatedButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        // グループリストと紐づくTodoを物理削除
+                        store.delete(store.selectedId);
+                        // デフォルトリストを選択中にする
+                        prvShared.saveValue(SELECT_ID_KEY, GROUPID_DEFUALT);
+                        prvShared.setSelectedGroupId(GROUPID_DEFUALT);
+                        // タイトルを反映させる
+                        store.getSelectedInfo();
+                        // ToDoリストも再読み込みする
+                        context.read<ProviderTodo>().initializeList();
+                        // ダイアログを閉じる
+                        Navigator.pop(context);
+                        // メニューリストを閉じる
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                );
+              },
+            );
+            print("dialog result: $result");
+          }
         },
       ),
     );
