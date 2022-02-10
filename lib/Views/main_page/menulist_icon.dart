@@ -79,8 +79,8 @@ class ListUpdate extends StatelessWidget {
             store.getSelectedInfo();
             // グループリストの再読み込み
             context.read<ProviderGroup>().initializeList();
-            // ToDoリストも再読み込みする
-            context.read<ProviderTodo>().initializeList();
+            // // ToDoリストも再読み込みする
+            // context.read<ProviderTodo>().initializeList();
             // メニューリストを閉じる
             Navigator.pop(context);
           });
@@ -156,7 +156,12 @@ class ListDelete extends StatelessWidget {
                   actions: <Widget>[
                     ElevatedButton(
                       child: Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(0),
+                      onPressed: () {
+                        // ダイアログを閉じる
+                        Navigator.of(context).pop(0);
+                        // モーダルシートも閉じる
+                        Navigator.pop(context);
+                      },
                     ),
                     ElevatedButton(
                       child: Text("OK"),

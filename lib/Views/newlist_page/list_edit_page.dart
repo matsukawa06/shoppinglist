@@ -48,6 +48,12 @@ class ListEditPage extends StatelessWidget {
                         break;
                       default:
                     }
+                    // storeの初期化
+                    context.read<ProviderGroup>().clearItems();
+                    // タイトルを反映させる
+                    store.getSelectedInfo();
+                    // グループリストの再読み込み
+                    context.read<ProviderGroup>().initializeList();
                     // 前の画面に戻る
                     Navigator.pop(context);
                   }
