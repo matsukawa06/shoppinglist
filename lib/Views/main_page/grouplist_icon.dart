@@ -71,6 +71,8 @@ Widget _groupList(BuildContext context) {
 /// リストを新規作成する画面へ遷移するアイテム
 ///
 Widget _groupItemAdd(BuildContext context, String title) {
+  final store = context.watch<ProviderGroup>();
+
   return Container(
     margin: EdgeInsets.only(bottom: 25),
     height: 60.0,
@@ -83,27 +85,49 @@ Widget _groupItemAdd(BuildContext context, String title) {
       ),
     ),
     child: InkWell(
-      onTap: () {
-        // "push"で新規画面に遷移
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              // 遷移先の画面として編集用画面を指定
-              return ListEditPage(MODE_INS);
+      onTap: () async {
+        if (store.groupList.length > GROUPLIST_MAX) {
+          // グループリストの最大件数を超えている場合、更新画面に遷移させない
+          var result = await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("エラー"),
+                content: Text("リスト最大件数を超えるため\nこれ以上追加できません。"),
+                actions: <Widget>[
+                  ElevatedButton(
+                    child: Text("OK"),
+                    onPressed: () => Navigator.of(context).pop(0),
+                  )
+                ],
+              );
             },
-          ),
-        ).then(
-          (value) async {
-            // storeの初期化
-            context.read<ProviderGroup>().clearItems();
-            // グループリストの再読み込み
-            context.read<ProviderGroup>().initializeList();
-            // ToDoリストも再読み込みする
-            context.read<ProviderTodo>().initializeList();
-            // メニューリストを閉じる
-            Navigator.pop(context);
-          },
-        );
+          );
+          print("dialog result: $result");
+          Navigator.pop(context);
+        } else {
+          // "push"で新規画面に遷移
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                // 遷移先の画面として編集用画面を指定
+                return ListEditPage(MODE_INS);
+              },
+            ),
+          ).then(
+            (value) async {
+              // storeの初期化
+              context.read<ProviderGroup>().clearItems();
+              // グループリストの再読み込み
+              context.read<ProviderGroup>().initializeList();
+              // ToDoリストも再読み込みする
+              context.read<ProviderTodo>().initializeList();
+              // メニューリストを閉じる
+              Navigator.pop(context);
+            },
+          );
+        }
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:shoppinglist/Views/newlist_page/list_edit_page.dart';
 
 import '../../Common/importer.dart';
@@ -72,18 +70,20 @@ class ListUpdate extends StatelessWidget {
                 return ListEditPage(MODE_UPD);
               },
             ),
-          ).then((value) async {
-            // storeの初期化
-            context.read<ProviderGroup>().clearItems();
-            // タイトルを反映させる
-            store.getSelectedInfo();
-            // グループリストの再読み込み
-            context.read<ProviderGroup>().initializeList();
-            // // ToDoリストも再読み込みする
-            // context.read<ProviderTodo>().initializeList();
-            // メニューリストを閉じる
-            Navigator.pop(context);
-          });
+          ).then(
+            (value) async {
+              // storeの初期化
+              context.read<ProviderGroup>().clearItems();
+              // タイトルを反映させる
+              store.getSelectedInfo();
+              // グループリストの再読み込み
+              context.read<ProviderGroup>().initializeList();
+              // // ToDoリストも再読み込みする
+              // context.read<ProviderTodo>().initializeList();
+              // メニューリストを閉じる
+              Navigator.pop(context);
+            },
+          );
         },
       ),
     );
@@ -98,38 +98,12 @@ class ListDelete extends StatelessWidget {
   Widget build(BuildContext context) {
     final prvShared = context.watch<ProviderSharedPreferences>();
     final store = context.watch<ProviderGroup>();
-    final _isDefualt = store.selectedId == GROUPID_DEFUALT ? true : false;
+
     return Container(
       margin: EdgeInsets.only(bottom: 35),
       height: 70.0,
       child: InkWell(
-        child: Container(
-          width: double.infinity,
-          alignment: Alignment.topLeft,
-          padding: EdgeInsets.only(left: 15.0),
-          child: Column(
-            children: [
-              Text(
-                "リストを削除する",
-                style: TextStyle(
-                  fontSize: 18,
-                  color: _isDefualt ? Colors.grey : Colors.black,
-                ),
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(
-                height: 0.1,
-              ),
-              Text(
-                _isDefualt ? "\nデフォルトのリストは削除できません" : "",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: _isDefualt ? Colors.grey : Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: _delContainer(context),
         onTap: () async {
           if (store.selectedId != GROUPID_DEFUALT) {
             // デフォルトのリストで無ければ、削除処理を行う
@@ -191,4 +165,33 @@ class ListDelete extends StatelessWidget {
       ),
     );
   }
+}
+
+///
+/// リスト削除用の選択行の見た目
+///
+Widget _delContainer(BuildContext context) {
+  final store = context.watch<ProviderGroup>();
+  final _isDefualt = store.selectedId == GROUPID_DEFUALT ? true : false;
+
+  return Container(
+    width: double.infinity,
+    alignment: Alignment.topLeft,
+    child: ListTile(
+      title: Text(
+        "リストを削除する",
+        style: TextStyle(
+          fontSize: 18,
+          color: _isDefualt ? Colors.grey : Colors.black,
+        ),
+      ),
+      subtitle: Text(
+        _isDefualt ? "\nデフォルトのリストは削除できません" : "",
+        style: TextStyle(
+          fontSize: 14,
+          color: _isDefualt ? Colors.grey : Colors.black,
+        ),
+      ),
+    ),
+  );
 }
