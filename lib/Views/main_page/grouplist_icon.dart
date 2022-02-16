@@ -30,6 +30,7 @@ class GroupListIcon extends StatelessWidget {
               builder: (BuildContext context) {
                 return SingleChildScrollView(
                   child: Container(
+                    margin: EdgeInsets.only(top: 20),
                     child: _groupList(context),
                   ),
                 );
@@ -71,7 +72,7 @@ Widget _groupList(BuildContext context) {
 /// リストを新規作成する画面へ遷移するアイテム
 ///
 Widget _groupItemAdd(BuildContext context, String title) {
-  final store = context.watch<ProviderGroup>();
+  final store = context.read<ProviderGroup>();
 
   return Container(
     margin: EdgeInsets.only(bottom: 25),

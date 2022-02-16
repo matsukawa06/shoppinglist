@@ -45,7 +45,7 @@ class MenuListIcon extends StatelessWidget {
 class ListUpdate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final store = context.watch<ProviderGroup>();
+    final store = context.read<ProviderGroup>();
 
     return Container(
       margin: EdgeInsets.only(top: 25, bottom: 5),
@@ -96,8 +96,8 @@ class ListUpdate extends StatelessWidget {
 class ListDelete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final prvShared = context.watch<ProviderSharedPreferences>();
-    final store = context.watch<ProviderGroup>();
+    final prvShared = context.read<ProviderSharedPreferences>();
+    final store = context.read<ProviderGroup>();
 
     return Container(
       margin: EdgeInsets.only(bottom: 35),
