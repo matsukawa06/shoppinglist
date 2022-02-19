@@ -223,7 +223,8 @@ class MainListPage extends StatelessWidget {
                     children: [
                       // 合計金額表示
                       Container(
-                        color: Colors.blue.shade600,
+                        // color: Colors.blue.shade600,
+                        color: Colors.blue,
                         // 左寄せ
                         width: double.infinity,
                         padding: EdgeInsets.all(16),
