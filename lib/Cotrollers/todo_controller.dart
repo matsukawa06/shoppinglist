@@ -84,7 +84,7 @@ class TodoController {
   }
 
   // Todoテーブルの金額合計対象フラグを更新
-  static Future<void> updateReleaseDay(int id, bool isSum) async {
+  static Future<void> updateIsSum(int id, bool isSum) async {
     var values = <String, dynamic>{"isSum": boolToInt(isSum)};
     final db = await MyDataBase.database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);

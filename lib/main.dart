@@ -1,7 +1,7 @@
 import 'Common/importer.dart';
 
 import 'Common/japanese_cupertino_localizations.dart';
-import 'Views/main_page/mainlist_page.dart';
+import 'Views/home/main.dart';
 
 void main() {
   // AdMob 用のプラグイン初期化
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
-      home: MainListPage(),
+      home: Main(),
       title: 'ShoppingList',
       theme: ThemeData(
         primarySwatch: Colors.blue,

@@ -1,4 +1,4 @@
-import 'package:shoppinglist/Views/newlist_page/list_edit_page.dart';
+import 'package:shoppinglist/Views/newlist_page/main.dart';
 
 import '../../Common/importer.dart';
 

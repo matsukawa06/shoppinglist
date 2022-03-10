@@ -1,5 +1,5 @@
 import '../../Common/importer.dart';
-import '../newlist_page/list_edit_page.dart';
+import '../newlist_page/main.dart';
 
 ///
 /// グループリスト

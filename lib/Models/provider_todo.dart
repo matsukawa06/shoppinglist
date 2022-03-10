@@ -23,7 +23,7 @@ class ProviderTodo with ChangeNotifier {
 
   // 計算対象区分の更新
   Future<void> updateIsSum(int? id, bool value) async {
-    TodoController.updateReleaseDay(id!, value);
+    TodoController.updateIsSum(id!, value);
     notifyListeners();
   }
 
