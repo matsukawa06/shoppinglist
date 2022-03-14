@@ -1,3 +1,6 @@
+///
+/// メインページのbody部
+///
 import '../../Common/importer.dart';
 
 import '../edit_page/edit_page.dart';
@@ -300,8 +303,4 @@ String strReleaseDay(int isRelease, DateTime value) {
 
 IconData konyuZumiIcon(int value) {
   return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;
-}
-
-void _test(TodoStore todo) {
-  if (todo.isSum == 1) {}
 }
