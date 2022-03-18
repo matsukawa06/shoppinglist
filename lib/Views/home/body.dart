@@ -33,9 +33,8 @@ class Body extends StatelessWidget {
                   children: context.watch<ProviderTodo>().todoList.map(
                     (TodoStore todo) {
                       // 合計金額に明細の金額を加算
-                      if (todo.isSum == 1) {
-                        sumPrice += todo.price;
-                      }
+                      sumPrice += todo.isSum == 1 ? todo.price : 0;
+
                       return Dismissible(
                         key: Key(todo.id.toString()),
                         background: Container(
@@ -74,11 +73,7 @@ class Body extends StatelessWidget {
                                   // 購入対象アイコン
                                   InkWell(
                                     onTap: () {
-                                      providerTodo.updateIsSum(
-                                        todo.id,
-                                        intToBool(todo.isSum) ? false : true,
-                                      );
-                                      providerTodo.initializeList();
+                                      _isSumIconTap(context, todo);
                                     },
                                     child: SizedBox(
                                       width: 60,
@@ -165,42 +160,10 @@ class Body extends StatelessWidget {
                   ).toList(),
                 ),
               ),
+              //================================
               // フッター
-              Container(
-                child: Stack(
-                  children: [
-                    // 合計金額表示
-                    Container(
-                      color: Colors.blue.shade600,
-                      // 左寄せ
-                      width: double.infinity,
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text(
-                          '合計：${formatPrice(sumPrice)} 円',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // グループリストアイコン
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: GroupListIcon(),
-                    ),
-                    // メニューアイコン
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: MenuListIcon(),
-                    ),
-                  ],
-                ),
-              ),
-
+              //================================
+              _setFooter(sumPrice),
               // 広告表示
               // AdmobBanner(
               //   adUnitId: AdMobService().getBannerAdUnitId()!,
@@ -290,6 +253,58 @@ void _todoCardTap(BuildContext context, TodoStore todo) {
       store.clearItems();
       store.initializeList();
     },
+  );
+}
+
+///
+/// 購入対象アイコンTap処理
+///
+void _isSumIconTap(BuildContext context, TodoStore todo) {
+  final providerTodo = context.read<ProviderTodo>();
+  providerTodo.updateIsSum(
+    todo.id,
+    intToBool(todo.isSum) ? false : true,
+  );
+  providerTodo.initializeList();
+}
+
+///
+/// フッター表示
+///
+Widget _setFooter(int sumPrice) {
+  return Container(
+    child: Stack(
+      children: [
+        // 合計金額表示
+        Container(
+          color: Colors.blue.shade600,
+          // 左寄せ
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: Text(
+              '合計：${formatPrice(sumPrice)} 円',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        // グループリストアイコン
+        Align(
+          alignment: Alignment.centerLeft,
+          child: GroupListIcon(),
+        ),
+        // メニューアイコン
+        Align(
+          alignment: Alignment.centerRight,
+          child: MenuListIcon(),
+        ),
+      ],
+    ),
   );
 }
 

@@ -2,7 +2,7 @@
 /// リストの新規追加ページ
 ///
 import '../../Common/importer.dart';
-import 'grouptitle_textField.dart';
+import 'body.dart';
 
 class ListEditPage extends StatelessWidget {
   final String mode;
@@ -37,12 +37,7 @@ class ListEditPage extends StatelessWidget {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(18),
-            child: GroupTitleTextField(),
-          ),
-        ),
+        body: Body(),
       ),
     );
   }
