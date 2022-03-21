@@ -14,7 +14,7 @@ class ListEditPage extends StatelessWidget {
       key: context.read<ProviderForm>().formKey,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_setTitle(mode)),
+          title: _retTitleTextWidget(mode),
           actions: <Widget>[
             Container(
               margin: EdgeInsets.only(
@@ -23,15 +23,9 @@ class ListEditPage extends StatelessWidget {
               ),
               // 右上完了テキスト
               child: InkWell(
-                child: Text(
-                  '完了',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: _retKanryoTextWidget(),
                 onTap: () async {
-                  _kanryoClick(context, mode);
+                  _clickKanryo(context, mode);
                 },
               ),
             ),
@@ -44,9 +38,9 @@ class ListEditPage extends StatelessWidget {
 }
 
 ///
-/// 画面タイトル設定
+/// 画面タイトルテキスト
 ///
-String _setTitle(String mode) {
+Widget _retTitleTextWidget(String mode) {
   String strTitle = "";
 
   switch (mode) {
@@ -58,13 +52,26 @@ String _setTitle(String mode) {
       break;
     default:
   }
-  return strTitle;
+  return Text(strTitle);
+}
+
+///
+/// 完了テキスト
+///
+Widget _retKanryoTextWidget() {
+  return Text(
+    '完了',
+    style: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+  );
 }
 
 ///
 /// 完了クリック処理
 ///
-void _kanryoClick(BuildContext context, String mode) async {
+void _clickKanryo(BuildContext context, String mode) async {
   if (context.read<ProviderForm>().formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
     switch (mode) {

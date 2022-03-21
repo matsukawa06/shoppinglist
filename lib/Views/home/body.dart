@@ -3,7 +3,7 @@
 ///
 import '../../Common/importer.dart';
 
-import '../edit_page/edit_page.dart';
+import '../edit_page/main.dart' as editPage;
 import '../home/grouplist_icon.dart';
 import '../home/menulist_icon.dart';
 
@@ -244,7 +244,7 @@ void _todoCardTap(BuildContext context, TodoStore todo) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {
-        return EditPage();
+        return editPage.Main();
       },
     ),
   ).then(

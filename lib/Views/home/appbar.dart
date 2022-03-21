@@ -1,7 +1,7 @@
 import '../../Common/importer.dart';
 
 import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import '../edit_page/edit_page.dart';
+import '../edit_page/main.dart' as editPage;
 
 // ignore: camel_case_types
 ///
@@ -45,7 +45,7 @@ Widget _newAddIcon(BuildContext context) {
         MaterialPageRoute(
           builder: (context) {
             // 遷移先の画面として編集用画面を指定
-            return EditPage();
+            return editPage.Main();
           },
         ),
       ).then(

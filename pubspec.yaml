@@ -33,6 +33,7 @@ dependencies:
   admob_flutter: ^2.0.0-nullsafety.1
   package_info: 2.0.2
   url_launcher: ^6.0.17
+  flutter_colorpicker: ^1.0.3
 
 
   # The following adds the Cupertino Icons font to your application.
