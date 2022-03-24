@@ -1,7 +1,6 @@
 import '../../Common/importer.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:package_info/package_info.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -16,16 +15,10 @@ class _State extends State<SettingPage> {
   String _version = "";
   // String _buildNumber = "";
 
-  _saveBool(String key, bool value) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setBool(key, value);
-    // PackageInfo _packageInfo = await PackageInfo.fromPlatform();
-  }
-
   _restoreValues(BuildContext context) async {
     var provider = context.read<ProviderSharedPreferences>();
     var prefs = await SharedPreferences.getInstance();
-    provider.setKonyuZumiView(prefs.getBool('konyuZumiView') ?? false);
+    provider.setKonyuZumiView(prefs.getBool(KONYUZUMIVIEW_KEW) ?? false);
   }
 
   @override
@@ -70,7 +63,7 @@ class _State extends State<SettingPage> {
                   value: prvShared.isKonyuZumiView,
                   title: Text('購入済みを表示する'),
                   onChanged: (bool value) {
-                    _saveBool('konyuZumiView', value);
+                    prvShared.saveBoolValue(KONYUZUMIVIEW_KEW, value);
                     prvShared.setKonyuZumiView(value);
                   },
                 ),

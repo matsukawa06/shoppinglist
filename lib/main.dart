@@ -32,7 +32,11 @@ void main() {
   );
 }
 
+// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
+  var _primarySwatch = Colors.blue;
+  var _isDark = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +44,8 @@ class HomeScreen extends StatelessWidget {
       home: Main(),
       title: 'ShoppingList',
       theme: ThemeData(
-        primarySwatch: context.read<ProviderSharedPreferences>().selectedColor,
+        primarySwatch: _primarySwatch,
+        brightness: _isDark ? Brightness.dark : Brightness.light,
       ),
       localizationsDelegates: [
         JapaneseCupertinoLocalizations.delegate,

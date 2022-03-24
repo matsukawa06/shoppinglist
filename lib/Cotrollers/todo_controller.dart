@@ -20,7 +20,7 @@ class TodoController {
     // ローカル設定の取得
     var prefs = await SharedPreferences.getInstance();
     // 購入済みを表示する区分
-    var konyuZumiView = prefs.getBool('konyuZumiView') ?? false;
+    var konyuZumiView = prefs.getBool(KONYUZUMIVIEW_KEW) ?? false;
     var konyuZumi = konyuZumiView ? 2 : 1;
     // 選択中のグループリストID
     var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);

@@ -4,12 +4,6 @@ class ProviderGroup with ChangeNotifier {
   List<GroupStore> _groupList = [];
   List<GroupStore> get groupList => _groupList;
 
-  // SharedPreferences に登録されている情報を保持
-  int? _selectedId = GROUPID_DEFUALT;
-  int? get selectedId => _selectedId;
-  String _selectedTitle = "";
-  String get selectedTitle => _selectedTitle;
-
   ///
   /// グループリストの初期処理
   ///
@@ -30,6 +24,14 @@ class ProviderGroup with ChangeNotifier {
     notifyListeners();
   }
 
+  // SharedPreferences に登録されている情報を保持
+  int? _selectedId = GROUPID_DEFUALT;
+  int? get selectedId => _selectedId;
+  String _selectedTitle = "";
+  String get selectedTitle => _selectedTitle;
+  MaterialColor _groupColor = GROUP_COLOR_DEFUALT;
+  MaterialColor get groupColor => _groupColor;
+
   ///
   /// SharedPreferences に登録されているリスト名を取得
   ///
@@ -41,6 +43,7 @@ class ProviderGroup with ChangeNotifier {
     for (var i = 0; i < list.length; i++) {
       _selectedId = list[i].id;
       _selectedTitle = list[i].title;
+      _groupColor = Colors.blue; // ※とりあえずブルー固定
       break;
     }
     notifyListeners();
@@ -64,7 +67,9 @@ class ProviderGroup with ChangeNotifier {
 
   // 各Controllerのクリア
   void clearItems() {
-    // _id = GROUPID_DEFUALT;
     _titleController.clear();
   }
+
+  // グループカラーの設定
+
 }
