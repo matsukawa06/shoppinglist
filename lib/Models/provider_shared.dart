@@ -19,11 +19,25 @@ class ProviderSharedPreferences with ChangeNotifier {
     notifyListeners();
   }
 
+  // 選択中のカラー
+  var _color = Colors.blue;
+  get selectedColor => _color;
+
+  void setSelectedColor(MaterialColor value) {
+    _color = value;
+    notifyListeners();
+  }
+
   ///
   /// ローカル設定を保存する
   ///
-  Future saveValue(String key, int value) async {
+  Future saveIntValue(String key, int value) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setInt(key, value);
+  }
+
+  Future saveStrValue(String key, String value) async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
   }
 }

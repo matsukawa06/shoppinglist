@@ -16,7 +16,7 @@ Widget groupItem(BuildContext context, int? id, String title) {
       child: InkWell(
         onTap: () {
           // 選択したリストを選択中にする
-          prvShared.saveValue(SELECT_ID_KEY, id!);
+          prvShared.saveIntValue(SELECT_ID_KEY, id!);
           prvShared.setSelectedGroupId(id);
           // タイトルを反映させる
           providerGroup.getSelectedInfo();

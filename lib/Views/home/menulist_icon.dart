@@ -143,7 +143,7 @@ class ListDelete extends StatelessWidget {
                         // グループリストと紐づくTodoを物理削除
                         store.delete(store.selectedId);
                         // デフォルトリストを選択中にする
-                        prvShared.saveValue(SELECT_ID_KEY, GROUPID_DEFUALT);
+                        prvShared.saveIntValue(SELECT_ID_KEY, GROUPID_DEFUALT);
                         prvShared.setSelectedGroupId(GROUPID_DEFUALT);
                         // タイトルを反映させる
                         store.getSelectedInfo();

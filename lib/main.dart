@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
       home: Main(),
       title: 'ShoppingList',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: context.read<ProviderSharedPreferences>().selectedColor,
       ),
       localizationsDelegates: [
         JapaneseCupertinoLocalizations.delegate,
