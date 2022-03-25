@@ -15,7 +15,7 @@ const String SELECT_ID_KEY = "selectedId";
 // 購入済みを表示するかフラグ
 const String KONYUZUMIVIEW_KEW = "konyuZumiView";
 // // カラー情報
-// const String COLOR_KEY = "color";
+const String COLOR_KEY = "color";
 
 // モード
 const String MODE_INS = "0";
