@@ -19,6 +19,9 @@ class ProviderSharedPreferences with ChangeNotifier {
     notifyListeners();
   }
 
+  var _color = Colors.blue;
+  get color => _color;
+
   ///
   /// ローカル設定を保存する
   ///
@@ -36,5 +39,17 @@ class ProviderSharedPreferences with ChangeNotifier {
   Future saveStringValue(String key, String value) async {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
+  }
+
+  ///
+  /// ローカル設定を取得する
+  ///
+  Future getColor() async {
+    var prefs = await SharedPreferences.getInstance();
+    var _prefsColor = prefs.getString(COLOR_KEY) ?? "";
+    if (_prefsColor != "") {
+      String valueColor = _prefsColor.split('(0x')[1].split(')')[0];
+      _color = MaterialColor(int.parse(valueColor, radix: 16));
+    }
   }
 }
