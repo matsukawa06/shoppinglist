@@ -18,17 +18,17 @@ class Body extends StatelessWidget {
           children: [
             // タイトル
             GroupTitleTextField(),
-            SpaceBox.height(1),
-            // カラー選択
-            Card(
-              elevation: 5,
-              child: InkWell(
-                child: Container(),
-                onTap: () {
-                  // _showPicker(context);
-                },
-              ),
-            ),
+            // SpaceBox.height(1),
+            // // カラー選択
+            // Card(
+            //   elevation: 5,
+            //   child: InkWell(
+            //     child: Container(),
+            //     onTap: () {
+            //       _showPicker(context);
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

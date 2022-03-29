@@ -10,14 +10,10 @@ import '../home/menulist_icon.dart';
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int sumPrice = 0;
     return Container(
       child: FutureBuilder(
         future: context.read<ProviderTodo>().initializeList(),
         builder: (context, snapshot) {
-          final providerTodo = context.read<ProviderTodo>();
-          // 合計金額初期化
-          sumPrice = 0;
           if (snapshot.connectionState == ConnectionState.waiting) {
             // 非同期処理未完了 = 通信中
             return Center(child: CircularProgressIndicator());
@@ -32,9 +28,8 @@ class Body extends StatelessWidget {
                   },
                   children: context.watch<ProviderTodo>().todoList.map(
                     (TodoStore todo) {
-                      // 合計金額に明細の金額を加算
-                      sumPrice += todo.isSum == 1 ? todo.price : 0;
-
+                      // 合計金額計算処理
+                      _calculationPrice(context, todo);
                       return Dismissible(
                         key: Key(todo.id.toString()),
                         background: Container(
@@ -54,107 +49,7 @@ class Body extends StatelessWidget {
                         //================================
                         // 一覧に表示する内容
                         //================================
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 4, // 上下
-                            horizontal: 8, // 左右
-                          ),
-                          elevation: 5.0,
-                          key: Key(todo.id.toString()),
-                          child: SizedBox(
-                            height: 70,
-                            child: InkWell(
-                              onTap: () {
-                                // Todoの編集画面へ遷移する処理
-                                _todoCardTap(context, todo);
-                              },
-                              child: Row(
-                                children: <Widget>[
-                                  // 購入対象アイコン
-                                  InkWell(
-                                    onTap: () {
-                                      _isSumIconTap(context, todo);
-                                    },
-                                    child: SizedBox(
-                                      width: 60,
-                                      child: Icon(
-                                        isSumIcon(todo.isSum),
-                                        size: 45,
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: <Widget>[
-                                      // １カードの１行目
-                                      // タイトル
-                                      SizedBox(
-                                        width: 250,
-                                        height: 40,
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '${todo.title}',
-                                            style: TextStyle(fontSize: 18),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                      // １カードの２行目
-                                      SizedBox(
-                                        height: 20,
-                                        child: Row(
-                                          children: <Widget>[
-                                            // 価格
-                                            SizedBox(
-                                              width: 100,
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  '${formatPrice(todo.price)} 円',
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                            // 発売日
-                                            SizedBox(
-                                              width: 150,
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  strReleaseDay(todo.release,
-                                                      todo.releaseDay),
-                                                  style:
-                                                      TextStyle(fontSize: 14),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // 購入済チェック
-                                  SizedBox(
-                                    width: 40,
-                                    child: Checkbox(
-                                      activeColor: Colors.blue,
-                                      value: intToBool(todo.konyuZumi),
-                                      onChanged: (bool? value) {
-                                        providerTodo.updateKonyuZumi(
-                                            todo.id,
-                                            intToBool(todo.konyuZumi)
-                                                ? false
-                                                : true);
-                                        providerTodo.initializeList();
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: _bodyCard(context, todo),
                       );
                     },
                   ).toList(),
@@ -163,7 +58,7 @@ class Body extends StatelessWidget {
               //================================
               // フッター
               //================================
-              _setFooter(sumPrice),
+              _setFooter(context.read<ProviderTodo>().sumPrice),
               // 広告表示
               // AdmobBanner(
               //   adUnitId: AdMobService().getBannerAdUnitId()!,
@@ -179,6 +74,133 @@ class Body extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+///
+/// 一覧に表示するCardウィジェットの作成
+///
+Widget _bodyCard(BuildContext context, TodoStore todo) {
+  final providerTodo = context.read<ProviderTodo>();
+  return Card(
+    margin: const EdgeInsets.symmetric(
+      vertical: 4, // 上下
+      horizontal: 8, // 左右
+    ),
+    elevation: 5.0,
+    key: Key(todo.id.toString()),
+    child: SizedBox(
+      height: 70,
+      child: InkWell(
+        onTap: () {
+          // Todoの編集画面へ遷移する処理
+          _todoCardTap(context, todo);
+        },
+        child: Row(
+          children: <Widget>[
+            // 購入対象アイコン
+            InkWell(
+              onTap: () {
+                _isSumIconTap(context, todo);
+              },
+              child: SizedBox(
+                width: 60,
+                child: Icon(
+                  isSumIcon(todo.isSum),
+                  size: 45,
+                ),
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                // １カードの１行目
+                // タイトル
+                SizedBox(
+                  width: 250,
+                  height: 40,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${todo.title}',
+                      style: TextStyle(fontSize: 18),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                // １カードの２行目
+                SizedBox(
+                  height: 20,
+                  child: Row(
+                    children: <Widget>[
+                      // 価格
+                      SizedBox(
+                        width: 100,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${formatPrice(todo.price)} 円',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ),
+                      // 発売日
+                      SizedBox(
+                        width: 150,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            strReleaseDay(todo.release, todo.releaseDay),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // 購入済チェック
+            SizedBox(
+              width: 50,
+              child: Column(
+                children: [
+                  SpaceBox.height(5),
+                  SizedBox(
+                    height: 17,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text("購入"),
+                    ),
+                  ),
+                  Transform.scale(
+                    scale: 1.5, // 1.5倍　checkboxのサイズ変更
+                    child: Checkbox(
+                      activeColor: Colors.blue,
+                      value: intToBool(todo.konyuZumi),
+                      onChanged: (bool? value) {
+                        providerTodo.updateKonyuZumi(
+                            todo.id, intToBool(todo.konyuZumi) ? false : true);
+                        providerTodo.initializeList();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+///
+/// 金額計算処理
+///
+void _calculationPrice(BuildContext context, TodoStore todo) {
+  // 合計金額に明細の金額を加算
+  if (todo.isSum == 1) {
+    context.read<ProviderTodo>().addSumPrice(todo.price);
   }
 }
 

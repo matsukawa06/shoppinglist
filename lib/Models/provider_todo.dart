@@ -7,6 +7,7 @@ class ProviderTodo with ChangeNotifier {
 
   Future<void> initializeList() async {
     _todoList = await TodoController.getTodos();
+    _sumPrice = 0;
     notifyListeners();
   }
 
@@ -18,25 +19,25 @@ class ProviderTodo with ChangeNotifier {
   // ソートNo.を更新
   Future<void> updateSortNo(int? id, int sortNo) async {
     TodoController.updateSotrNo(id!, sortNo);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // 計算対象区分の更新
   Future<void> updateIsSum(int? id, bool value) async {
     TodoController.updateIsSum(id!, value);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // 購入済区分の更新
   Future<void> updateKonyuZumi(int? id, bool value) async {
     TodoController.updateKonyuZumi(id!, value);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // 削除区分の更新
   Future<void> updateIsDelete(int? id, bool value) async {
     TodoController.updateIsDelete(id!, value);
-    notifyListeners();
+    // notifyListeners();
   }
 
   // 明細を選択した時の情報保持
@@ -145,5 +146,14 @@ class ProviderTodo with ChangeNotifier {
     _releaseDay = value;
     _labelDate = dateToString(value);
     notifyListeners();
+  }
+
+  ///
+  /// リストの合計金額
+  ///
+  int _sumPrice = 0;
+  get sumPrice => _sumPrice;
+  void addSumPrice(int value) {
+    _sumPrice += value;
   }
 }

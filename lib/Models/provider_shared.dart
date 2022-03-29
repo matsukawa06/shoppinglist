@@ -46,10 +46,7 @@ class ProviderSharedPreferences with ChangeNotifier {
   ///
   Future getColor() async {
     var prefs = await SharedPreferences.getInstance();
-    var _prefsColor = prefs.getString(COLOR_KEY) ?? "";
-    if (_prefsColor != "") {
-      String valueColor = _prefsColor.split('(0x')[1].split(')')[0];
-      _color = MaterialColor(int.parse(valueColor, radix: 16));
-    }
+    var _prefsColor = prefs.getInt(COLOR_KEY) ?? 0xFF42A5F5;
+    // _color = Colors(_prefsColor);
   }
 }
