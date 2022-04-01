@@ -20,7 +20,9 @@ class Body extends StatelessWidget {
           }
           return Column(
             children: <Widget>[
+              // ColumnやRowの空いたスペースをレスポンシブに埋める
               Expanded(
+                // ドラッグ＆ドロップできるListView
                 child: ReorderableListView(
                   onReorder: (oldIndex, newIndex) {
                     // Todoの並び順を変更
