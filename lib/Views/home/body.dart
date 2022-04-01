@@ -173,7 +173,7 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                     ),
                   ),
                   Transform.scale(
-                    scale: 1.5, // 1.5倍　checkboxのサイズ変更
+                    scale: 1.5, // 1.5倍  checkboxのサイズ変更
                     child: Checkbox(
                       activeColor: Colors.blue,
                       value: intToBool(todo.konyuZumi),
