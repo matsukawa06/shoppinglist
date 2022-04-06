@@ -81,13 +81,6 @@ class Body extends StatelessWidget {
 
                       // 購入済みチェック
                       KonyuContainer(),
-                      // SwitchListTile(
-                      //   value: _providerTodo.switchKonyuZumi,
-                      //   title: Text('購入済み'),
-                      //   onChanged: (bool value) {
-                      //     _providerTodo.changeKonyuZumi(value);
-                      //   },
-                      // ),
                     ],
                   ),
                 ),

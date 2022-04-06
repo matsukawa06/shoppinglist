@@ -145,13 +145,13 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                           ),
                         ),
                       ),
-                      // 発売日
+                      // 発売日又は購入日
                       SizedBox(
                         width: 150,
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            strReleaseDay(todo.release, todo.releaseDay),
+                            stringDay(todo),
                             style: TextStyle(fontSize: 14),
                           ),
                         ),
@@ -334,6 +334,14 @@ Widget _setFooter(int sumPrice) {
 
 IconData isSumIcon(int value) {
   return value == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined;
+}
+
+String stringDay(TodoStore todo) {
+  if (intToBool(todo.konyuZumi) == true) {
+    return '${dateToString(todo.konyuDay)} 購入';
+  } else {
+    return todo.release == 1 ? '${dateToString(todo.releaseDay)} 発売' : '';
+  }
 }
 
 String strReleaseDay(int isRelease, DateTime value) {
