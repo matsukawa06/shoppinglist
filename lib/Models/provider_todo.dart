@@ -52,11 +52,15 @@ class ProviderTodo with ChangeNotifier {
     _switchKonyuZumi = intToBool(todo.konyuZumi);
     _sortNo = todo.sortNo!;
     if (_switchReleaseDay == true) {
-      _labelDate = dateToString(todo.releaseDay);
+      _labelReleaseDate = dateToString(todo.releaseDay);
     }
     _isDelete = intToBool(todo.isDelete);
     _deleteDay = todo.deleteDay;
     _groupId = todo.groupId!;
+    _konyuDay = todo.konyuDay;
+    if (_switchKonyuZumi == true) {
+      _labelKonyuDate = dateToString(todo.konyuDay);
+    }
   }
 
   // 各Controllerのクリア
@@ -73,6 +77,7 @@ class ProviderTodo with ChangeNotifier {
     _isDelete = false;
     _deleteDay = DateTime.now();
     _groupId = 1;
+    _konyuDay = DateTime.now();
   }
 
   // ID
@@ -99,6 +104,9 @@ class ProviderTodo with ChangeNotifier {
   DateTime _releaseDay = DateTime.now();
   get releaseDay => _releaseDay;
 
+  var _labelReleaseDate = '日付を選択してください';
+  get labelReleaseDate => _labelReleaseDate;
+
   // 金額計算対象チェックの状態
   var _switchIsSum = true;
   get switchIsSum => _switchIsSum;
@@ -119,16 +127,26 @@ class ProviderTodo with ChangeNotifier {
   int _groupId = 1;
   get groupId => _groupId;
 
+  // 購入日
+  late var _konyuDay = DateTime.now();
+  get konyuDay => _konyuDay;
+
+  var _labelKonyuDate = '';
+  get labelKonyuDate => _labelKonyuDate;
+
   // 並び順
   int _sortNo = 0;
   get sortNo => _sortNo;
 
-  var _labelDate = '日付を選択してください';
-  get labelDate => _labelDate;
-
   void changeRelease(bool value) {
     _switchReleaseDay = value;
-    _labelDate = '日付を選択してください';
+    _labelReleaseDate = '日付を選択してください';
+    notifyListeners();
+  }
+
+  void changeReleaseDay(DateTime value) {
+    _releaseDay = value;
+    _labelReleaseDate = dateToString(value);
     notifyListeners();
   }
 
@@ -139,12 +157,14 @@ class ProviderTodo with ChangeNotifier {
 
   void changeKonyuZumi(bool value) {
     _switchKonyuZumi = value;
+    _konyuDay = DateTime.now();
+    _labelKonyuDate = dateToString(_konyuDay);
     notifyListeners();
   }
 
-  void changeReleaseDay(DateTime value) {
-    _releaseDay = value;
-    _labelDate = dateToString(value);
+  void changeKonyuDay(DateTime value) {
+    _konyuDay = value;
+    _labelKonyuDate = dateToString(value);
     notifyListeners();
   }
 

@@ -48,6 +48,7 @@ class TodoController {
           isDelete: maps[i]['isDelete'],
           deleteDay: DateTime.parse(maps[i]['deleteDay']).toLocal(),
           groupId: maps[i]['groupId'],
+          konyuDay: DateTime.parse(maps[i]['konyuDay']).toLocal(),
         );
       },
     );

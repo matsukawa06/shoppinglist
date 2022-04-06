@@ -1,6 +1,6 @@
 import '../../Common/importer.dart';
 
-class ReleaseContainer extends StatelessWidget {
+class KonyuContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final providerTodo = context.watch<ProviderTodo>();
@@ -8,16 +8,16 @@ class ReleaseContainer extends StatelessWidget {
       child: Column(
         children: [
           SwitchListTile(
-            value: providerTodo.switchReleaseDay,
-            title: Text('発売日'),
+            value: providerTodo.switchKonyuZumi,
+            title: Text('購入済'),
             onChanged: (bool value) {
-              providerTodo.changeRelease(value);
+              providerTodo.changeKonyuZumi(value);
             },
           ),
           // 日付表示（switchReleaseDayで表示・非表示切替）
           Container(
             child: Visibility(
-              visible: providerTodo.switchReleaseDay,
+              visible: providerTodo.switchKonyuZumi,
               child: Container(
                 padding: const EdgeInsets.only(left: 15),
                 decoration: BoxDecoration(
@@ -31,7 +31,7 @@ class ReleaseContainer extends StatelessWidget {
                   children: <Widget>[
                     const SizedBox(height: 15),
                     Text(
-                      providerTodo.labelReleaseDate,
+                      providerTodo.labelKonyuDate,
                       style: TextStyle(fontSize: 16),
                     ),
                     IconButton(
@@ -57,7 +57,7 @@ class ReleaseContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      context.read<ProviderTodo>().changeReleaseDay(selected);
+      context.read<ProviderTodo>().changeKonyuDay(selected);
     }
   }
 }

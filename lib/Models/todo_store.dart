@@ -11,6 +11,7 @@ class TodoStore {
   final int isDelete;
   final DateTime deleteDay;
   final int? groupId;
+  final DateTime konyuDay;
 
   TodoStore(
       {this.id,
@@ -24,7 +25,8 @@ class TodoStore {
       required this.sortNo,
       required this.isDelete,
       required this.deleteDay,
-      required this.groupId});
+      required this.groupId,
+      required this.konyuDay});
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,6 +42,7 @@ class TodoStore {
       'isDelete': isDelete,
       'deleteDay': deleteDay.toUtc().toIso8601String(),
       'groupId': groupId,
+      'konyuDay': konyuDay.toUtc().toIso8601String(),
     };
   }
 

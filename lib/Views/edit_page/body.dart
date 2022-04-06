@@ -7,6 +7,7 @@ import 'title_textField.dart';
 import 'memo_textField.dart';
 import 'price_textField.dart';
 import 'release_container.dart';
+import 'konyu_container.dart';
 
 class Body extends StatelessWidget {
   @override
@@ -79,13 +80,14 @@ class Body extends StatelessWidget {
                       ),
 
                       // 購入済みチェック
-                      SwitchListTile(
-                        value: _providerTodo.switchKonyuZumi,
-                        title: Text('購入済み'),
-                        onChanged: (bool value) {
-                          _providerTodo.changeKonyuZumi(value);
-                        },
-                      ),
+                      KonyuContainer(),
+                      // SwitchListTile(
+                      //   value: _providerTodo.switchKonyuZumi,
+                      //   title: Text('購入済み'),
+                      //   onChanged: (bool value) {
+                      //     _providerTodo.changeKonyuZumi(value);
+                      //   },
+                      // ),
                     ],
                   ),
                 ),
@@ -137,6 +139,7 @@ Widget _bottomButton(BuildContext context) {
               isDelete: boolToInt(providerTodo.isDelete),
               deleteDay: providerTodo.deleteDay,
               groupId: selectedId,
+              konyuDay: providerTodo.konyuDay,
             );
 
             await TodoController.insertTodo(_todo);
@@ -155,6 +158,7 @@ Widget _bottomButton(BuildContext context) {
               isDelete: boolToInt(providerTodo.isDelete),
               deleteDay: providerTodo.deleteDay,
               groupId: selectedId,
+              konyuDay: providerTodo.konyuDay,
             );
 
             await TodoController.updateTodo(_todo);

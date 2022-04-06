@@ -7,7 +7,7 @@ class MyDataBase {
     final Future<Database> _database = openDatabase(
       join(await getDatabasesPath(), 'todo_database.db'),
       // このversionで実行するスクリプトを制御する
-      version: 3,
+      version: 4,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -70,5 +70,8 @@ class MyDataBase {
           title TEXT
         )'''
     ],
+    '4': [
+      "ALTER TABLE todo ADD COLUMN konyuDay TEXT DEFAULT '2200-01-01';",
+    ]
   };
 }
