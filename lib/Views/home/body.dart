@@ -281,6 +281,13 @@ void _todoCardTap(BuildContext context, TodoStore todo) {
 }
 
 ///
+/// 購入対象アイコン表示処理
+///
+IconData isSumIcon(int value) {
+  return value == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined;
+}
+
+///
 /// 購入対象アイコンTap処理
 ///
 void _isSumIconTap(BuildContext context, TodoStore todo) {
@@ -332,10 +339,6 @@ Widget _setFooter(int sumPrice) {
   );
 }
 
-IconData isSumIcon(int value) {
-  return value == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined;
-}
-
 String stringDay(TodoStore todo) {
   if (intToBool(todo.konyuZumi) == true) {
     return '${dateToString(todo.konyuDay)} 購入';
@@ -344,9 +347,9 @@ String stringDay(TodoStore todo) {
   }
 }
 
-String strReleaseDay(int isRelease, DateTime value) {
-  return isRelease == 1 ? '${dateToString(value)} 発売' : '';
-}
+// String strReleaseDay(int isRelease, DateTime value) {
+//   return isRelease == 1 ? '${dateToString(value)} 発売' : '';
+// }
 
 IconData konyuZumiIcon(int value) {
   return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;

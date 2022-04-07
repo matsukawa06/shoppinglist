@@ -96,6 +96,12 @@ class TodoController {
     var values = <String, dynamic>{"konyuZumi": boolToInt(konyuZumi)};
     final db = await MyDataBase.database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+    if (konyuZumi == true) {
+      var values = <String, dynamic>{
+        "konyuDay": DateTime.now().toUtc().toIso8601String()
+      };
+      await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+    }
   }
 
   // Todoテーブルの削除フラグを更新

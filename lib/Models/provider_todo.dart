@@ -100,13 +100,6 @@ class ProviderTodo with ChangeNotifier {
   var _switchReleaseDay = false;
   get switchReleaseDay => _switchReleaseDay;
 
-  // 発売日
-  DateTime _releaseDay = DateTime.now();
-  get releaseDay => _releaseDay;
-
-  var _labelReleaseDate = '日付を選択してください';
-  get labelReleaseDate => _labelReleaseDate;
-
   // 金額計算対象チェックの状態
   var _switchIsSum = true;
   get switchIsSum => _switchIsSum;
@@ -127,16 +120,16 @@ class ProviderTodo with ChangeNotifier {
   int _groupId = 1;
   get groupId => _groupId;
 
-  // 購入日
-  late var _konyuDay = DateTime.now();
-  get konyuDay => _konyuDay;
-
-  var _labelKonyuDate = '';
-  get labelKonyuDate => _labelKonyuDate;
-
   // 並び順
   int _sortNo = 0;
   get sortNo => _sortNo;
+
+  // 発売日
+  DateTime _releaseDay = DateTime.now();
+  get releaseDay => _releaseDay;
+
+  var _labelReleaseDate = '日付を選択してください';
+  get labelReleaseDate => _labelReleaseDate;
 
   void changeRelease(bool value) {
     _switchReleaseDay = value;
@@ -154,6 +147,13 @@ class ProviderTodo with ChangeNotifier {
     _switchIsSum = value;
     notifyListeners();
   }
+
+  // 購入日
+  late var _konyuDay = DateTime.now();
+  get konyuDay => _konyuDay;
+
+  var _labelKonyuDate = '';
+  get labelKonyuDate => _labelKonyuDate;
 
   void changeKonyuZumi(bool value) {
     _switchKonyuZumi = value;
