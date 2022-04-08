@@ -27,7 +27,7 @@ class Main extends StatelessWidget {
           TextButton(
               onPressed: () {},
               child: Text(
-                "更新",
+                _providerTodo.id == 0 ? 'リスト追加' : '更新',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
