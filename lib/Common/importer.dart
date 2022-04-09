@@ -6,7 +6,10 @@ export 'package:sqflite/sqflite.dart';
 export 'package:flutter/services.dart';
 export 'package:package_info/package_info.dart';
 export 'package:shared_preferences/shared_preferences.dart';
+export 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'package:shoppinglist/services/admob.dart';
+
+export '../services/admob.dart';
 
 export 'common_util.dart';
 export 'common_const.dart';
