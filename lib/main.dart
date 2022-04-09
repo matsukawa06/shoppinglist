@@ -4,9 +4,10 @@ import 'Common/japanese_cupertino_localizations.dart';
 import 'Views/home/main.dart';
 
 void main() {
-  // AdMob 用のプラグイン初期化
   WidgetsFlutterBinding.ensureInitialized();
+  // AdMob 用のプラグイン初期化
   // Admob.initialize();
+  MobileAds.instance.initialize();
   //向き指定
   SystemChrome.setPreferredOrientations([
     //縦固定

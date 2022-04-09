@@ -60,7 +60,7 @@ Widget _retTitleTextWidget(String mode) {
 ///
 Widget _retKanryoTextWidget() {
   return Text(
-    '完了',
+    '保存',
     style: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,

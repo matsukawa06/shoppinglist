@@ -10,10 +10,30 @@ import 'release_container.dart';
 import 'konyu_container.dart';
 
 class Body extends StatelessWidget {
+  final BannerAd myBanner = BannerAd(
+    adUnitId: AdMobService().getBannerAdUnitId(),
+    size: AdSize.banner,
+    listener: BannerAdListener(),
+    request: AdRequest(),
+  );
+
   @override
   Widget build(BuildContext context) {
     final _providerTodo = context.watch<ProviderTodo>();
     final _providerForm = context.read<ProviderForm>();
+
+    // 広告の読み込み
+    myBanner.load();
+    final AdWidget adWidget = AdWidget(ad: myBanner);
+
+    final Container adContainer = Container(
+      alignment: Alignment.center,
+      child: adWidget,
+      // width: myBanner.size.width.toDouble(),
+      // height: myBanner.size.height.toDouble(),
+      width: MediaQuery.of(context).size.width.toDouble(),
+      height: AdMobService().getHeight(context).toDouble(),
+    );
 
     return SingleChildScrollView(
       child: Container(
@@ -85,12 +105,15 @@ class Body extends StatelessWidget {
                   ),
                 ),
               ),
-              SpaceBox.height(24),
+              SpaceBox.height(36),
 
               // ====================================
               // ボタン
               // ====================================
-              _bottomButton(context),
+              // _bottomButton(context),
+
+              // Admob広告
+              adContainer,
             ],
           ),
         ),

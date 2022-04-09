@@ -2,19 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class AdMobService {
-  String? getBannerAdUnitId() {
+  String getBannerAdUnitId() {
+    String bannerId = "";
     // iOSとAndroidで広告ユニットIDを分岐させる
     if (Platform.isAndroid) {
       // Androidの広告ユニットID
       // return 'ca-app-pub-1667936047040887/1282958246';
-      return null;
+      bannerId = "";
     } else if (Platform.isIOS) {
       // iOSの広告ユニットID（テスト）
-      // return 'ca-app-pub-3940256099942544/2934735716';
+      // bannerId = 'ca-app-pub-3940256099942544/2934735716';
       // iOSの広告ユニットID（本番）
-      return 'ca-app-pub-9231213341698825/5726594816';
+      bannerId = 'ca-app-pub-9231213341698825/5726594816';
     }
-    return null;
+    return bannerId;
   }
 
   // 表示するバナー広告の高さを計算
