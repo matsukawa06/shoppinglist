@@ -7,7 +7,6 @@ import 'body.dart';
 class ListEditPage extends StatelessWidget {
   final String mode;
   ListEditPage(this.mode);
-
   @override
   Widget build(BuildContext context) {
     return Form(

@@ -1,3 +1,6 @@
+///
+/// アプリ設定ページ
+///
 import '../../Common/importer.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -118,7 +121,9 @@ class _State extends State<SettingPage> {
   }
 }
 
-// 利用規約のページをブラウザで表示する
+///
+/// 利用規約のページをブラウザで表示する
+///
 void _launchURL() async {
   const url = "https://naonari.com/kiyaku.html";
   if (await canLaunch(url)) {

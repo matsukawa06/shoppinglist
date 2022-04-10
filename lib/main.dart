@@ -23,8 +23,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
         // validate用
         ChangeNotifierProvider(create: (_) => ProviderForm()),
-        // アプリのバージョン情報取得用
-        ChangeNotifierProvider(create: (_) => ProviderPackage()),
         // グループリスト用
         ChangeNotifierProvider(create: (_) => ProviderGroup()),
       ],
