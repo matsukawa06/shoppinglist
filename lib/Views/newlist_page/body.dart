@@ -11,25 +11,29 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(18),
-        child: Column(
-          children: [
-            // タイトル
-            GroupTitleTextField(),
-            // SpaceBox.height(1),
-            // // カラー選択
-            // Card(
-            //   elevation: 5,
-            //   child: InkWell(
-            //     child: Container(),
-            //     onTap: () {
-            //       _showPicker(context);
-            //     },
-            //   ),
-            // ),
-          ],
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.95,
+          padding: EdgeInsets.all(18),
+          child: Column(
+            children: [
+              // タイトル
+              GroupTitleTextField(),
+              // SpaceBox.height(1),
+              // // カラー選択
+              // Card(
+              //   elevation: 5,
+              //   child: InkWell(
+              //     child: Container(),
+              //     onTap: () {
+              //       _showPicker(context);
+              //     },
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

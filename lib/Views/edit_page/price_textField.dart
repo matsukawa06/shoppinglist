@@ -7,6 +7,7 @@ class PriceTextField extends StatelessWidget {
     return new TextFormField(
       controller: providerTodo.priceController,
       enabled: true,
+      maxLength: 8,
       style: TextStyle(color: Colors.black),
       obscureText: false,
       keyboardType: TextInputType.number,
