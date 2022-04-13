@@ -30,7 +30,7 @@ class GroupListIcon extends StatelessWidget {
               builder: (BuildContext context) {
                 return SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: _groupList(context),
                   ),
                 );
@@ -75,7 +75,7 @@ Widget _groupItemAdd(BuildContext context, String title) {
   final store = context.read<ProviderGroup>();
 
   return Container(
-    margin: EdgeInsets.only(bottom: 25),
+    margin: const EdgeInsets.only(bottom: 25),
     height: 60.0,
     decoration: new BoxDecoration(
       border: new Border(
@@ -133,9 +133,9 @@ Widget _groupItemAdd(BuildContext context, String title) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(padding: EdgeInsets.only(left: 15.0)),
+          Padding(padding: const EdgeInsets.only(left: 15.0)),
           Icon(Icons.add),
-          Padding(padding: EdgeInsets.only(left: 15.0)),
+          Padding(padding: const EdgeInsets.only(left: 15.0)),
           Text(
             title,
             style: TextStyle(fontSize: 18),

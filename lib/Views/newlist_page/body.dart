@@ -16,7 +16,7 @@ class Body extends StatelessWidget {
       child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.95,
-          padding: EdgeInsets.all(18),
+          padding: const EdgeInsets.all(18),
           child: Column(
             children: [
               // タイトル

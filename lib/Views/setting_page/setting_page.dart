@@ -48,7 +48,7 @@ class _State extends State<SettingPage> {
       ),
       body: Container(
         // 余白をつける
-        padding: EdgeInsets.all(28),
+        padding: const EdgeInsets.all(28),
         child: Column(
           children: <Widget>[
             // Container(

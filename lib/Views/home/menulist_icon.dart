@@ -48,12 +48,12 @@ class ListUpdate extends StatelessWidget {
     final store = context.read<ProviderGroup>();
 
     return Container(
-      margin: EdgeInsets.only(top: 25, bottom: 5),
+      margin: const EdgeInsets.only(top: 25, bottom: 5),
       height: 60.0,
       child: InkWell(
         child: Row(
           children: [
-            Padding(padding: EdgeInsets.only(left: 15.0)),
+            Padding(padding: const EdgeInsets.only(left: 15.0)),
             Text(
               "リスト名を変更する",
               style: TextStyle(fontSize: 18),
@@ -100,7 +100,7 @@ class ListDelete extends StatelessWidget {
     final store = context.read<ProviderGroup>();
 
     return Container(
-      margin: EdgeInsets.only(bottom: 35),
+      margin: const EdgeInsets.only(bottom: 35),
       height: 70.0,
       child: InkWell(
         child: _delContainer(context),

@@ -16,7 +16,7 @@ class ListEditPage extends StatelessWidget {
           title: _retTitleTextWidget(mode),
           actions: <Widget>[
             Container(
-              margin: EdgeInsets.only(
+              margin: const EdgeInsets.only(
                 top: 10,
                 right: 20,
               ),

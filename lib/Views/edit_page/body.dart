@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         // 余白をつける
-        padding: EdgeInsets.all(18),
+        padding: const EdgeInsets.all(18),
         child: Form(
           key: _providerForm.formKey,
           child: Column(

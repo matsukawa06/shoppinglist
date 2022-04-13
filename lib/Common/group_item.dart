@@ -11,7 +11,7 @@ Widget groupItem(BuildContext context, int? id, String title) {
     // margin: EdgeInsets.only(top: 10),
     decoration: BoxDecoration(color: _setBackColor(context, id)),
     child: Container(
-      margin: EdgeInsets.only(left: 40, right: 10),
+      margin: const EdgeInsets.only(left: 40, right: 10),
       height: 60.0,
       child: InkWell(
         onTap: () {
@@ -26,7 +26,7 @@ Widget groupItem(BuildContext context, int? id, String title) {
         },
         child: Row(
           children: [
-            Padding(padding: EdgeInsets.only(left: 15.0)),
+            Padding(padding: const EdgeInsets.only(left: 15.0)),
             Text(
               title,
               style: TextStyle(fontSize: 18),

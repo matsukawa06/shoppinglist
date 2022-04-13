@@ -35,7 +35,7 @@ class Body extends StatelessWidget {
                       return Dismissible(
                         key: Key(todo.id.toString()),
                         background: Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           alignment: AlignmentDirectional.centerEnd,
                           color: Colors.red,
                           child: Icon(
@@ -311,7 +311,7 @@ Widget _setFooter(int sumPrice) {
           color: Colors.blue.shade600,
           // 左寄せ
           width: double.infinity,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Center(
             child: Text(
               '合計：${formatPrice(sumPrice)} 円',
