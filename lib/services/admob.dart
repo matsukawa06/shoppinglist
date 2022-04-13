@@ -11,9 +11,9 @@ class AdMobService {
       bannerId = "";
     } else if (Platform.isIOS) {
       // iOSの広告ユニットID（テスト）
-      bannerId = 'ca-app-pub-3940256099942544/2934735716';
+      // bannerId = 'ca-app-pub-3940256099942544/2934735716';
       // iOSの広告ユニットID（本番）
-      // bannerId = 'ca-app-pub-9231213341698825/5726594816';
+      bannerId = 'ca-app-pub-9231213341698825/5726594816';
     }
     return bannerId;
   }
