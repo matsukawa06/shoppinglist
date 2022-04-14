@@ -40,24 +40,24 @@ class Body extends StatelessWidget {
   }
 }
 
-void _showPicker(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('カラー選択'),
-        content: SingleChildScrollView(
-          child: BlockPicker(
-            pickerColor: Colors.blue,
-            onColorChanged: _changeColor,
-          ),
-        ),
-        actions: [],
-      );
-    },
-  );
-}
+// void _showPicker(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text('カラー選択'),
+//         content: SingleChildScrollView(
+//           child: BlockPicker(
+//             pickerColor: Colors.blue,
+//             onColorChanged: _changeColor,
+//           ),
+//         ),
+//         actions: [],
+//       );
+//     },
+//   );
+// }
 
 ///
 /// カラー選択Widget

@@ -3,13 +3,15 @@
 ///
 import '../../Common/importer.dart';
 import 'group_textButton.dart';
-import 'title_textField.dart';
+import 'konyu_container.dart';
 import 'memo_textField.dart';
 import 'price_textField.dart';
 import 'release_container.dart';
-import 'konyu_container.dart';
+import 'title_textField.dart';
 
 class Body extends StatelessWidget {
+  Body({Key? key}) : super(key: key);
+
   final BannerAd myBanner = AdMobService().setBannerAd();
 
   @override
@@ -19,7 +21,7 @@ class Body extends StatelessWidget {
 
     // 広告の読み込み
     myBanner.load();
-    final AdWidget adWidget = AdWidget(ad: myBanner);
+    final adWidget = AdWidget(ad: myBanner);
 
     return SingleChildScrollView(
       child: Container(
@@ -78,7 +80,7 @@ class Body extends StatelessWidget {
                         // 金額計算チェック
                         child: SwitchListTile(
                           value: _providerTodo.switchIsSum,
-                          title: Text('計算対象に含める'),
+                          title: const Text('計算対象に含める'),
                           onChanged: (bool value) {
                             _providerTodo.changeIsSum(value);
                           },
@@ -108,72 +110,72 @@ class Body extends StatelessWidget {
   }
 }
 
-///
-/// 登録、修正ボタン部
-///
-Widget _bottomButton(BuildContext context) {
-  final providerTodo = context.watch<ProviderTodo>();
-  final providerForm = context.read<ProviderForm>();
+// ///
+// /// 登録、修正ボタン部
+// ///
+// Widget _bottomButton(BuildContext context) {
+//   final providerTodo = context.watch<ProviderTodo>();
+//   final providerForm = context.read<ProviderForm>();
 
-  return Container(
-    // 横幅いっぱいに広げる
-    width: double.infinity,
-    height: 50,
-    // リスト追加ボタン
-    child: ElevatedButton(
-      onPressed: () async {
-        var prefs = await SharedPreferences.getInstance();
-        var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
+//   return Container(
+//     // 横幅いっぱいに広げる
+//     width: double.infinity,
+//     height: 50,
+//     // リスト追加ボタン
+//     child: ElevatedButton(
+//       onPressed: () async {
+//         var prefs = await SharedPreferences.getInstance();
+//         var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
 
-        if (providerForm.formVallidate()) {
-          // 入力チェックでエラーが無ければ、DBに登録する
-          if (providerTodo.id == 0) {
-            // 新規
-            var _todo = TodoStore(
-              title: providerTodo.titleController.text,
-              memo: providerTodo.memoController.text,
-              price: int.parse(providerTodo.priceController.text),
-              release: boolToInt(providerTodo.switchReleaseDay),
-              releaseDay: providerTodo.releaseDay,
-              isSum: boolToInt(providerTodo.switchIsSum),
-              konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-              sortNo: await TodoController.getListCount(),
-              isDelete: boolToInt(providerTodo.isDelete),
-              deleteDay: providerTodo.deleteDay,
-              groupId: selectedId,
-              konyuDay: providerTodo.konyuDay,
-            );
+//         if (providerForm.formVallidate()) {
+//           // 入力チェックでエラーが無ければ、DBに登録する
+//           if (providerTodo.id == 0) {
+//             // 新規
+//             var _todo = TodoStore(
+//               title: providerTodo.titleController.text,
+//               memo: providerTodo.memoController.text,
+//               price: int.parse(providerTodo.priceController.text),
+//               release: boolToInt(providerTodo.switchReleaseDay),
+//               releaseDay: providerTodo.releaseDay,
+//               isSum: boolToInt(providerTodo.switchIsSum),
+//               konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+//               sortNo: await TodoController.getListCount(),
+//               isDelete: boolToInt(providerTodo.isDelete),
+//               deleteDay: providerTodo.deleteDay,
+//               groupId: selectedId,
+//               konyuDay: providerTodo.konyuDay,
+//             );
 
-            await TodoController.insertTodo(_todo);
-          } else {
-            // 修正
-            var _todo = TodoStore(
-              id: providerTodo.id,
-              title: providerTodo.titleController.text,
-              memo: providerTodo.memoController.text,
-              price: int.parse(providerTodo.priceController.text),
-              release: boolToInt(providerTodo.switchReleaseDay),
-              releaseDay: providerTodo.releaseDay,
-              isSum: boolToInt(providerTodo.switchIsSum),
-              konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-              sortNo: providerTodo.sortNo,
-              isDelete: boolToInt(providerTodo.isDelete),
-              deleteDay: providerTodo.deleteDay,
-              groupId: selectedId,
-              konyuDay: providerTodo.konyuDay,
-            );
+//             await TodoController.insertTodo(_todo);
+//           } else {
+//             // 修正
+//             var _todo = TodoStore(
+//               id: providerTodo.id,
+//               title: providerTodo.titleController.text,
+//               memo: providerTodo.memoController.text,
+//               price: int.parse(providerTodo.priceController.text),
+//               release: boolToInt(providerTodo.switchReleaseDay),
+//               releaseDay: providerTodo.releaseDay,
+//               isSum: boolToInt(providerTodo.switchIsSum),
+//               konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+//               sortNo: providerTodo.sortNo,
+//               isDelete: boolToInt(providerTodo.isDelete),
+//               deleteDay: providerTodo.deleteDay,
+//               groupId: selectedId,
+//               konyuDay: providerTodo.konyuDay,
+//             );
 
-            await TodoController.updateTodo(_todo);
-          }
-          // await TodoController.insertTodo(_todo);
-          // 前の画面に戻る
-          Navigator.pop(context);
-        }
-      },
-      child: Text(
-        providerTodo.id == 0 ? 'リスト追加' : '修正',
-        style: TextStyle(color: Colors.white),
-      ),
-    ),
-  );
-}
+//             await TodoController.updateTodo(_todo);
+//           }
+//           // await TodoController.insertTodo(_todo);
+//           // 前の画面に戻る
+//           Navigator.pop(context);
+//         }
+//       },
+//       child: Text(
+//         providerTodo.id == 0 ? 'リスト追加' : '修正',
+//         style: TextStyle(color: Colors.white),
+//       ),
+//     ),
+//   );
+// }

@@ -41,12 +41,12 @@ class ProviderSharedPreferences with ChangeNotifier {
     prefs.setString(key, value);
   }
 
-  ///
-  /// ローカル設定を取得する
-  ///
-  Future getColor() async {
-    var prefs = await SharedPreferences.getInstance();
-    var _prefsColor = prefs.getInt(COLOR_KEY) ?? 0xFF42A5F5;
-    // _color = Colors(_prefsColor);
-  }
+  // ///
+  // /// ローカル設定を取得する
+  // ///
+  // Future getColor() async {
+  //   var prefs = await SharedPreferences.getInstance();
+  //   var _prefsColor = prefs.getInt(COLOR_KEY) ?? 0xFF42A5F5;
+  //   // _color = Colors(_prefsColor);
+  // }
 }
