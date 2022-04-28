@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
 import '../../Common/importer.dart';
 
 class GroupTextButton extends StatelessWidget {
+  const GroupTextButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final providerGroup = context.watch<ProviderGroup>();
@@ -11,7 +14,7 @@ class GroupTextButton extends StatelessWidget {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             builder: (BuildContext context) {
@@ -41,7 +44,7 @@ Widget _groupList(BuildContext context) {
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: providerGroup.groupList.map(
           (GroupStore store) {
             return Container(
@@ -51,7 +54,7 @@ Widget _groupList(BuildContext context) {
           },
         ).toList(),
       ),
-      SpaceBox.height(50),
+      const SpaceBox.height(value: 50),
     ],
   );
 }

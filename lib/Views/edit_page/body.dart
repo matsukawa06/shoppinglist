@@ -33,67 +33,63 @@ class Body extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               // グループリスト選択
-              GroupTextButton(),
-              SpaceBox.height(1),
+              const GroupTextButton(),
+              const SpaceBox.height(value: 1),
               // タイトル
-              TitleTextField(),
-              SpaceBox.height(1),
+              const TitleTextField(),
+              const SpaceBox.height(value: 1),
               // メモ
-              MemoTextField(),
-              SpaceBox.height(1),
+              const MemoTextField(),
+              const SpaceBox.height(value: 1),
               // 価格
-              PriceTextField(),
-              SpaceBox.height(24),
+              const PriceTextField(),
+              const SpaceBox.height(value: 24),
 
               // ====================================
               // 発売日
               // ====================================
               Card(
                 elevation: 5,
-                child: Container(
-                  child: Column(
-                    children: [
-                      // 発売予定日
-                      ReleaseContainer(),
-                    ],
-                  ),
+                child: Column(
+                  children: const [
+                    // 発売予定日
+                    ReleaseContainer(),
+                  ],
                 ),
               ),
-              SpaceBox.height(24),
+              const SpaceBox.height(value: 24),
 
               // ====================================
               // 計算チェックと購入済みチェック
               // ====================================
               Card(
                 elevation: 5,
-                child: Container(
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: const Border(
-                            bottom: const BorderSide(
-                              color: Colors.grey,
-                            ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
                           ),
                         ),
-                        // 金額計算チェック
-                        child: SwitchListTile(
-                          value: _providerTodo.switchIsSum,
-                          title: const Text('計算対象に含める'),
-                          onChanged: (bool value) {
-                            _providerTodo.changeIsSum(value);
-                          },
-                        ),
                       ),
+                      // 金額計算チェック
+                      child: SwitchListTile(
+                        value: _providerTodo.switchIsSum,
+                        title: const Text('計算対象に含める'),
+                        onChanged: (bool value) {
+                          _providerTodo.changeIsSum(value);
+                        },
+                      ),
+                    ),
 
-                      // 購入済みチェック
-                      KonyuContainer(),
-                    ],
-                  ),
+                    // 購入済みチェック
+                    const KonyuContainer(),
+                  ],
                 ),
               ),
-              SpaceBox.height(36),
+              const SpaceBox.height(value: 36),
 
               // ====================================
               // ボタン

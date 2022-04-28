@@ -6,7 +6,7 @@ import 'body.dart';
 
 class ListEditPage extends StatelessWidget {
   final String mode;
-  ListEditPage(this.mode);
+  const ListEditPage(this.mode, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -43,10 +43,10 @@ Widget _retTitleTextWidget(String mode) {
   String strTitle = "";
 
   switch (mode) {
-    case MODE_INS:
+    case modeInsert:
       strTitle = "リストを新規作成";
       break;
-    case MODE_UPD:
+    case modeUpdate:
       strTitle = "リスト名を変更";
       break;
     default:
@@ -58,7 +58,7 @@ Widget _retTitleTextWidget(String mode) {
 /// 完了テキスト
 ///
 Widget _retKanryoTextWidget() {
-  return Text(
+  return const Text(
     '保存',
     style: TextStyle(
       fontSize: 20,
@@ -74,13 +74,13 @@ void _clickKanryo(BuildContext context, String mode) async {
   if (context.read<ProviderForm>().formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
     switch (mode) {
-      case MODE_INS:
+      case modeInsert:
         var _providerStore = GroupStore(
           title: context.read<ProviderGroup>().titleController.text,
         );
         await GroupController.insertGroup(_providerStore);
         break;
-      case MODE_UPD:
+      case modeUpdate:
         var _providerStore = GroupStore(
           id: context.read<ProviderGroup>().selectedId,
           title: context.read<ProviderGroup>().titleController.text,

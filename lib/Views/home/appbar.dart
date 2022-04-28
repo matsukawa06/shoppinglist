@@ -1,13 +1,15 @@
 import '../../Common/importer.dart';
 
 import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import '../edit_page/main.dart' as editPage;
+import '../edit_page/main.dart' as edit_page;
 
 // ignore: camel_case_types
 ///
 /// メインページのAppBar設定
 ///
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+  const MyAppBar({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final providerGroup = context.watch<ProviderGroup>();
@@ -45,7 +47,7 @@ Widget _newAddIcon(BuildContext context) {
         MaterialPageRoute(
           builder: (context) {
             // 遷移先の画面として編集用画面を指定
-            return editPage.Main();
+            return const edit_page.Main();
           },
         ),
       ).then(
@@ -56,7 +58,7 @@ Widget _newAddIcon(BuildContext context) {
         },
       );
     },
-    icon: Icon(Icons.add),
+    icon: const Icon(Icons.add),
   );
 }
 
@@ -69,7 +71,7 @@ Widget _settingIcon(BuildContext context) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
-            return SettingPage();
+            return const SettingPage();
           },
         ),
       ).then(
@@ -80,7 +82,7 @@ Widget _settingIcon(BuildContext context) {
         },
       );
     },
-    icon: Icon(
+    icon: const Icon(
       Icons.settings, //dehaze_sharp,
       size: 30,
     ),

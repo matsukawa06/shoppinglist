@@ -33,8 +33,8 @@ class AdMobService {
     return BannerAd(
       adUnitId: getBannerAdUnitId(),
       size: AdSize.banner,
-      listener: BannerAdListener(),
-      request: AdRequest(),
+      listener: const BannerAdListener(),
+      request: const AdRequest(),
     );
   }
 

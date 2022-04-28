@@ -6,30 +6,30 @@ import '../../Common/importer.dart';
 /// メニューリスト
 ///
 class MenuListIcon extends StatelessWidget {
+  const MenuListIcon({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.more_horiz),
+      icon: const Icon(Icons.more_horiz),
       color: Colors.white,
       iconSize: 40,
       onPressed: () {
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           builder: (BuildContext contex) {
             return SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: [
-                    // リスト更新
-                    ListUpdate(),
-                    // リスト削除
-                    ListDelete(),
-                  ],
-                ),
+              child: Column(
+                children: const [
+                  // リスト更新
+                  ListUpdate(),
+                  // リスト削除
+                  ListDelete(),
+                ],
               ),
             );
           },
@@ -43,6 +43,8 @@ class MenuListIcon extends StatelessWidget {
 /// リスト更新
 ///
 class ListUpdate extends StatelessWidget {
+  const ListUpdate({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final store = context.read<ProviderGroup>();
@@ -52,8 +54,8 @@ class ListUpdate extends StatelessWidget {
       height: 60.0,
       child: InkWell(
         child: Row(
-          children: [
-            Padding(padding: const EdgeInsets.only(left: 15.0)),
+          children: const [
+            Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
               "リスト名を変更する",
               style: TextStyle(fontSize: 18),
@@ -67,7 +69,7 @@ class ListUpdate extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return ListEditPage(MODE_UPD);
+                return const ListEditPage(modeUpdate);
               },
             ),
           ).then(
@@ -94,6 +96,8 @@ class ListUpdate extends StatelessWidget {
 /// リスト削除
 ///
 class ListDelete extends StatelessWidget {
+  const ListDelete({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final prvShared = context.read<ProviderSharedPreferences>();
@@ -105,18 +109,18 @@ class ListDelete extends StatelessWidget {
       child: InkWell(
         child: _delContainer(context),
         onTap: () async {
-          if (store.selectedId != GROUPID_DEFUALT) {
+          if (store.selectedId != defualtGroupId) {
             // デフォルトのリストで無ければ、削除処理を行う
-            var result = await showDialog(
+            await showDialog(
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("確認"),
-                  content: Container(
+                  title: const Text("確認"),
+                  content: SizedBox(
                     height: 90.0,
                     child: Column(
-                      children: [
+                      children: const [
                         Text("リストを削除します。よろしいですか？"),
                         Text(
                           "この操作は取り消しできません。",
@@ -129,7 +133,7 @@ class ListDelete extends StatelessWidget {
                   ),
                   actions: <Widget>[
                     ElevatedButton(
-                      child: Text("Cancel"),
+                      child: const Text("Cancel"),
                       onPressed: () {
                         // ダイアログを閉じる
                         Navigator.of(context).pop(0);
@@ -138,13 +142,13 @@ class ListDelete extends StatelessWidget {
                       },
                     ),
                     ElevatedButton(
-                      child: Text("OK"),
+                      child: const Text("OK"),
                       onPressed: () {
                         // グループリストと紐づくTodoを物理削除
                         store.delete(store.selectedId);
                         // デフォルトリストを選択中にする
-                        prvShared.saveIntValue(SELECT_ID_KEY, GROUPID_DEFUALT);
-                        prvShared.setSelectedGroupId(GROUPID_DEFUALT);
+                        prvShared.saveIntValue(keySelectId, defualtGroupId);
+                        prvShared.setSelectedGroupId(defualtGroupId);
                         // タイトルを反映させる
                         store.getSelectedInfo();
                         // ToDoリストも再読み込みする
@@ -159,7 +163,6 @@ class ListDelete extends StatelessWidget {
                 );
               },
             );
-            print("dialog result: $result");
           }
         },
       ),
@@ -172,7 +175,7 @@ class ListDelete extends StatelessWidget {
 ///
 Widget _delContainer(BuildContext context) {
   final store = context.watch<ProviderGroup>();
-  final _isDefualt = store.selectedId == GROUPID_DEFUALT ? true : false;
+  final _isDefualt = store.selectedId == defualtGroupId ? true : false;
 
   return Container(
     width: double.infinity,

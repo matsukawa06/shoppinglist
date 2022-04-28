@@ -9,6 +9,8 @@ import 'grouptitle_textField.dart';
 class Body extends StatelessWidget {
   Color picker = Colors.blue;
 
+  Body({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -18,7 +20,7 @@ class Body extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.95,
           padding: const EdgeInsets.all(18),
           child: Column(
-            children: [
+            children: const [
               // タイトル
               GroupTitleTextField(),
               // SpaceBox.height(1),
@@ -63,7 +65,7 @@ class Body extends StatelessWidget {
 /// カラー選択Widget
 ///
 Widget retColorPikerWidet(BuildContext contex) {
-  return BlockPicker(
+  return const BlockPicker(
     pickerColor: Colors.blue,
     onColorChanged: _changeColor,
   );

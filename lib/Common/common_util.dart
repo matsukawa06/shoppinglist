@@ -1,4 +1,4 @@
-import '../Common/importer.dart';
+import 'importer.dart';
 import 'package:intl/intl.dart';
 
 /*
@@ -22,7 +22,7 @@ String formatPrice(int value) {
 
 String dateToString(DateTime value) {
   // 日付を文字列に変換して返す
-  var formatter = new DateFormat('yyyy/MM/dd(E)', "ja_JP");
+  var formatter = DateFormat('yyyy/MM/dd(E)', "ja_JP");
   return formatter.format(value);
 }
 
@@ -35,9 +35,11 @@ DateTime stringToDate(String value) {
 Widget間のスペース（マージン）をSpaceBoxで調整する
 */
 class SpaceBox extends SizedBox {
-  SpaceBox({double width = 8, double height = 8})
-      : super(width: width, height: height);
+  const SpaceBox({Key? key, double width = 8, double height = 8})
+      : super(key: key, width: width, height: height);
 
-  SpaceBox.width([double value = 8]) : super(width: value);
-  SpaceBox.height([double value = 8]) : super(height: value);
+  const SpaceBox.width({Key? key, double value = 8})
+      : super(key: key, width: value);
+  const SpaceBox.height({Key? key, double value = 8})
+      : super(key: key, height: value);
 }

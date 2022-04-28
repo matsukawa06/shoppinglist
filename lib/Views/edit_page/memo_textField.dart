@@ -1,6 +1,9 @@
+// ignore_for_file: file_names
 import '../../Common/importer.dart';
 
 class MemoTextField extends StatelessWidget {
+  const MemoTextField({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final providerTodo = context.watch<ProviderTodo>();
@@ -8,14 +11,14 @@ class MemoTextField extends StatelessWidget {
       controller: providerTodo.memoController,
       enabled: true,
       maxLength: 300,
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
       obscureText: false,
       maxLines: 3,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'メモ',
         // hintText: 'メモを入力してください',
-        enabledBorder: new UnderlineInputBorder(
-            borderSide: new BorderSide(color: Colors.blue)),
+        enabledBorder:
+            UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.orange),
         ),

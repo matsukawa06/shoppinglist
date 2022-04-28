@@ -26,34 +26,35 @@ void main() {
         // グループリスト用
         ChangeNotifierProvider(create: (_) => ProviderGroup()),
       ],
-      child: HomeScreen(),
+      child: const HomeScreen(),
     ),
   );
 }
 
-// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
-  var _primarySwatch = Colors.blue;
-  var _isDark = false;
+  final _primarySwatch = Colors.blue;
+  final _isDark = false;
+
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
-      home: Main(),
+      home: const Main(),
       title: 'ShoppingList',
       theme: ThemeData(
         primarySwatch: _primarySwatch,
         brightness: _isDark ? Brightness.dark : Brightness.light,
       ),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         JapaneseCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale('en'),
-        const Locale('ja'),
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ja'),
       ],
     );
   }

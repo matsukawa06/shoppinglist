@@ -19,7 +19,7 @@ class ProviderSharedPreferences with ChangeNotifier {
     notifyListeners();
   }
 
-  var _color = Colors.blue;
+  final _color = Colors.blue;
   get color => _color;
 
   ///

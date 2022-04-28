@@ -16,7 +16,7 @@ Widget groupItem(BuildContext context, int? id, String title) {
       child: InkWell(
         onTap: () {
           // 選択したリストを選択中にする
-          prvShared.saveIntValue(SELECT_ID_KEY, id!);
+          prvShared.saveIntValue(keySelectId, id!);
           prvShared.setSelectedGroupId(id);
           // タイトルを反映させる
           providerGroup.getSelectedInfo();
@@ -26,10 +26,10 @@ Widget groupItem(BuildContext context, int? id, String title) {
         },
         child: Row(
           children: [
-            Padding(padding: const EdgeInsets.only(left: 15.0)),
+            const Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
               title,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

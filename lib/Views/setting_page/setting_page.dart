@@ -6,6 +6,8 @@ import '../../Common/importer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
+  const SettingPage({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _State();
@@ -21,7 +23,7 @@ class _State extends State<SettingPage> {
   _restoreValues(BuildContext context) async {
     var provider = context.read<ProviderSharedPreferences>();
     var prefs = await SharedPreferences.getInstance();
-    provider.setKonyuZumiView(prefs.getBool(KONYUZUMIVIEW_KEW) ?? false);
+    provider.setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
   }
 
   @override
@@ -44,7 +46,7 @@ class _State extends State<SettingPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('設定'),
+        title: const Text('設定'),
       ),
       body: Container(
         // 余白をつける
@@ -60,19 +62,16 @@ class _State extends State<SettingPage> {
             // ),
             Card(
               elevation: 5,
-              child: Container(
-                // 購入済み表示チェック
-                child: SwitchListTile(
-                  value: prvShared.isKonyuZumiView,
-                  title: Text('購入済みを表示する'),
-                  onChanged: (bool value) {
-                    prvShared.saveBoolValue(KONYUZUMIVIEW_KEW, value);
-                    prvShared.setKonyuZumiView(value);
-                  },
-                ),
+              child: SwitchListTile(
+                value: prvShared.isKonyuZumiView,
+                title: const Text('購入済みを表示する'),
+                onChanged: (bool value) {
+                  prvShared.saveBoolValue(keyKonyuzumiView, value);
+                  prvShared.setKonyuZumiView(value);
+                },
               ),
             ),
-            SpaceBox.height(32),
+            const SpaceBox.height(value: 32),
             // Container(
             //   width: double.infinity,
             //   padding: EdgeInsets.only(left: 10),
@@ -80,38 +79,36 @@ class _State extends State<SettingPage> {
             // ),
             Card(
               elevation: 5, // 影のサイズ
-              child: Container(
-                child: Column(
-                  children: [
-                    // アプリ情報
-                    Container(
-                      decoration: BoxDecoration(
-                        border: const Border(
-                          bottom: const BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                      child: InkWell(
-                        onTap: () => showAboutDialog(
-                          context: context,
-                          applicationName: "買い物計画",
-                          applicationVersion: "Ver. " + _version,
-                        ),
-                        child: ListTile(
-                          title: Text("アプリ情報"),
+              child: Column(
+                children: [
+                  // アプリ情報
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey,
                         ),
                       ),
                     ),
-                    // 利用規約
-                    InkWell(
-                      onTap: _launchURL,
-                      child: ListTile(
-                        title: Text("利用規約・プライバシーポリシー"),
+                    child: InkWell(
+                      onTap: () => showAboutDialog(
+                        context: context,
+                        applicationName: "買い物計画",
+                        applicationVersion: "Ver. " + _version,
+                      ),
+                      child: const ListTile(
+                        title: Text("アプリ情報"),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // 利用規約
+                  const InkWell(
+                    onTap: _launchURL,
+                    child: ListTile(
+                      title: Text("利用規約・プライバシーポリシー"),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
