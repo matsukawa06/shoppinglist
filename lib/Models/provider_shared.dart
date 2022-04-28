@@ -2,25 +2,22 @@ import '../Common/importer.dart';
 
 class ProviderSharedPreferences with ChangeNotifier {
   // 購入済を表示するか
-  var _isKonyuZumiView = false;
-  get isKonyuZumiView => _isKonyuZumiView;
+  var isKonyuZumiView = false;
 
   void setKonyuZumiView(bool value) {
-    _isKonyuZumiView = value;
+    isKonyuZumiView = value;
     notifyListeners();
   }
 
   // 選択中のグループID
-  var _selectedGroupId = 0;
-  get selectedGroupId => _selectedGroupId;
+  var selectedGroupId = 0;
 
   void setSelectedGroupId(int value) {
-    _selectedGroupId = value;
+    selectedGroupId = value;
     notifyListeners();
   }
 
-  final _color = Colors.blue;
-  get color => _color;
+  final color = Colors.blue;
 
   ///
   /// ローカル設定を保存する

@@ -1,10 +1,10 @@
 import '../Common/importer.dart';
 
 class ProviderForm with ChangeNotifier {
-  final _formKey = GlobalKey<FormState>();
-  get formKey => _formKey;
+  final formKey = GlobalKey<FormState>();
+  // get formKey => _formKey;
 
   bool formVallidate() {
-    return _formKey.currentState!.validate();
+    return formKey.currentState!.validate();
   }
 }

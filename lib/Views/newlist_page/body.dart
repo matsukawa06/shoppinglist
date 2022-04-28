@@ -20,20 +20,26 @@ class Body extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.95,
           padding: const EdgeInsets.all(18),
           child: Column(
-            children: const [
+            children: [
               // タイトル
-              GroupTitleTextField(),
-              // SpaceBox.height(1),
-              // // カラー選択
+              const GroupTitleTextField(),
+              const SpaceBox.height(value: 1),
+              // カラー選択
               // Card(
               //   elevation: 5,
               //   child: InkWell(
               //     child: Container(),
               //     onTap: () {
-              //       _showPicker(context);
+              //       _showColorPicker(context);
               //     },
               //   ),
               // ),
+              TextButton(
+                onPressed: () async {
+                  // await _showColorPicker(context);
+                },
+                child: const Text('カラー選択'),
+              ),
             ],
           ),
         ),
@@ -42,33 +48,26 @@ class Body extends StatelessWidget {
   }
 }
 
-// void _showPicker(BuildContext context) {
-//   showDialog(
+// Future _showColorPicker(BuildContext context) async {
+//   return showDialog(
 //     context: context,
 //     barrierDismissible: false,
 //     builder: (BuildContext context) {
 //       return AlertDialog(
-//         title: Text('カラー選択'),
-//         content: SingleChildScrollView(
-//           child: BlockPicker(
-//             pickerColor: Colors.blue,
-//             onColorChanged: _changeColor,
-//           ),
+//         title: const Text('カラー選択'),
+//         content: BlockPicker(
+//           pickerColor: myTheme.pickerColor,
+//           onColorChanged: myTheme.changeColor,
 //         ),
-//         actions: [],
+//         actions: <Widget>[
+//           ElevatedButton(
+//             onPressed: () {
+//               Navigator.pop(context);
+//             },
+//             child: const Text('決定'),
+//           )
+//         ],
 //       );
 //     },
 //   );
 // }
-
-///
-/// カラー選択Widget
-///
-Widget retColorPikerWidet(BuildContext contex) {
-  return const BlockPicker(
-    pickerColor: Colors.blue,
-    onColorChanged: _changeColor,
-  );
-}
-
-void _changeColor(Color color) {}
