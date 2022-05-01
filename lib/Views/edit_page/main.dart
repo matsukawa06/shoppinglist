@@ -36,7 +36,7 @@ class Main extends StatelessWidget {
               child: Text(
                 '保存',
                 style: TextStyle(
-                  color: context.watch<ProviderGroup>().fontColor,
+                  color: context.read<ProviderGroup>().fontColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
