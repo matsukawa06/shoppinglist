@@ -9,6 +9,8 @@ import 'grouptitle_textField.dart';
 class Body extends StatelessWidget {
   Color picker = Colors.blue;
 
+  Body({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -16,22 +18,47 @@ class Body extends StatelessWidget {
       child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.95,
-          padding: EdgeInsets.all(18),
+          padding: const EdgeInsets.all(28),
           child: Column(
             children: [
               // タイトル
-              GroupTitleTextField(),
-              // SpaceBox.height(1),
-              // // カラー選択
-              // Card(
-              //   elevation: 5,
-              //   child: InkWell(
-              //     child: Container(),
-              //     onTap: () {
-              //       _showPicker(context);
-              //     },
-              //   ),
-              // ),
+              const GroupTitleTextField(),
+              const SpaceBox.height(value: 20),
+              // カラー選択
+              Card(
+                elevation: 5,
+                child: SizedBox(
+                  height: 50,
+                  child: InkWell(
+                    child: Row(
+                      children: [
+                        // Cardのタイトル
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: const SizedBox(
+                            width: 220,
+                            child: Text(
+                              'カラー選択',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        // 選択中のカラーをContainerで表示
+                        SizedBox(
+                          width: 50,
+                          height: 40,
+                          child: Container(
+                            color: context.watch<ProviderGroup>().pickerColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      _showColorPicker(context);
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -40,33 +67,26 @@ class Body extends StatelessWidget {
   }
 }
 
-void _showPicker(BuildContext context) {
-  showDialog(
+Future _showColorPicker(BuildContext context) async {
+  return showDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('カラー選択'),
-        content: SingleChildScrollView(
-          child: BlockPicker(
-            pickerColor: Colors.blue,
-            onColorChanged: _changeColor,
-          ),
+        title: const Text('カラー選択'),
+        content: BlockPicker(
+          pickerColor: context.watch<ProviderGroup>().pickerColor,
+          onColorChanged: context.read<ProviderGroup>().changeColor,
         ),
-        actions: [],
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('決定'),
+          )
+        ],
       );
     },
   );
 }
-
-///
-/// カラー選択Widget
-///
-Widget retColorPikerWidet(BuildContext contex) {
-  return BlockPicker(
-    pickerColor: Colors.blue,
-    onColorChanged: _changeColor,
-  );
-}
-
-void _changeColor(Color color) {}

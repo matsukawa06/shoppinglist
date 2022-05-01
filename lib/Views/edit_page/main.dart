@@ -10,6 +10,8 @@ import 'body.dart';
 // import 'footer.dart';
 
 class Main extends StatelessWidget {
+  const Main({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _providerTodo = context.watch<ProviderTodo>();
@@ -18,14 +20,14 @@ class Main extends StatelessWidget {
     initializeDateFormatting('ja');
     return Scaffold(
       appBar: AppBar(
-        title: Text('詳細'),
+        title: const Text('詳細'),
         // 右側のアイコン一覧
         actions: <Widget>[
           Visibility(
             visible: _providerTodo.id == 0 ? false : true,
             child: _iconButton(context),
           ),
-          SpaceBox.width(15),
+          const SpaceBox.width(value: 15),
           TextButton(
               onPressed: () async {
                 // 登録・更新処理
@@ -34,7 +36,7 @@ class Main extends StatelessWidget {
               child: Text(
                 '保存',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: context.watch<ProviderGroup>().fontColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -54,20 +56,20 @@ Widget _iconButton(BuildContext context) {
   final providerTodo = context.watch<ProviderTodo>();
   return IconButton(
     onPressed: () async {
-      var result = await showDialog(
+      await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('確認'),
-            content: Text('削除します。よろしいですか？'),
+            title: const Text('確認'),
+            content: const Text('削除します。よろしいですか？'),
             actions: <Widget>[
               ElevatedButton(
-                child: Text('Cancel'),
+                child: const Text('Cancel'),
                 onPressed: () => Navigator.of(context).pop(0),
               ),
               ElevatedButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   // 論理削除に変更
                   // providerStore.delete(providerStore.id);
@@ -82,10 +84,9 @@ Widget _iconButton(BuildContext context) {
           );
         },
       );
-      print('dialog result: $result');
       // providerStore.delete(providerStore.id);
     },
-    icon: Icon(Icons.delete),
+    icon: const Icon(Icons.delete),
   );
 }
 
@@ -96,7 +97,7 @@ void _insertUpdate(BuildContext context) async {
   final providerTodo = context.read<ProviderTodo>();
   final providerForm = context.read<ProviderForm>();
   var prefs = await SharedPreferences.getInstance();
-  var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
+  var selectedId = (prefs.getInt(keySelectId) ?? defualtGroupId);
 
   if (providerForm.formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する

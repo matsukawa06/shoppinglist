@@ -1,49 +1,62 @@
 import '../Common/importer.dart';
 
 class ProviderGroup with ChangeNotifier {
-  List<GroupStore> _groupList = [];
-  List<GroupStore> get groupList => _groupList;
+  List<GroupStore> groupList = [];
+  // タイトル入力内容
+  final titleController = TextEditingController();
+  // グループカラー
+  Color primarySwatch = Colors.blue;
+  // pickerで選択中のカラー
+  Color pickerColor = Colors.blue;
+
+  Color fontColor = Colors.white;
 
   ///
   /// グループリストの初期処理
   ///
   Future<void> initializeList() async {
-    _groupList = await GroupController.getGroup();
-    if (_groupList.length == 0) {
+    groupList = await GroupController.getGroup();
+    if (groupList.isEmpty) {
       // デフォルトのグループ（id=0）を登録する
       var _store = GroupStore(
-        id: GROUPID_DEFUALT,
+        id: defualtGroupId,
         title: "マイリスト",
+        color: Colors.blue.toString(),
       );
       await GroupController.insertGroup(_store);
-      _groupList = await GroupController.getGroup();
+      groupList = await GroupController.getGroup();
       // 選択中のグループリストIDを更新
       var prefs = await SharedPreferences.getInstance();
-      prefs.setInt(SELECT_ID_KEY, GROUPID_DEFUALT);
+      prefs.setInt(keySelectId, defualtGroupId);
     }
     notifyListeners();
   }
 
   // SharedPreferences に登録されている情報を保持
-  int? _selectedId = GROUPID_DEFUALT;
-  int? get selectedId => _selectedId;
-  String _selectedTitle = "";
-  String get selectedTitle => _selectedTitle;
-  MaterialColor _groupColor = GROUP_COLOR_DEFUALT;
-  MaterialColor get groupColor => _groupColor;
+  int? selectedId = defualtGroupId;
+  String selectedTitle = "";
+  // Color groupColor = defualtGroupColor;
 
   ///
   /// SharedPreferences に登録されているリスト名を取得
   ///
   Future<void> getSelectedInfo() async {
     var prefs = await SharedPreferences.getInstance();
-    var selectedId = (prefs.getInt(SELECT_ID_KEY) ?? GROUPID_DEFUALT);
-    List<GroupStore> list = await GroupController.getGroupSelect(selectedId);
+    var prefsSelectedId = (prefs.getInt(keySelectId) ?? defualtGroupId);
+    List<GroupStore> list =
+        await GroupController.getGroupSelect(prefsSelectedId);
     // 1件しか取得しないけどforでループしておく
     for (var i = 0; i < list.length; i++) {
-      _selectedId = list[i].id;
-      _selectedTitle = list[i].title;
-      _groupColor = Colors.blue; // ※とりあえずブルー固定
+      selectedId = list[i].id;
+      selectedTitle = list[i].title;
+      if (list[i].color == '') {
+        primarySwatch = Colors.blue;
+        changeFontColor(primarySwatch);
+      } else {
+        String valueString = list[i].color.split('(0x')[1].split(')')[0];
+        primarySwatch = Color(int.parse(valueString, radix: 16));
+        changeFontColor(primarySwatch);
+      }
       break;
     }
     notifyListeners();
@@ -57,19 +70,40 @@ class ProviderGroup with ChangeNotifier {
     TodoController.deleteTodoGroup(id);
   }
 
-  // タイトル入力内容
-  final _titleController = TextEditingController();
-  get titleController => _titleController;
-
+  // 各Controllerの初期化
   void initTitleController(String title) {
-    _titleController.text = title;
+    titleController.text = title;
+    pickerColor = primarySwatch;
   }
 
   // 各Controllerのクリア
   void clearItems() {
-    _titleController.clear();
+    titleController.clear();
+    pickerColor = Colors.blue;
   }
 
   // グループカラーの設定
+  changeColor(Color _color) {
+    pickerColor = _color;
+    changeFontColor(_color);
+    // notifyListeners();
+  }
 
+  // フォントカラーの設定
+  changeFontColor(Color _color) {
+    switch (_color.value) {
+      case 4278238420:
+      case 4278430196:
+      case 4287349578:
+      case 4288585374:
+      case 4291681337:
+      case 4294940672:
+      case 4294951175:
+      case 4294961979:
+        fontColor = Colors.black;
+        break;
+      default:
+        fontColor = Colors.white;
+    }
+  }
 }

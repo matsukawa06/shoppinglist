@@ -3,78 +3,70 @@
 ///
 import '../../Common/importer.dart';
 
-import '../edit_page/main.dart' as editPage;
+import '../edit_page/main.dart' as edit_page;
 import '../home/grouplist_icon.dart';
 import '../home/menulist_icon.dart';
 
 class Body extends StatelessWidget {
+  const Body({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder(
-        future: context.read<ProviderTodo>().initializeList(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // 非同期処理未完了 = 通信中
-            return Center(child: CircularProgressIndicator());
-          }
-          return Column(
-            children: <Widget>[
-              // ColumnやRowの空いたスペースをレスポンシブに埋める
-              Expanded(
-                // ドラッグ＆ドロップできるListView
-                child: ReorderableListView(
-                  onReorder: (oldIndex, newIndex) {
-                    // Todoの並び順を変更
-                    _changeSort(context, oldIndex, newIndex);
-                  },
-                  children: context.watch<ProviderTodo>().todoList.map(
-                    (TodoStore todo) {
-                      // 合計金額計算処理
-                      _calculationPrice(context, todo);
-                      return Dismissible(
-                        key: Key(todo.id.toString()),
-                        background: Container(
-                          padding: EdgeInsets.only(right: 10),
-                          alignment: AlignmentDirectional.centerEnd,
-                          color: Colors.red,
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.white,
-                          ),
+    return FutureBuilder(
+      future: context.read<ProviderTodo>().initializeList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // 非同期処理未完了 = 通信中
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Column(
+          children: <Widget>[
+            // ColumnやRowの空いたスペースをレスポンシブに埋める
+            Expanded(
+              // ドラッグ＆ドロップできるListView
+              child: ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  // Todoの並び順を変更
+                  _changeSort(context, oldIndex, newIndex);
+                },
+                children: context.watch<ProviderTodo>().todoList.map(
+                  (TodoStore todo) {
+                    // // 合計金額計算処理
+                    // _calculationPrice(context, todo);
+                    return Dismissible(
+                      key: Key(todo.id.toString()),
+                      background: Container(
+                        padding: const EdgeInsets.only(right: 10),
+                        alignment: AlignmentDirectional.centerEnd,
+                        color: Colors.red,
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
                         ),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          // Todo削除処理
-                          _todoDelete(context, todo);
-                        },
-                        //================================
-                        // 一覧に表示する内容
-                        //================================
-                        child: _bodyCard(context, todo),
-                      );
-                    },
-                  ).toList(),
-                ),
+                      ),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        // Todo削除処理
+                        _todoDelete(context, todo);
+                      },
+                      //================================
+                      // 一覧に表示する内容
+                      //================================
+                      child: _bodyCard(context, todo),
+                    );
+                  },
+                ).toList(),
               ),
-              //================================
-              // フッター
-              //================================
-              _setFooter(context.read<ProviderTodo>().sumPrice),
-              // 広告表示
-              // AdmobBanner(
-              //   adUnitId: AdMobService().getBannerAdUnitId()!,
-              //   adSize: AdmobBannerSize(
-              //     width: MediaQuery.of(context).size.width.toInt(),
-              //     height: AdMobService().getHeight(context).toInt(),
-              //     name: 'SMART_BANNER',
-              //   ),
-              // ),
-              SpaceBox.height(20),
-            ],
-          );
-        },
-      ),
+            ),
+            //================================
+            // フッター
+            //================================
+            // _setFooter(context.read<ProviderTodo>().sumPrice),
+            _setFooter(context),
+            const SpaceBox.height(value: 20),
+          ],
+        );
+      },
     );
   }
 }
@@ -123,8 +115,8 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '${todo.title}',
-                      style: TextStyle(fontSize: 18),
+                      todo.title,
+                      style: const TextStyle(fontSize: 18),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -141,7 +133,7 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             '${formatPrice(todo.price)} 円',
-                            style: TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ),
                       ),
@@ -152,7 +144,7 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             stringDay(todo),
-                            style: TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ),
                       ),
@@ -166,8 +158,8 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
               width: 50,
               child: Column(
                 children: [
-                  SpaceBox.height(5),
-                  SizedBox(
+                  const SpaceBox.height(value: 5),
+                  const SizedBox(
                     height: 17,
                     child: Align(
                       alignment: Alignment.bottomCenter,
@@ -194,16 +186,6 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
       ),
     ),
   );
-}
-
-///
-/// 金額計算処理
-///
-void _calculationPrice(BuildContext context, TodoStore todo) {
-  // 合計金額に明細の金額を加算
-  if (todo.isSum == 1) {
-    context.read<ProviderTodo>().addSumPrice(todo.price);
-  }
 }
 
 ///
@@ -268,7 +250,7 @@ void _todoCardTap(BuildContext context, TodoStore todo) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) {
-        return editPage.Main();
+        return const edit_page.Main();
       },
     ),
   ).then(
@@ -302,40 +284,40 @@ void _isSumIconTap(BuildContext context, TodoStore todo) {
 ///
 /// フッター表示
 ///
-Widget _setFooter(int sumPrice) {
-  return Container(
-    child: Stack(
-      children: [
-        // 合計金額表示
-        Container(
-          color: Colors.blue.shade600,
-          // 左寄せ
-          width: double.infinity,
-          padding: EdgeInsets.all(16),
-          child: Center(
-            child: Text(
-              '合計：${formatPrice(sumPrice)} 円',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: Colors.white,
-              ),
+Widget _setFooter(BuildContext context) {
+  final _groupProvider = context.watch<ProviderGroup>();
+  final _todoProvider = context.read<ProviderTodo>();
+  return Stack(
+    children: [
+      // 合計金額表示
+      Container(
+        color: _groupProvider.primarySwatch,
+        // 左寄せ
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Text(
+            '合計：${formatPrice(_todoProvider.sumPrice)} 円',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              color: context.watch<ProviderGroup>().fontColor,
             ),
           ),
         ),
-        // グループリストアイコン
-        Align(
-          alignment: Alignment.centerLeft,
-          child: GroupListIcon(),
-        ),
-        // メニューアイコン
-        Align(
-          alignment: Alignment.centerRight,
-          child: MenuListIcon(),
-        ),
-      ],
-    ),
+      ),
+      // グループリストアイコン
+      const Align(
+        alignment: Alignment.centerLeft,
+        child: GroupListIcon(),
+      ),
+      // メニューアイコン
+      const Align(
+        alignment: Alignment.centerRight,
+        child: MenuListIcon(),
+      ),
+    ],
   );
 }
 

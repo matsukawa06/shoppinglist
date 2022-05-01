@@ -1,23 +1,23 @@
 // グループリストのデフォルトID
 import 'package:flutter/material.dart';
 
-const int GROUPID_DEFUALT = 0;
+const int defualtGroupId = 0;
 // グループリストの最大件数
-const int GROUPLIST_MAX = 7;
+const int maxGroupListCount = 7;
 // グループリストのデフォルトカラー
-const MaterialColor GROUP_COLOR_DEFUALT = Colors.blue;
+const Color defualtGroupColor = Colors.blue;
 
 ///
 /// SharedPreferencesに登録する時のキー
 ///
 // 選択中のグループリストID
-const String SELECT_ID_KEY = "selectedId";
+const String keySelectId = "selectedId";
 // 購入済みを表示するかフラグ
-const String KONYUZUMIVIEW_KEW = "konyuZumiView";
+const String keyKonyuzumiView = "konyuZumiView";
 // // カラー情報
-const String COLOR_KEY = "color";
+const String keyColor = "color";
 
 // モード
-const String MODE_INS = "0";
-const String MODE_UPD = "1";
-const String MODE_DEL = "2";
+const String modeInsert = "0";
+const String modeUpdate = "1";
+const String modeDelete = "2";

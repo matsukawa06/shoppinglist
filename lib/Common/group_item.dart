@@ -11,12 +11,12 @@ Widget groupItem(BuildContext context, int? id, String title) {
     // margin: EdgeInsets.only(top: 10),
     decoration: BoxDecoration(color: _setBackColor(context, id)),
     child: Container(
-      margin: EdgeInsets.only(left: 40, right: 10),
+      margin: const EdgeInsets.only(left: 40, right: 10),
       height: 60.0,
       child: InkWell(
         onTap: () {
           // 選択したリストを選択中にする
-          prvShared.saveIntValue(SELECT_ID_KEY, id!);
+          prvShared.saveIntValue(keySelectId, id!);
           prvShared.setSelectedGroupId(id);
           // タイトルを反映させる
           providerGroup.getSelectedInfo();
@@ -26,10 +26,10 @@ Widget groupItem(BuildContext context, int? id, String title) {
         },
         child: Row(
           children: [
-            Padding(padding: EdgeInsets.only(left: 15.0)),
+            const Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
               title,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

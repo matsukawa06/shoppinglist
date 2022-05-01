@@ -5,6 +5,8 @@ import '../newlist_page/main.dart';
 /// グループリスト
 ///
 class GroupListIcon extends StatelessWidget {
+  const GroupListIcon({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -12,25 +14,25 @@ class GroupListIcon extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 非同期処理未完了 = 処理中
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
         return IconButton(
-          icon: Icon(Icons.menu),
-          color: Colors.white,
+          icon: const Icon(Icons.menu),
+          color: context.watch<ProviderGroup>().fontColor,
           iconSize: 40,
           onPressed: () {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
               builder: (BuildContext context) {
                 return SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 20),
                     child: _groupList(context),
                   ),
                 );
@@ -53,7 +55,7 @@ Widget _groupList(BuildContext context) {
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: providerGroup.groupList.map(
           (GroupStore store) {
             return Container(
@@ -75,10 +77,10 @@ Widget _groupItemAdd(BuildContext context, String title) {
   final store = context.read<ProviderGroup>();
 
   return Container(
-    margin: EdgeInsets.only(bottom: 25),
+    margin: const EdgeInsets.only(bottom: 25),
     height: 60.0,
-    decoration: new BoxDecoration(
-      border: new Border(
+    decoration: const BoxDecoration(
+      border: Border(
         top: BorderSide(
           width: 0.8,
           color: Colors.grey,
@@ -87,25 +89,25 @@ Widget _groupItemAdd(BuildContext context, String title) {
     ),
     child: InkWell(
       onTap: () async {
-        if (store.groupList.length > GROUPLIST_MAX) {
+        if (store.groupList.length > maxGroupListCount) {
           // グループリストの最大件数を超えている場合、更新画面に遷移させない
-          var result = await showDialog(
+          await showDialog(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("エラー"),
-                content: Text("リスト最大件数を超えるため\nこれ以上追加できません。"),
+                title: const Text("エラー"),
+                content: const Text("リスト最大件数を超えるため\nこれ以上追加できません。"),
                 actions: <Widget>[
                   ElevatedButton(
-                    child: Text("OK"),
+                    child: const Text("OK"),
                     onPressed: () => Navigator.of(context).pop(0),
                   )
                 ],
               );
             },
           );
-          print("dialog result: $result");
+          // print("dialog result: $result");
           Navigator.pop(context);
         } else {
           // "push"で新規画面に遷移
@@ -113,7 +115,7 @@ Widget _groupItemAdd(BuildContext context, String title) {
             MaterialPageRoute(
               builder: (context) {
                 // 遷移先の画面として編集用画面を指定
-                return ListEditPage(MODE_INS);
+                return const ListEditPage(modeInsert);
               },
             ),
           ).then(
@@ -133,12 +135,12 @@ Widget _groupItemAdd(BuildContext context, String title) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(padding: EdgeInsets.only(left: 15.0)),
-          Icon(Icons.add),
-          Padding(padding: EdgeInsets.only(left: 15.0)),
+          const Padding(padding: EdgeInsets.only(left: 15.0)),
+          const Icon(Icons.add),
+          const Padding(padding: EdgeInsets.only(left: 15.0)),
           Text(
             title,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
         ],
       ),

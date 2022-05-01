@@ -2,12 +2,20 @@ import '../Common/importer.dart';
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
 class ProviderTodo with ChangeNotifier {
-  List<TodoStore> _todoList = [];
-  List<TodoStore> get todoList => _todoList;
+  List<TodoStore> todoList = [];
+  int sumPrice = 0;
 
   Future<void> initializeList() async {
-    _todoList = await TodoController.getTodos();
-    _sumPrice = 0;
+    todoList = await TodoController.getTodos();
+    // 金額計算ここでやる
+    sumPrice = 0;
+    todoList.map(
+      (TodoStore todo) {
+        if (todo.isSum == 1) {
+          sumPrice += todo.price;
+        }
+      },
+    ).toList();
     notifyListeners();
   }
 
@@ -42,138 +50,103 @@ class ProviderTodo with ChangeNotifier {
 
   // 明細を選択した時の情報保持
   void setRowInfo(TodoStore todo) {
-    _id = todo.id!;
-    _titleController.text = todo.title;
-    _memoController.text = todo.memo;
-    _priceController.text = todo.price.toString();
-    _switchReleaseDay = intToBool(todo.release);
-    _releaseDay = todo.releaseDay;
-    _switchIsSum = intToBool(todo.isSum);
-    _switchKonyuZumi = intToBool(todo.konyuZumi);
-    _sortNo = todo.sortNo!;
-    if (_switchReleaseDay == true) {
-      _labelReleaseDate = dateToString(todo.releaseDay);
+    id = todo.id!;
+    titleController.text = todo.title;
+    memoController.text = todo.memo;
+    priceController.text = todo.price.toString();
+    switchReleaseDay = intToBool(todo.release);
+    releaseDay = todo.releaseDay;
+    switchIsSum = intToBool(todo.isSum);
+    switchKonyuZumi = intToBool(todo.konyuZumi);
+    sortNo = todo.sortNo!;
+    if (switchReleaseDay == true) {
+      labelReleaseDate = dateToString(todo.releaseDay);
     }
-    _isDelete = intToBool(todo.isDelete);
-    _deleteDay = todo.deleteDay;
-    _groupId = todo.groupId!;
-    _konyuDay = todo.konyuDay;
-    if (_switchKonyuZumi == true) {
-      _labelKonyuDate = dateToString(todo.konyuDay);
+    isDelete = intToBool(todo.isDelete);
+    deleteDay = todo.deleteDay;
+    groupId = todo.groupId!;
+    konyuDay = todo.konyuDay;
+    if (switchKonyuZumi == true) {
+      labelKonyuDate = dateToString(todo.konyuDay);
     }
   }
 
   // 各Controllerのクリア
   void clearItems() {
-    _id = 0;
-    _titleController.clear();
-    _memoController.clear();
-    _priceController.clear();
-    _switchReleaseDay = false;
-    _releaseDay = DateTime.now();
-    _switchIsSum = true;
-    _switchKonyuZumi = false;
-    _sortNo = 0;
-    _isDelete = false;
-    _deleteDay = DateTime.now();
-    _groupId = 1;
-    _konyuDay = DateTime.now();
+    id = 0;
+    titleController.clear();
+    memoController.clear();
+    priceController.clear();
+    switchReleaseDay = false;
+    releaseDay = DateTime.now();
+    switchIsSum = true;
+    switchKonyuZumi = false;
+    sortNo = 0;
+    isDelete = false;
+    deleteDay = DateTime.now();
+    groupId = 1;
+    konyuDay = DateTime.now();
   }
 
   // ID
-  int _id = 0;
-  get id => _id;
-
+  int id = 0;
   // タイトル入力内容
-  final _titleController = TextEditingController();
-  get titleController => _titleController;
-
+  final titleController = TextEditingController();
   // メモ入力内容
-  final _memoController = TextEditingController();
-  get memoController => _memoController;
-
+  final memoController = TextEditingController();
   // 価格
-  final _priceController = TextEditingController();
-  get priceController => _priceController;
-
+  final priceController = TextEditingController();
   // 発売日選択チェックの状態
-  var _switchReleaseDay = false;
-  get switchReleaseDay => _switchReleaseDay;
-
+  var switchReleaseDay = false;
   // 金額計算対象チェックの状態
-  var _switchIsSum = true;
-  get switchIsSum => _switchIsSum;
-
+  var switchIsSum = true;
   // 購入済みチェックの状態
-  var _switchKonyuZumi = false;
-  get switchKonyuZumi => _switchKonyuZumi;
-
+  var switchKonyuZumi = false;
   // 削除区分の状態
-  var _isDelete = false;
-  get isDelete => _isDelete;
-
+  var isDelete = false;
   // 削除日（物理削除する日）
-  late var _deleteDay = DateTime.now();
-  get deleteDay => _deleteDay;
-
+  late var deleteDay = DateTime.now();
   // グループID
-  int _groupId = 1;
-  get groupId => _groupId;
-
+  int groupId = 1;
   // 並び順
-  int _sortNo = 0;
-  get sortNo => _sortNo;
-
+  int sortNo = 0;
   // 発売日
-  DateTime _releaseDay = DateTime.now();
-  get releaseDay => _releaseDay;
-
-  var _labelReleaseDate = '日付を選択してください';
-  get labelReleaseDate => _labelReleaseDate;
+  DateTime releaseDay = DateTime.now();
+  // 発売日の初期ラベル
+  var labelReleaseDate = '日付を選択してください';
 
   void changeRelease(bool value) {
-    _switchReleaseDay = value;
-    _labelReleaseDate = '日付を選択してください';
+    switchReleaseDay = value;
+    labelReleaseDate = '日付を選択してください';
     notifyListeners();
   }
 
   void changeReleaseDay(DateTime value) {
-    _releaseDay = value;
-    _labelReleaseDate = dateToString(value);
+    releaseDay = value;
+    labelReleaseDate = dateToString(value);
     notifyListeners();
   }
 
   void changeIsSum(bool value) {
-    _switchIsSum = value;
+    switchIsSum = value;
     notifyListeners();
   }
 
   // 購入日
-  late var _konyuDay = DateTime.now();
-  get konyuDay => _konyuDay;
-
-  var _labelKonyuDate = '';
-  get labelKonyuDate => _labelKonyuDate;
+  late var konyuDay = DateTime.now();
+  // 購入日の初期ラベル
+  var labelKonyuDate = '';
 
   void changeKonyuZumi(bool value) {
-    _switchKonyuZumi = value;
-    _konyuDay = DateTime.now();
-    _labelKonyuDate = dateToString(_konyuDay);
+    switchKonyuZumi = value;
+    konyuDay = DateTime.now();
+    labelKonyuDate = dateToString(konyuDay);
     notifyListeners();
   }
 
   void changeKonyuDay(DateTime value) {
-    _konyuDay = value;
-    _labelKonyuDate = dateToString(value);
+    konyuDay = value;
+    labelKonyuDate = dateToString(value);
     notifyListeners();
-  }
-
-  ///
-  /// リストの合計金額
-  ///
-  int _sumPrice = 0;
-  get sumPrice => _sumPrice;
-  void addSumPrice(int value) {
-    _sumPrice += value;
   }
 }
