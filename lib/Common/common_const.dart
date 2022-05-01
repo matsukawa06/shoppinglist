@@ -5,7 +5,7 @@ const int defualtGroupId = 0;
 // グループリストの最大件数
 const int maxGroupListCount = 7;
 // グループリストのデフォルトカラー
-const MaterialColor defualtGroupColor = Colors.blue;
+const Color defualtGroupColor = Colors.blue;
 
 ///
 /// SharedPreferencesに登録する時のキー

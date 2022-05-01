@@ -12,7 +12,7 @@ class MenuListIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.more_horiz),
-      color: Colors.white,
+      color: context.watch<ProviderGroup>().fontColor,
       iconSize: 40,
       onPressed: () {
         showModalBottomSheet(
@@ -57,7 +57,7 @@ class ListUpdate extends StatelessWidget {
           children: const [
             Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
-              "リスト名を変更する",
+              "リスト情報を変更する",
               style: TextStyle(fontSize: 18),
             ),
           ],
@@ -146,6 +146,8 @@ class ListDelete extends StatelessWidget {
                       onPressed: () {
                         // グループリストと紐づくTodoを物理削除
                         store.delete(store.selectedId);
+                        // グループリストの再読み込み
+                        context.read<ProviderGroup>().initializeList();
                         // デフォルトリストを選択中にする
                         prvShared.saveIntValue(keySelectId, defualtGroupId);
                         prvShared.setSelectedGroupId(defualtGroupId);

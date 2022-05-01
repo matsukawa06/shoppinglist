@@ -33,10 +33,10 @@ class Main extends StatelessWidget {
                 // 登録・更新処理
                 _insertUpdate(context);
               },
-              child: const Text(
+              child: Text(
                 '保存',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: context.watch<ProviderGroup>().fontColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

@@ -3,10 +3,19 @@ import '../Common/importer.dart';
 // ChangeNotifierを継承すると変更可能なデータを渡せる
 class ProviderTodo with ChangeNotifier {
   List<TodoStore> todoList = [];
+  int sumPrice = 0;
 
   Future<void> initializeList() async {
     todoList = await TodoController.getTodos();
+    // 金額計算ここでやる
     sumPrice = 0;
+    todoList.map(
+      (TodoStore todo) {
+        if (todo.isSum == 1) {
+          sumPrice += todo.price;
+        }
+      },
+    ).toList();
     notifyListeners();
   }
 
@@ -139,14 +148,5 @@ class ProviderTodo with ChangeNotifier {
     konyuDay = value;
     labelKonyuDate = dateToString(value);
     notifyListeners();
-  }
-
-  ///
-  /// リストの合計金額
-  ///
-  int sumPrice = 0;
-  // get sumPrice => _sumPrice;
-  void addSumPrice(int value) {
-    sumPrice += value;
   }
 }

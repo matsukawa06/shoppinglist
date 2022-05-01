@@ -2,6 +2,14 @@ import '../Common/importer.dart';
 
 class ProviderGroup with ChangeNotifier {
   List<GroupStore> groupList = [];
+  // タイトル入力内容
+  final titleController = TextEditingController();
+  // グループカラー
+  Color primarySwatch = Colors.blue;
+  // pickerで選択中のカラー
+  Color pickerColor = Colors.blue;
+
+  Color fontColor = Colors.white;
 
   ///
   /// グループリストの初期処理
@@ -13,6 +21,7 @@ class ProviderGroup with ChangeNotifier {
       var _store = GroupStore(
         id: defualtGroupId,
         title: "マイリスト",
+        color: Colors.blue.toString(),
       );
       await GroupController.insertGroup(_store);
       groupList = await GroupController.getGroup();
@@ -26,7 +35,7 @@ class ProviderGroup with ChangeNotifier {
   // SharedPreferences に登録されている情報を保持
   int? selectedId = defualtGroupId;
   String selectedTitle = "";
-  MaterialColor groupColor = defualtGroupColor;
+  // Color groupColor = defualtGroupColor;
 
   ///
   /// SharedPreferences に登録されているリスト名を取得
@@ -40,7 +49,14 @@ class ProviderGroup with ChangeNotifier {
     for (var i = 0; i < list.length; i++) {
       selectedId = list[i].id;
       selectedTitle = list[i].title;
-      groupColor = Colors.blue; // ※とりあえずブルー固定
+      if (list[i].color == '') {
+        primarySwatch = Colors.blue;
+        changeFontColor(primarySwatch);
+      } else {
+        String valueString = list[i].color.split('(0x')[1].split(')')[0];
+        primarySwatch = Color(int.parse(valueString, radix: 16));
+        changeFontColor(primarySwatch);
+      }
       break;
     }
     notifyListeners();
@@ -54,18 +70,40 @@ class ProviderGroup with ChangeNotifier {
     TodoController.deleteTodoGroup(id);
   }
 
-  // タイトル入力内容
-  final titleController = TextEditingController();
-
+  // 各Controllerの初期化
   void initTitleController(String title) {
     titleController.text = title;
+    pickerColor = primarySwatch;
   }
 
   // 各Controllerのクリア
   void clearItems() {
     titleController.clear();
+    pickerColor = Colors.blue;
   }
 
   // グループカラーの設定
+  changeColor(Color _color) {
+    pickerColor = _color;
+    changeFontColor(_color);
+    // notifyListeners();
+  }
 
+  // フォントカラーの設定
+  changeFontColor(Color _color) {
+    switch (_color.value) {
+      case 4278238420:
+      case 4278430196:
+      case 4287349578:
+      case 4288585374:
+      case 4291681337:
+      case 4294940672:
+      case 4294951175:
+      case 4294961979:
+        fontColor = Colors.black;
+        break;
+      default:
+        fontColor = Colors.white;
+    }
+  }
 }

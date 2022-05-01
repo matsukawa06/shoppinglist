@@ -20,7 +20,7 @@ class GroupListIcon extends StatelessWidget {
         }
         return IconButton(
           icon: const Icon(Icons.menu),
-          color: Colors.white,
+          color: context.watch<ProviderGroup>().fontColor,
           iconSize: 40,
           onPressed: () {
             showModalBottomSheet(

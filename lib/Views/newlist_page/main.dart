@@ -71,19 +71,22 @@ Widget _retKanryoTextWidget() {
 /// 完了クリック処理
 ///
 void _clickKanryo(BuildContext context, String mode) async {
+  final _providerGroup = context.read<ProviderGroup>();
   if (context.read<ProviderForm>().formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
     switch (mode) {
       case modeInsert:
         var _providerStore = GroupStore(
-          title: context.read<ProviderGroup>().titleController.text,
+          title: _providerGroup.titleController.text,
+          color: _providerGroup.pickerColor.toString(),
         );
         await GroupController.insertGroup(_providerStore);
         break;
       case modeUpdate:
         var _providerStore = GroupStore(
-          id: context.read<ProviderGroup>().selectedId,
-          title: context.read<ProviderGroup>().titleController.text,
+          id: _providerGroup.selectedId,
+          title: _providerGroup.titleController.text,
+          color: _providerGroup.pickerColor.toString(),
         );
         await GroupController.updateGroup(_providerStore);
         break;

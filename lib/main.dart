@@ -32,19 +32,20 @@ void main() {
 }
 
 class HomeScreen extends StatelessWidget {
-  final _primarySwatch = Colors.blue;
+  // final _primarySwatch = Colors.blue;
   final _isDark = false;
 
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final _groupProvider = context.watch<ProviderGroup>();
     return MaterialApp(
       debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
       home: const Main(),
       title: 'ShoppingList',
       theme: ThemeData(
-        primarySwatch: _primarySwatch,
+        primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
         brightness: _isDark ? Brightness.dark : Brightness.light,
       ),
       localizationsDelegates: const [

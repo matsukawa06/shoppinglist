@@ -31,8 +31,8 @@ class Body extends StatelessWidget {
                 },
                 children: context.watch<ProviderTodo>().todoList.map(
                   (TodoStore todo) {
-                    // 合計金額計算処理
-                    _calculationPrice(context, todo);
+                    // // 合計金額計算処理
+                    // _calculationPrice(context, todo);
                     return Dismissible(
                       key: Key(todo.id.toString()),
                       background: Container(
@@ -61,16 +61,8 @@ class Body extends StatelessWidget {
             //================================
             // フッター
             //================================
-            _setFooter(context.read<ProviderTodo>().sumPrice),
-            // 広告表示
-            // AdmobBanner(
-            //   adUnitId: AdMobService().getBannerAdUnitId()!,
-            //   adSize: AdmobBannerSize(
-            //     width: MediaQuery.of(context).size.width.toInt(),
-            //     height: AdMobService().getHeight(context).toInt(),
-            //     name: 'SMART_BANNER',
-            //   ),
-            // ),
+            // _setFooter(context.read<ProviderTodo>().sumPrice),
+            _setFooter(context),
             const SpaceBox.height(value: 20),
           ],
         );
@@ -197,16 +189,6 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
 }
 
 ///
-/// 金額計算処理
-///
-void _calculationPrice(BuildContext context, TodoStore todo) {
-  // 合計金額に明細の金額を加算
-  if (todo.isSum == 1) {
-    context.read<ProviderTodo>().addSumPrice(todo.price);
-  }
-}
-
-///
 /// Todo画面の上の並びを変更する処理
 ///
 void _changeSort(BuildContext context, int oldIndex, int newIndex) {
@@ -302,23 +284,25 @@ void _isSumIconTap(BuildContext context, TodoStore todo) {
 ///
 /// フッター表示
 ///
-Widget _setFooter(int sumPrice) {
+Widget _setFooter(BuildContext context) {
+  final _groupProvider = context.watch<ProviderGroup>();
+  final _todoProvider = context.read<ProviderTodo>();
   return Stack(
     children: [
       // 合計金額表示
       Container(
-        color: Colors.blue.shade600,
+        color: _groupProvider.primarySwatch,
         // 左寄せ
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         child: Center(
           child: Text(
-            '合計：${formatPrice(sumPrice)} 円',
+            '合計：${formatPrice(_todoProvider.sumPrice)} 円',
             textAlign: TextAlign.left,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
-              color: Colors.white,
+              color: context.watch<ProviderGroup>().fontColor,
             ),
           ),
         ),
