@@ -86,7 +86,6 @@ class ProviderGroup with ChangeNotifier {
   changeColor(Color _color) {
     pickerColor = _color;
     changeFontColor(_color);
-    // notifyListeners();
   }
 
   // フォントカラーの設定
