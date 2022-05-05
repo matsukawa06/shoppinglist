@@ -75,7 +75,6 @@ class Body extends StatelessWidget {
 /// 一覧に表示するCardウィジェットの作成
 ///
 Widget _bodyCard(BuildContext context, TodoStore todo) {
-  final providerTodo = context.read<ProviderTodo>();
   return Card(
     margin: const EdgeInsets.symmetric(
       vertical: 4, // 上下
@@ -172,9 +171,8 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
                       activeColor: Colors.blue,
                       value: intToBool(todo.konyuZumi),
                       onChanged: (bool? value) {
-                        providerTodo.updateKonyuZumi(
-                            todo.id, intToBool(todo.konyuZumi) ? false : true);
-                        providerTodo.initializeList();
+                        // 購入済のチェックON/OFF処理
+                        _konyuZumiOnOff(context, todo);
                       },
                     ),
                   ),
@@ -186,6 +184,25 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
       ),
     ),
   );
+}
+
+///
+/// 購入済のチェックON/OFFの処理
+///
+void _konyuZumiOnOff(BuildContext context, TodoStore todo) {
+  final providerTodo = context.read<ProviderTodo>();
+
+  providerTodo.updateKonyuZumi(
+      todo.id, intToBool(todo.konyuZumi) ? false : true);
+  providerTodo.initializeList();
+  if (intToBool(todo.konyuZumi) == false) {
+    // メッセージ表示
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('購入済みに変更しました'),
+      ),
+    );
+  }
 }
 
 ///
@@ -212,16 +229,48 @@ void _changeSort(BuildContext context, int oldIndex, int newIndex) {
 ///
 void _todoDelete(BuildContext context, TodoStore todo) {
   final store = context.read<ProviderTodo>();
-
+  bool _isDelete = true;
   // まずリストから削除する
   store.todoList.removeAt(todo.sortNo!);
-  // DBからも削除 ※DBから削除するのは一旦止めて、論理削除にする。
-  // context.read<ProviderStore>().delete(todo.id);
-  store.updateIsDelete(todo.id, true);
-  // リストのソート番号を全件更新
-  updateSortNo(context);
-  // スワイプ後に実行される削除処理
-  store.initializeList();
+  // メッセージ表示
+  ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          // 角を丸くする
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width.toDouble(),
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // これで両端によせる
+              children: [
+                const Text('削除しました'),
+                ElevatedButton(
+                  onPressed: () {
+                    // 再度DBからTodoを取得して、削除を無かったことにする
+                    store.initializeList();
+                    _isDelete = false;
+                  },
+                  child: const Text('元に戻す'),
+                )
+              ],
+            ),
+          ),
+        ),
+      )
+      .closed
+      .then((value) {
+    if (_isDelete == true) {
+      // 元に戻さなかった場合、DBからも削除する
+      store.delete(todo.id);
+      // リストのソート番号を全件更新
+      updateSortNo(context);
+      // スワイプ後に実行される削除処理
+      store.initializeList();
+    }
+  });
 }
 
 ///

@@ -72,8 +72,8 @@ Widget _iconButton(BuildContext context) {
                 child: const Text('OK'),
                 onPressed: () {
                   // 論理削除に変更
-                  // providerStore.delete(providerStore.id);
-                  providerTodo.updateIsDelete(providerTodo.id, true);
+                  providerTodo.delete(providerTodo.id);
+                  // providerTodo.updateIsDelete(providerTodo.id, true);
                   // ダイアログを閉じる
                   Navigator.pop(context);
                   // 編集画面を閉じる
@@ -111,7 +111,7 @@ void _insertUpdate(BuildContext context) async {
         releaseDay: providerTodo.releaseDay,
         isSum: boolToInt(providerTodo.switchIsSum),
         konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-        sortNo: await TodoController.getListCount(),
+        sortNo: await TodoController.getListCount(selectedId),
         isDelete: boolToInt(providerTodo.isDelete),
         deleteDay: providerTodo.deleteDay,
         groupId: selectedId,

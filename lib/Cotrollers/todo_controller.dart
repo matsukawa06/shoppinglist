@@ -55,10 +55,11 @@ class TodoController {
   }
 
   // Todoテーブルから件数を取得
-  static Future<int> getListCount() async {
+  static Future<int> getListCount(int selectedId) async {
     final Database db = await MyDataBase.database;
     var result = await db.rawQuery(
-      'SELECT COUNT(*) FROM todo where isDelete = 0',
+      'SELECT COUNT(*) FROM todo where isDelete = 0 AND groupId = ?',
+      [selectedId],
     );
     int? exists = Sqflite.firstIntValue(result);
     return exists == null ? 0 : Sqflite.firstIntValue(result)!;
