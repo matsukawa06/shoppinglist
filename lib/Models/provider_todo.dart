@@ -24,6 +24,11 @@ class ProviderTodo with ChangeNotifier {
     TodoController.deleteTodo(id!);
   }
 
+  // 全レコード削除
+  Future<void> deleteAll() async {
+    TodoController.deleteAll();
+  }
+
   // ソートNo.を更新
   Future<void> updateSortNo(int? id, int sortNo) async {
     TodoController.updateSotrNo(id!, sortNo);
@@ -42,11 +47,11 @@ class ProviderTodo with ChangeNotifier {
     // notifyListeners();
   }
 
-  // 削除区分の更新
-  Future<void> updateIsDelete(int? id, bool value) async {
-    TodoController.updateIsDelete(id!, value);
-    // notifyListeners();
-  }
+  // // 削除区分の更新
+  // Future<void> updateIsDelete(int? id, bool value) async {
+  //   TodoController.updateIsDelete(id!, value);
+  //   // notifyListeners();
+  // }
 
   // 明細を選択した時の情報保持
   void setRowInfo(TodoStore todo) {

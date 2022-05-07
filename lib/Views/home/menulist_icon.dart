@@ -57,7 +57,7 @@ class ListUpdate extends StatelessWidget {
           children: const [
             Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
-              "リスト情報を変更する",
+              'リスト情報を変更する',
               style: TextStyle(fontSize: 18),
             ),
           ],
@@ -116,14 +116,14 @@ class ListDelete extends StatelessWidget {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Text("確認"),
+                  title: const Text('確認'),
                   content: SizedBox(
                     height: 90.0,
                     child: Column(
                       children: const [
-                        Text("リストを削除します。よろしいですか？"),
+                        Text('リストを削除します。よろしいですか？'),
                         Text(
-                          "この操作は取り消しできません。",
+                          'この操作は取り消しできません。',
                           style: TextStyle(
                             color: Colors.red,
                           ),
@@ -132,8 +132,8 @@ class ListDelete extends StatelessWidget {
                     ),
                   ),
                   actions: <Widget>[
-                    ElevatedButton(
-                      child: const Text("Cancel"),
+                    TextButton(
+                      child: const Text('いいえ'),
                       onPressed: () {
                         // ダイアログを閉じる
                         Navigator.of(context).pop(0);
@@ -141,8 +141,8 @@ class ListDelete extends StatelessWidget {
                         Navigator.pop(context);
                       },
                     ),
-                    ElevatedButton(
-                      child: const Text("OK"),
+                    TextButton(
+                      child: const Text('はい'),
                       onPressed: () {
                         // グループリストと紐づくTodoを物理削除
                         store.delete(store.selectedId);
@@ -184,14 +184,14 @@ Widget _delContainer(BuildContext context) {
     alignment: Alignment.topLeft,
     child: ListTile(
       title: Text(
-        "リストを削除する",
+        'リストを削除する',
         style: TextStyle(
           fontSize: 18,
           color: _isDefualt ? Colors.grey : Colors.black,
         ),
       ),
       subtitle: Text(
-        _isDefualt ? "\nデフォルトのリストは削除できません" : "",
+        _isDefualt ? '\nデフォルトのリストは削除できません' : '',
         style: TextStyle(
           fontSize: 14,
           color: _isDefualt ? Colors.grey : Colors.black,

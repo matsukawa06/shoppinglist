@@ -65,7 +65,7 @@ Widget _groupList(BuildContext context) {
           },
         ).toList(),
       ),
-      _groupItemAdd(context, "リストを新しく作成"),
+      _groupItemAdd(context, 'リストを新しく作成'),
     ],
   );
 }
@@ -96,11 +96,11 @@ Widget _groupItemAdd(BuildContext context, String title) {
             barrierDismissible: false,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("エラー"),
-                content: const Text("リスト最大件数を超えるため\nこれ以上追加できません。"),
+                title: const Text('エラー'),
+                content: const Text('リスト最大件数を超えるため\nこれ以上追加できません。'),
                 actions: <Widget>[
-                  ElevatedButton(
-                    child: const Text("OK"),
+                  TextButton(
+                    child: const Text('OK'),
                     onPressed: () => Navigator.of(context).pop(0),
                   )
                 ],

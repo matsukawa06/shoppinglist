@@ -32,7 +32,6 @@ void main() {
 }
 
 class HomeScreen extends StatelessWidget {
-  // final _primarySwatch = Colors.blue;
   final _isDark = false;
 
   const HomeScreen({Key? key}) : super(key: key);

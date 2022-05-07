@@ -70,6 +70,13 @@ class ProviderGroup with ChangeNotifier {
     TodoController.deleteTodoGroup(id);
   }
 
+  ///
+  /// 全件削除
+  ///
+  Future<void> deleteAll() async {
+    GroupController.deleteAll();
+  }
+
   // 各Controllerの初期化
   void initTitleController(String title) {
     titleController.text = title;

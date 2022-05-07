@@ -79,7 +79,7 @@ Future _showColorPicker(BuildContext context) async {
           onColorChanged: context.read<ProviderGroup>().changeColor,
         ),
         actions: <Widget>[
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               Navigator.pop(context);
             },

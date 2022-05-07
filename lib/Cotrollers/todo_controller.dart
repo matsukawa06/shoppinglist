@@ -14,7 +14,9 @@ class TodoController {
     );
   }
 
-  // Todoテーブルから対象のデータ取得
+  ///
+  /// Todoテーブルから対象のデータ取得
+  ///
   static Future<List<TodoStore>> getTodos() async {
     final Database db = await MyDataBase.database;
     // ローカル設定の取得
@@ -54,7 +56,9 @@ class TodoController {
     );
   }
 
-  // Todoテーブルから件数を取得
+  ///
+  /// Todoテーブルから件数を取得
+  ///
   static Future<int> getListCount(int selectedId) async {
     final Database db = await MyDataBase.database;
     var result = await db.rawQuery(
@@ -65,7 +69,9 @@ class TodoController {
     return exists == null ? 0 : Sqflite.firstIntValue(result)!;
   }
 
-  // Todoテーブルの1件を更新
+  ///
+  /// Todoテーブルの1件を更新
+  ///
   static Future<void> updateTodo(TodoStore todo) async {
     // Get a reference to the database.
     final db = await MyDataBase.database;
@@ -78,21 +84,27 @@ class TodoController {
     );
   }
 
-  // Todoテーブルソート番号を更新
+  ///
+  /// Todoテーブルソート番号を更新
+  ///
   static Future<void> updateSotrNo(int id, int sortNo) async {
     var values = <String, dynamic>{"sortNo": sortNo};
     final db = await MyDataBase.database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
 
-  // Todoテーブルの金額合計対象フラグを更新
+  ///
+  /// Todoテーブルの金額合計対象フラグを更新
+  ///
   static Future<void> updateIsSum(int id, bool isSum) async {
     var values = <String, dynamic>{"isSum": boolToInt(isSum)};
     final db = await MyDataBase.database;
     await db.update('todo', values, where: "id = ?", whereArgs: [id]);
   }
 
-  // Todoテーブルの購入済みフラグを更新
+  ///
+  /// Todoテーブルの購入済みフラグを更新
+  ///
   static Future<void> updateKonyuZumi(int id, bool konyuZumi) async {
     var values = <String, dynamic>{"konyuZumi": boolToInt(konyuZumi)};
     final db = await MyDataBase.database;
@@ -105,14 +117,18 @@ class TodoController {
     }
   }
 
-  // Todoテーブルの削除フラグを更新
-  static Future<void> updateIsDelete(int id, bool isDelete) async {
-    var values = <String, dynamic>{"isDelete": boolToInt(isDelete)};
-    final db = await MyDataBase.database;
-    await db.update('todo', values, where: "id = ?", whereArgs: [id]);
-  }
+  // ///
+  // /// Todoテーブルの削除フラグを更新
+  // ///
+  // static Future<void> updateIsDelete(int id, bool isDelete) async {
+  //   var values = <String, dynamic>{"isDelete": boolToInt(isDelete)};
+  //   final db = await MyDataBase.database;
+  //   await db.update('todo', values, where: "id = ?", whereArgs: [id]);
+  // }
 
-  // Todoテーブルから1件を削除
+  ///
+  /// Todoテーブルから1件を削除
+  ///
   static Future<void> deleteTodo(int id) async {
     final db = await MyDataBase.database;
     await db.delete(
@@ -122,7 +138,17 @@ class TodoController {
     );
   }
 
-  // Todoテーブルから対象グループIDのデータを削除
+  ///
+  /// Todoテーブルから全件を削除
+  ///
+  static Future<void> deleteAll() async {
+    final db = await MyDataBase.database;
+    await db.delete('todo');
+  }
+
+  ///
+  /// Todoテーブルから対象グループIDのデータを削除
+  ///
   static Future<void> deleteTodoGroup(int groupId) async {
     final db = await MyDataBase.database;
     await db.delete(

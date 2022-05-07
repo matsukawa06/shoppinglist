@@ -17,7 +17,7 @@ class SettingPage extends StatefulWidget {
 class _State extends State<SettingPage> {
   // String _appName = "";
   // String _packageName = "";
-  String _version = "";
+  String _version = '';
   // String _buildNumber = "";
 
   _restoreValues(BuildContext context) async {
@@ -53,13 +53,6 @@ class _State extends State<SettingPage> {
         padding: const EdgeInsets.all(28),
         child: Column(
           children: <Widget>[
-            // Container(
-            //   width: double.infinity,
-            //   padding: EdgeInsets.only(left: 10),
-            //   child: Text(
-            //     '各種設定',
-            //   ),
-            // ),
             Card(
               elevation: 5,
               child: SwitchListTile(
@@ -72,11 +65,6 @@ class _State extends State<SettingPage> {
               ),
             ),
             const SpaceBox.height(value: 32),
-            // Container(
-            //   width: double.infinity,
-            //   padding: EdgeInsets.only(left: 10),
-            //   child: Text('情報'),
-            // ),
             Card(
               elevation: 5, // 影のサイズ
               child: Column(
@@ -93,11 +81,11 @@ class _State extends State<SettingPage> {
                     child: InkWell(
                       onTap: () => showAboutDialog(
                         context: context,
-                        applicationName: "買い物計画",
-                        applicationVersion: "Ver. " + _version,
+                        applicationName: '買い物計画',
+                        applicationVersion: 'Ver. ' + _version,
                       ),
                       child: const ListTile(
-                        title: Text("アプリ情報"),
+                        title: Text('アプリ情報'),
                       ),
                     ),
                   ),
@@ -105,10 +93,22 @@ class _State extends State<SettingPage> {
                   const InkWell(
                     onTap: _launchURL,
                     child: ListTile(
-                      title: Text("利用規約・プライバシーポリシー"),
+                      title: Text('利用規約・プライバシーポリシー'),
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SpaceBox.height(value: 32),
+            Card(
+              elevation: 5, // 影のサイズ
+              child: InkWell(
+                child: const ListTile(
+                  title: Text('データ初期化'),
+                ),
+                onTap: () {
+                  _allDataInit(context);
+                },
               ),
             ),
           ],
@@ -122,10 +122,68 @@ class _State extends State<SettingPage> {
 /// 利用規約のページをブラウザで表示する
 ///
 void _launchURL() async {
-  const url = "https://naonari.com/kiyaku.html";
+  const url = 'https://naonari.com/kiyaku.html';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
     throw 'Could not Launch $url';
   }
+}
+
+///
+/// 全データ初期化処理
+/// リスト・グループを全て削除する
+///
+Future _allDataInit(BuildContext context) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('確認'),
+        content: SizedBox(
+          height: 90,
+          child: Column(
+            children: const [
+              Text('全てのデータを削除します。よろしいですか？'),
+              Text(
+                'この操作は取り消しできません。',
+                style: TextStyle(color: Colors.red),
+              )
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('いいえ'),
+            onPressed: () => Navigator.of(context).pop(0),
+          ),
+          // const SpaceBox.width(value: 12),
+          TextButton(
+            child: const Text('はい'),
+            onPressed: () {
+              TodoController.deleteAll();
+              GroupController.deleteAll();
+              context.read<ProviderGroup>().initializeList();
+              context.read<ProviderTodo>().initializeList();
+              Navigator.of(context).pop(0);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  margin: const EdgeInsets.all(20),
+                  behavior: SnackBarBehavior.floating,
+                  content: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: const Text(
+                      '全てのデータを削除しました',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
