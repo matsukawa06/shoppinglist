@@ -99,4 +99,12 @@ class GroupController {
       whereArgs: [id],
     );
   }
+
+  ///
+  /// Groupテーブルから全件削除
+  ///
+  static Future<void> deleteAll() async {
+    final db = await MyDataBase.database;
+    await db.delete('grouplist');
+  }
 }

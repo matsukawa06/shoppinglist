@@ -198,8 +198,19 @@ void _konyuZumiOnOff(BuildContext context, TodoStore todo) {
   if (intToBool(todo.konyuZumi) == false) {
     // メッセージ表示
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('購入済みに変更しました'),
+      SnackBar(
+        margin: const EdgeInsets.all(20),
+        behavior: SnackBarBehavior.floating,
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          // height: 60,
+          child: const Text(
+            '購入済みに変更しました',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -236,24 +247,33 @@ void _todoDelete(BuildContext context, TodoStore todo) {
   ScaffoldMessenger.of(context)
       .showSnackBar(
         SnackBar(
-          // 角を丸くする
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
+          margin: const EdgeInsets.all(20),
+          behavior: SnackBarBehavior.floating,
           content: SizedBox(
-            width: MediaQuery.of(context).size.width.toDouble(),
-            height: 60,
+            width: MediaQuery.of(context).size.width,
+            // height: 60,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween, // これで両端によせる
               children: [
-                const Text('削除しました'),
-                ElevatedButton(
+                const Text(
+                  '削除しました',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton(
                   onPressed: () {
                     // 再度DBからTodoを取得して、削除を無かったことにする
                     store.initializeList();
                     _isDelete = false;
                   },
-                  child: const Text('元に戻す'),
+                  child: const Text(
+                    '元に戻す',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 )
               ],
             ),
@@ -378,10 +398,6 @@ String stringDay(TodoStore todo) {
   }
 }
 
-// String strReleaseDay(int isRelease, DateTime value) {
-//   return isRelease == 1 ? '${dateToString(value)} 発売' : '';
+// IconData konyuZumiIcon(int value) {
+//   return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;
 // }
-
-IconData konyuZumiIcon(int value) {
-  return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;
-}

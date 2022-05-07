@@ -64,12 +64,12 @@ Widget _iconButton(BuildContext context) {
             title: const Text('確認'),
             content: const Text('削除します。よろしいですか？'),
             actions: <Widget>[
-              ElevatedButton(
-                child: const Text('Cancel'),
+              TextButton(
+                child: const Text('いいえ'),
                 onPressed: () => Navigator.of(context).pop(0),
               ),
-              ElevatedButton(
-                child: const Text('OK'),
+              TextButton(
+                child: const Text('はい'),
                 onPressed: () {
                   // 論理削除に変更
                   providerTodo.delete(providerTodo.id);
