@@ -3,7 +3,7 @@ import 'importer.dart';
 ///
 /// grouplistテーブルに登録されているデータを表示するアイテム
 ///
-Widget groupItem(BuildContext context, int? id, String title) {
+Widget groupItem(BuildContext context, int? id, String title, String color) {
   final prvShared = context.read<ProviderSharedPreferences>();
   final providerGroup = context.read<ProviderGroup>();
 
@@ -26,7 +26,16 @@ Widget groupItem(BuildContext context, int? id, String title) {
         },
         child: Row(
           children: [
-            const Padding(padding: EdgeInsets.only(left: 15.0)),
+            const Padding(padding: EdgeInsets.only(left: 1.0)),
+            Container(
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                color: stringToColor(color),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(left: 5.0)),
             Text(
               title,
               style: const TextStyle(fontSize: 18),

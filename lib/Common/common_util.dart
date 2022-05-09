@@ -45,6 +45,18 @@ class SpaceBox extends SizedBox {
 }
 
 ///
+/// DBに登録した文字列をColorに変換して返却する
+///
+Color stringToColor(String pStr) {
+  if (pStr == '') {
+    return Colors.blue;
+  } else {
+    String valueString = pStr.split('(0x')[1].split(')')[0];
+    return Color(int.parse(valueString, radix: 16));
+  }
+}
+
+///
 /// MaterialColorを作成する
 ///
 MaterialColor createMaterialColor(Color color) {

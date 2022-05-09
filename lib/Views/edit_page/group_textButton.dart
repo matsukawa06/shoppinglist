@@ -49,7 +49,7 @@ Widget _groupList(BuildContext context) {
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
-              child: groupItem(context, store.id, store.title),
+              child: groupItem(context, store.id, store.title, store.color),
             );
           },
         ).toList(),
