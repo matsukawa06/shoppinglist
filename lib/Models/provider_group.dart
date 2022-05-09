@@ -49,14 +49,16 @@ class ProviderGroup with ChangeNotifier {
     for (var i = 0; i < list.length; i++) {
       selectedId = list[i].id;
       selectedTitle = list[i].title;
-      if (list[i].color == '') {
-        primarySwatch = Colors.blue;
-        changeFontColor(primarySwatch);
-      } else {
-        String valueString = list[i].color.split('(0x')[1].split(')')[0];
-        primarySwatch = Color(int.parse(valueString, radix: 16));
-        changeFontColor(primarySwatch);
-      }
+      primarySwatch = stringToColor(list[i].color);
+      changeFontColor(primarySwatch);
+      // if (list[i].color == '') {
+      //   primarySwatch = Colors.blue;
+      //   changeFontColor(primarySwatch);
+      // } else {
+      //   String valueString = list[i].color.split('(0x')[1].split(')')[0];
+      //   primarySwatch = Color(int.parse(valueString, radix: 16));
+      //   changeFontColor(primarySwatch);
+      // }
       break;
     }
     notifyListeners();
