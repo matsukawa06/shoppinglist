@@ -6,9 +6,9 @@ class MemoTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final _todoProvider = context.watch<TodoProvider>();
     return TextField(
-      controller: providerTodo.memoController,
+      controller: _todoProvider.memoController,
       enabled: true,
       maxLength: 300,
       style: const TextStyle(color: Colors.black),

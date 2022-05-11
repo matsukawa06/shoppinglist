@@ -6,9 +6,9 @@ class PriceTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final _todoProvider = context.watch<TodoProvider>();
     return TextFormField(
-      controller: providerTodo.priceController,
+      controller: _todoProvider.priceController,
       enabled: true,
       maxLength: 8,
       style: const TextStyle(color: Colors.black),

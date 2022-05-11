@@ -1,6 +1,6 @@
 import '../Common/importer.dart';
 
-class ProviderSharedPreferences with ChangeNotifier {
+class SharedPreferencesProvider with ChangeNotifier {
   // 購入済を表示するか
   var isKonyuZumiView = false;
 

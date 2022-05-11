@@ -1,22 +1,27 @@
 import '../Common/importer.dart';
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
-class ProviderTodo with ChangeNotifier {
+class TodoProvider with ChangeNotifier {
   List<TodoStore> todoList = [];
-  int sumPrice = 0;
+  int totalPrice = 0;
 
   Future<void> initializeList() async {
     todoList = await TodoController.getTodos();
     // 金額計算ここでやる
-    sumPrice = 0;
+    _sumPrice();
+    notifyListeners();
+  }
+
+  // 合計金額を計算する
+  void _sumPrice() {
+    totalPrice = 0;
     todoList.map(
       (TodoStore todo) {
         if (todo.isSum == 1) {
-          sumPrice += todo.price;
+          totalPrice += todo.price;
         }
       },
     ).toList();
-    notifyListeners();
   }
 
   // 1レコード削除
@@ -27,18 +32,6 @@ class ProviderTodo with ChangeNotifier {
   // 全レコード削除
   Future<void> deleteAll() async {
     TodoController.deleteAll();
-  }
-
-  // ソートNo.を更新
-  Future<void> updateSortNo(int? id, int sortNo) async {
-    TodoController.updateSotrNo(id!, sortNo);
-    // notifyListeners();
-  }
-
-  // 計算対象区分の更新
-  Future<void> updateIsSum(int? id, bool value) async {
-    TodoController.updateIsSum(id!, value);
-    // notifyListeners();
   }
 
   // 購入済区分の更新
@@ -153,5 +146,50 @@ class ProviderTodo with ChangeNotifier {
     konyuDay = value;
     labelKonyuDate = dateToString(value);
     notifyListeners();
+  }
+
+  /* リストのソート順変更処理 */
+  void changeSort(int oldIndex, int newIndex) {
+    if (oldIndex < newIndex) {
+      // 下に移動した場合
+      newIndex -= 1;
+    }
+    final TodoStore todoStore = todoList.removeAt(oldIndex);
+    todoList.insert(newIndex, todoStore);
+
+    // リストのソート番号を全件更新
+    changeSortAll();
+    // 再描画
+    notifyListeners();
+  }
+
+  /* リストのソート番号を全件更新 */
+  void changeSortAll() {
+    // リストのソート番号を全件更新
+    for (var i = 0; i < todoList.length; i++) {
+      if (todoList[i].sortNo != i) {
+        // 登録されているソート番号が現在のインデックスと異なる場合更新
+        TodoController.updateSotrNo(todoList[i].id!, i);
+      }
+    }
+  }
+
+  /* todoを１件削除 */
+  void todoDelete(int? id) {
+    // DBから削除
+    delete(id);
+    // リストのソート番号を全件更新
+    changeSortAll();
+    // 合計金額再計算
+    _sumPrice();
+    // 再描画
+    notifyListeners();
+  }
+
+  /* 計算対象区分の更新 */
+  void updateIsSum(TodoStore _todo) {
+    TodoController.updateIsSum(
+        _todo.id!, intToBool(_todo.isSum) ? false : true);
+    initializeList();
   }
 }

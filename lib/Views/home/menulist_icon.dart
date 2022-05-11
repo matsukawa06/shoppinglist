@@ -12,7 +12,7 @@ class MenuListIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.more_horiz),
-      color: context.watch<ProviderGroup>().fontColor,
+      color: context.watch<GroupProvider>().fontColor,
       iconSize: 40,
       onPressed: () {
         showModalBottomSheet(
@@ -47,7 +47,7 @@ class ListUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = context.read<ProviderGroup>();
+    final store = context.read<GroupProvider>();
 
     return Container(
       margin: const EdgeInsets.only(top: 25, bottom: 5),
@@ -69,17 +69,17 @@ class ListUpdate extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return const ListEditPage(modeUpdate);
+                return const Main(modeUpdate);
               },
             ),
           ).then(
             (value) async {
               // storeの初期化
-              context.read<ProviderGroup>().clearItems();
+              context.read<GroupProvider>().clearItems();
               // タイトルを反映させる
               store.getSelectedInfo();
               // グループリストの再読み込み
-              context.read<ProviderGroup>().initializeList();
+              context.read<GroupProvider>().initializeList();
               // // ToDoリストも再読み込みする
               // context.read<ProviderTodo>().initializeList();
               // メニューリストを閉じる
@@ -100,8 +100,8 @@ class ListDelete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prvShared = context.read<ProviderSharedPreferences>();
-    final store = context.read<ProviderGroup>();
+    final _sharedProvider = context.read<SharedPreferencesProvider>();
+    final _groupProvider = context.read<GroupProvider>();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 35),
@@ -109,7 +109,7 @@ class ListDelete extends StatelessWidget {
       child: InkWell(
         child: _delContainer(context),
         onTap: () async {
-          if (store.selectedId != defualtGroupId) {
+          if (_groupProvider.selectedId != defualtGroupId) {
             // デフォルトのリストで無ければ、削除処理を行う
             await showDialog(
               context: context,
@@ -145,16 +145,17 @@ class ListDelete extends StatelessWidget {
                       child: const Text('はい'),
                       onPressed: () {
                         // グループリストと紐づくTodoを物理削除
-                        store.delete(store.selectedId);
+                        _groupProvider.delete(_groupProvider.selectedId);
                         // グループリストの再読み込み
-                        context.read<ProviderGroup>().initializeList();
+                        context.read<GroupProvider>().initializeList();
                         // デフォルトリストを選択中にする
-                        prvShared.saveIntValue(keySelectId, defualtGroupId);
-                        prvShared.setSelectedGroupId(defualtGroupId);
+                        _sharedProvider.saveIntValue(
+                            keySelectId, defualtGroupId);
+                        _sharedProvider.setSelectedGroupId(defualtGroupId);
                         // タイトルを反映させる
-                        store.getSelectedInfo();
+                        _groupProvider.getSelectedInfo();
                         // ToDoリストも再読み込みする
-                        context.read<ProviderTodo>().initializeList();
+                        context.read<TodoProvider>().initializeList();
                         // ダイアログを閉じる
                         Navigator.pop(context);
                         // メニューリストを閉じる
@@ -176,8 +177,8 @@ class ListDelete extends StatelessWidget {
 /// リスト削除用の選択行の見た目
 ///
 Widget _delContainer(BuildContext context) {
-  final store = context.watch<ProviderGroup>();
-  final _isDefualt = store.selectedId == defualtGroupId ? true : false;
+  final _groupProvider = context.watch<GroupProvider>();
+  final _isDefualt = _groupProvider.selectedId == defualtGroupId ? true : false;
 
   return Container(
     width: double.infinity,

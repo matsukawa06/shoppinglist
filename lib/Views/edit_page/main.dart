@@ -14,7 +14,7 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _providerTodo = context.watch<ProviderTodo>();
+    final _providerTodo = context.watch<TodoProvider>();
 
     Intl.defaultLocale = 'ja';
     initializeDateFormatting('ja');
@@ -36,7 +36,7 @@ class Main extends StatelessWidget {
               child: Text(
                 '保存',
                 style: TextStyle(
-                  color: context.read<ProviderGroup>().fontColor,
+                  color: context.read<GroupProvider>().fontColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -53,7 +53,7 @@ class Main extends StatelessWidget {
 /// AppBarの右側
 ///
 Widget _iconButton(BuildContext context) {
-  final providerTodo = context.watch<ProviderTodo>();
+  final _todoProvider = context.watch<TodoProvider>();
   return IconButton(
     onPressed: () async {
       await showDialog(
@@ -72,7 +72,7 @@ Widget _iconButton(BuildContext context) {
                 child: const Text('はい'),
                 onPressed: () {
                   // 論理削除に変更
-                  providerTodo.delete(providerTodo.id);
+                  _todoProvider.delete(_todoProvider.id);
                   // providerTodo.updateIsDelete(providerTodo.id, true);
                   // ダイアログを閉じる
                   Navigator.pop(context);
@@ -94,47 +94,47 @@ Widget _iconButton(BuildContext context) {
 /// 登録・修正処理
 ///
 void _insertUpdate(BuildContext context) async {
-  final providerTodo = context.read<ProviderTodo>();
-  final providerForm = context.read<ProviderForm>();
+  final _todoProvider = context.read<TodoProvider>();
+  final _formProvider = context.read<FormProvider>();
   var prefs = await SharedPreferences.getInstance();
   var selectedId = (prefs.getInt(keySelectId) ?? defualtGroupId);
 
-  if (providerForm.formVallidate()) {
+  if (_formProvider.formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
-    if (providerTodo.id == 0) {
+    if (_todoProvider.id == 0) {
       // 新規
       var _todo = TodoStore(
-        title: providerTodo.titleController.text,
-        memo: providerTodo.memoController.text,
-        price: int.parse(providerTodo.priceController.text),
-        release: boolToInt(providerTodo.switchReleaseDay),
-        releaseDay: providerTodo.releaseDay,
-        isSum: boolToInt(providerTodo.switchIsSum),
-        konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
+        title: _todoProvider.titleController.text,
+        memo: _todoProvider.memoController.text,
+        price: int.parse(_todoProvider.priceController.text),
+        release: boolToInt(_todoProvider.switchReleaseDay),
+        releaseDay: _todoProvider.releaseDay,
+        isSum: boolToInt(_todoProvider.switchIsSum),
+        konyuZumi: boolToInt(_todoProvider.switchKonyuZumi),
         sortNo: await TodoController.getListCount(selectedId),
-        isDelete: boolToInt(providerTodo.isDelete),
-        deleteDay: providerTodo.deleteDay,
+        isDelete: boolToInt(_todoProvider.isDelete),
+        deleteDay: _todoProvider.deleteDay,
         groupId: selectedId,
-        konyuDay: providerTodo.konyuDay,
+        konyuDay: _todoProvider.konyuDay,
       );
 
       await TodoController.insertTodo(_todo);
     } else {
       // 修正
       var _todo = TodoStore(
-        id: providerTodo.id,
-        title: providerTodo.titleController.text,
-        memo: providerTodo.memoController.text,
-        price: int.parse(providerTodo.priceController.text),
-        release: boolToInt(providerTodo.switchReleaseDay),
-        releaseDay: providerTodo.releaseDay,
-        isSum: boolToInt(providerTodo.switchIsSum),
-        konyuZumi: boolToInt(providerTodo.switchKonyuZumi),
-        sortNo: providerTodo.sortNo,
-        isDelete: boolToInt(providerTodo.isDelete),
-        deleteDay: providerTodo.deleteDay,
+        id: _todoProvider.id,
+        title: _todoProvider.titleController.text,
+        memo: _todoProvider.memoController.text,
+        price: int.parse(_todoProvider.priceController.text),
+        release: boolToInt(_todoProvider.switchReleaseDay),
+        releaseDay: _todoProvider.releaseDay,
+        isSum: boolToInt(_todoProvider.switchIsSum),
+        konyuZumi: boolToInt(_todoProvider.switchKonyuZumi),
+        sortNo: _todoProvider.sortNo,
+        isDelete: boolToInt(_todoProvider.isDelete),
+        deleteDay: _todoProvider.deleteDay,
         groupId: selectedId,
-        konyuDay: providerTodo.konyuDay,
+        konyuDay: _todoProvider.konyuDay,
       );
 
       await TodoController.updateTodo(_todo);

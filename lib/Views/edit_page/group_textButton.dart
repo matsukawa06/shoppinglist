@@ -6,7 +6,7 @@ class GroupTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerGroup = context.watch<ProviderGroup>();
+    final _groupProvider = context.watch<GroupProvider>();
     return Container(
       alignment: Alignment.centerLeft,
       child: TextButton(
@@ -27,7 +27,7 @@ class GroupTextButton extends StatelessWidget {
           );
         },
         child: Text(
-          providerGroup.selectedTitle + " ▼",
+          _groupProvider.selectedTitle + " ▼",
         ),
       ),
     );
@@ -38,14 +38,14 @@ class GroupTextButton extends StatelessWidget {
 /// showModalBottomSheetの表示内容
 ///
 Widget _groupList(BuildContext context) {
-  final providerGroup = context.read<ProviderGroup>();
+  final _groupProvider = context.read<GroupProvider>();
   return Column(
     children: [
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        children: providerGroup.groupList.map(
+        children: _groupProvider.groupList.map(
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),

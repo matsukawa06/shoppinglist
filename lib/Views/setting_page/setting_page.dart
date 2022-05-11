@@ -21,9 +21,10 @@ class _State extends State<SettingPage> {
   // String _buildNumber = "";
 
   _restoreValues(BuildContext context) async {
-    var provider = context.read<ProviderSharedPreferences>();
     var prefs = await SharedPreferences.getInstance();
-    provider.setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
+    context
+        .read<SharedPreferencesProvider>()
+        .setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
   }
 
   @override
@@ -42,7 +43,7 @@ class _State extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final prvShared = context.watch<ProviderSharedPreferences>();
+    final _sharedProvider = context.watch<SharedPreferencesProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -56,11 +57,11 @@ class _State extends State<SettingPage> {
             Card(
               elevation: 5,
               child: SwitchListTile(
-                value: prvShared.isKonyuZumiView,
+                value: _sharedProvider.isKonyuZumiView,
                 title: const Text('購入済みを表示する'),
                 onChanged: (bool value) {
-                  prvShared.saveBoolValue(keyKonyuzumiView, value);
-                  prvShared.setKonyuZumiView(value);
+                  _sharedProvider.saveBoolValue(keyKonyuzumiView, value);
+                  _sharedProvider.setKonyuZumiView(value);
                 },
               ),
             ),
@@ -164,8 +165,8 @@ Future _allDataInit(BuildContext context) async {
             onPressed: () {
               TodoController.deleteAll();
               GroupController.deleteAll();
-              context.read<ProviderGroup>().initializeList();
-              context.read<ProviderTodo>().initializeList();
+              context.read<GroupProvider>().initializeList();
+              context.read<TodoProvider>().initializeList();
               Navigator.of(context).pop(0);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

@@ -18,13 +18,13 @@ void main() {
     MultiProvider(
       providers: [
         // Todo情報
-        ChangeNotifierProvider(create: (_) => ProviderTodo()),
+        ChangeNotifierProvider(create: (_) => TodoProvider()),
         // 端末保存情報
-        ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
+        ChangeNotifierProvider(create: (_) => SharedPreferencesProvider()),
         // validate用
-        ChangeNotifierProvider(create: (_) => ProviderForm()),
+        ChangeNotifierProvider(create: (_) => FormProvider()),
         // グループリスト用
-        ChangeNotifierProvider(create: (_) => ProviderGroup()),
+        ChangeNotifierProvider(create: (_) => GroupProvider()),
       ],
       child: const HomeScreen(),
     ),
@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _groupProvider = context.watch<ProviderGroup>();
+    final _groupProvider = context.watch<GroupProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
       home: const Main(),

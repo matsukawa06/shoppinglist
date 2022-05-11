@@ -21,10 +21,10 @@ export 'group_item.dart';
 ///
 /// Provier読み込み
 ///
-export '../Models/provider_todo.dart';
-export '../Models/provider_group.dart';
-export '../Models/provider_shared.dart';
-export '../Models/provider_form.dart';
+export '../Models/todo_provider.dart';
+export '../Models/group_provider.dart';
+export '../Models/shared_provider.dart';
+export '../Models/form_provider.dart';
 
 ///
 /// storeとcontroller

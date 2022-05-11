@@ -6,11 +6,11 @@ class TitleTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final _todoProvider = context.watch<TodoProvider>();
     return TextFormField(
       // 入力エリアのセレクトアクション（コピペ、選択、削除など）の有効、無効
       enableInteractiveSelection: true,
-      controller: providerTodo.titleController,
+      controller: _todoProvider.titleController,
       enabled: true,
       maxLength: 30,
       style: const TextStyle(color: Colors.black),

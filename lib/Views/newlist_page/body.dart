@@ -48,7 +48,7 @@ class Body extends StatelessWidget {
                           width: 50,
                           height: 40,
                           child: Container(
-                            color: context.watch<ProviderGroup>().pickerColor,
+                            color: context.watch<GroupProvider>().pickerColor,
                           ),
                         ),
                       ],
@@ -75,8 +75,8 @@ Future _showColorPicker(BuildContext context) async {
       return AlertDialog(
         title: const Text('カラー選択'),
         content: BlockPicker(
-          pickerColor: context.watch<ProviderGroup>().pickerColor,
-          onColorChanged: context.read<ProviderGroup>().changeColor,
+          pickerColor: context.watch<GroupProvider>().pickerColor,
+          onColorChanged: context.read<GroupProvider>().changeColor,
         ),
         actions: <Widget>[
           TextButton(

@@ -5,19 +5,19 @@ class ReleaseContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final _todoProvider = context.watch<TodoProvider>();
     return Column(
       children: [
         SwitchListTile(
-          value: providerTodo.switchReleaseDay,
+          value: _todoProvider.switchReleaseDay,
           title: const Text('発売日'),
           onChanged: (bool value) {
-            providerTodo.changeRelease(value);
+            _todoProvider.changeRelease(value);
           },
         ),
         // 日付表示（switchReleaseDayで表示・非表示切替）
         Visibility(
-          visible: providerTodo.switchReleaseDay,
+          visible: _todoProvider.switchReleaseDay,
           child: Container(
             padding: const EdgeInsets.only(left: 15),
             decoration: const BoxDecoration(
@@ -31,7 +31,7 @@ class ReleaseContainer extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 15),
                 Text(
-                  providerTodo.labelReleaseDate,
+                  _todoProvider.labelReleaseDate,
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
@@ -55,7 +55,7 @@ class ReleaseContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      context.read<ProviderTodo>().changeReleaseDay(selected);
+      context.read<TodoProvider>().changeReleaseDay(selected);
     }
   }
 }

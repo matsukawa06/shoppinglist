@@ -4,16 +4,16 @@
 import '../../Common/importer.dart';
 import 'body.dart';
 
-class ListEditPage extends StatelessWidget {
-  final String mode;
-  const ListEditPage(this.mode, {Key? key}) : super(key: key);
+class Main extends StatelessWidget {
+  final String _mode;
+  const Main(this._mode, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: context.read<ProviderForm>().formKey,
+      key: context.read<FormProvider>().formKey,
       child: Scaffold(
         appBar: AppBar(
-          title: _retTitleTextWidget(mode),
+          title: _retTitleTextWidget(_mode),
           actions: <Widget>[
             Container(
               margin: const EdgeInsets.only(
@@ -24,7 +24,7 @@ class ListEditPage extends StatelessWidget {
               child: InkWell(
                 child: _retKanryoTextWidget(),
                 onTap: () async {
-                  _clickKanryo(context, mode);
+                  _clickKanryo(context, _mode);
                 },
               ),
             ),
@@ -39,19 +39,19 @@ class ListEditPage extends StatelessWidget {
 ///
 /// 画面タイトルテキスト
 ///
-Widget _retTitleTextWidget(String mode) {
-  String strTitle = "";
+Widget _retTitleTextWidget(String _mode) {
+  String _strTitle = "";
 
-  switch (mode) {
+  switch (_mode) {
     case modeInsert:
-      strTitle = "リストを新規作成";
+      _strTitle = "リストを新規作成";
       break;
     case modeUpdate:
-      strTitle = "リスト名を変更";
+      _strTitle = "リスト名を変更";
       break;
     default:
   }
-  return Text(strTitle);
+  return Text(_strTitle);
 }
 
 ///
@@ -70,34 +70,34 @@ Widget _retKanryoTextWidget() {
 ///
 /// 完了クリック処理
 ///
-void _clickKanryo(BuildContext context, String mode) async {
-  final _providerGroup = context.read<ProviderGroup>();
-  if (context.read<ProviderForm>().formVallidate()) {
+void _clickKanryo(BuildContext context, String _mode) async {
+  final _groupProvider = context.read<GroupProvider>();
+  if (context.read<FormProvider>().formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
-    switch (mode) {
+    switch (_mode) {
       case modeInsert:
         var _providerStore = GroupStore(
-          title: _providerGroup.titleController.text,
-          color: _providerGroup.pickerColor.toString(),
+          title: _groupProvider.titleController.text,
+          color: _groupProvider.pickerColor.toString(),
         );
         await GroupController.insertGroup(_providerStore);
         break;
       case modeUpdate:
         var _providerStore = GroupStore(
-          id: _providerGroup.selectedId,
-          title: _providerGroup.titleController.text,
-          color: _providerGroup.pickerColor.toString(),
+          id: _groupProvider.selectedId,
+          title: _groupProvider.titleController.text,
+          color: _groupProvider.pickerColor.toString(),
         );
         await GroupController.updateGroup(_providerStore);
         break;
       default:
     }
     // storeの初期化
-    context.read<ProviderGroup>().clearItems();
+    _groupProvider.clearItems();
     // タイトルを反映させる
-    context.read<ProviderGroup>().getSelectedInfo();
+    _groupProvider.getSelectedInfo();
     // グループリストの再読み込み
-    context.read<ProviderGroup>().initializeList();
+    _groupProvider.initializeList();
     // 前の画面に戻る
     Navigator.pop(context);
   }

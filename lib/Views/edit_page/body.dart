@@ -16,8 +16,8 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _providerTodo = context.watch<ProviderTodo>();
-    final _providerForm = context.read<ProviderForm>();
+    final _todoProvider = context.watch<TodoProvider>();
+    final _formProvider = context.read<FormProvider>();
 
     // 広告の読み込み
     myBanner.load();
@@ -28,7 +28,7 @@ class Body extends StatelessWidget {
         // 余白をつける
         padding: const EdgeInsets.all(18),
         child: Form(
-          key: _providerForm.formKey,
+          key: _formProvider.formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -76,10 +76,10 @@ class Body extends StatelessWidget {
                       ),
                       // 金額計算チェック
                       child: SwitchListTile(
-                        value: _providerTodo.switchIsSum,
+                        value: _todoProvider.switchIsSum,
                         title: const Text('計算対象に含める'),
                         onChanged: (bool value) {
-                          _providerTodo.changeIsSum(value);
+                          _todoProvider.changeIsSum(value);
                         },
                       ),
                     ),

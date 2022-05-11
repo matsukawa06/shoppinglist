@@ -1,19 +1,19 @@
-///
-/// メインページのbody部
-///
 import '../../Common/importer.dart';
 
 import '../edit_page/main.dart' as edit_page;
 import '../home/grouplist_icon.dart';
 import '../home/menulist_icon.dart';
 
+///
+/// メインページのbody部
+///
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.read<ProviderTodo>().initializeList(),
+      future: context.read<TodoProvider>().initializeList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 非同期処理未完了 = 通信中
@@ -21,47 +21,9 @@ class Body extends StatelessWidget {
         }
         return Column(
           children: <Widget>[
-            // ColumnやRowの空いたスペースをレスポンシブに埋める
-            Expanded(
-              // ドラッグ＆ドロップできるListView
-              child: ReorderableListView(
-                onReorder: (oldIndex, newIndex) {
-                  // Todoの並び順を変更
-                  _changeSort(context, oldIndex, newIndex);
-                },
-                children: context.watch<ProviderTodo>().todoList.map(
-                  (TodoStore todo) {
-                    // // 合計金額計算処理
-                    // _calculationPrice(context, todo);
-                    return Dismissible(
-                      key: Key(todo.id.toString()),
-                      background: Container(
-                        padding: const EdgeInsets.only(right: 10),
-                        alignment: AlignmentDirectional.centerEnd,
-                        color: Colors.red,
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                        // Todo削除処理
-                        _todoDelete(context, todo);
-                      },
-                      //================================
-                      // 一覧に表示する内容
-                      //================================
-                      child: _bodyCard(context, todo),
-                    );
-                  },
-                ).toList(),
-              ),
-            ),
-            //================================
-            // フッター
-            //================================
-            // _setFooter(context.read<ProviderTodo>().sumPrice),
+            // コンテンツ部
+            _Content(),
+            // フッター部
             _setFooter(context),
             const SpaceBox.height(value: 20),
           ],
@@ -72,108 +34,215 @@ class Body extends StatelessWidget {
 }
 
 ///
-/// 一覧に表示するCardウィジェットの作成
+/// コンテンツ部クラス
 ///
-Widget _bodyCard(BuildContext context, TodoStore todo) {
-  return Card(
-    margin: const EdgeInsets.symmetric(
-      vertical: 4, // 上下
-      horizontal: 8, // 左右
-    ),
-    elevation: 5.0,
-    key: Key(todo.id.toString()),
-    child: SizedBox(
-      height: 70,
-      child: InkWell(
-        onTap: () {
-          // Todoの編集画面へ遷移する処理
-          _todoCardTap(context, todo);
+class _Content extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      // ドラッグ＆ドロップできるListView
+      child: ReorderableListView(
+        onReorder: (oldIndex, newIndex) {
+          // Todoの並び順を変更
+          context.read<TodoProvider>().changeSort(oldIndex, newIndex);
         },
-        child: Row(
-          children: <Widget>[
-            // 購入対象アイコン
-            InkWell(
-              onTap: () {
-                _isSumIconTap(context, todo);
+        children: context.watch<TodoProvider>().todoList.map(
+          (TodoStore todo) {
+            return Dismissible(
+              key: Key(todo.id.toString()),
+              background: Container(
+                padding: const EdgeInsets.only(right: 10),
+                alignment: AlignmentDirectional.centerEnd,
+                color: Colors.red,
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) {
+                // Todo削除処理
+                _todoDelete(context, todo);
               },
-              child: SizedBox(
-                width: 60,
-                child: Icon(
-                  isSumIcon(todo.isSum),
-                  size: 45,
+              //================================
+              // 一覧に表示する内容
+              //================================
+              child: _ContentCard(todo: todo),
+            );
+          },
+        ).toList(),
+      ),
+    );
+  }
+
+  /* Todoを削除する処理 */
+  void _todoDelete(BuildContext context, TodoStore _todo) {
+    final _todoProvider = context.read<TodoProvider>();
+    bool _isDelete = true;
+    // まずリストから削除する
+    _todoProvider.todoList.removeAt(_todo.sortNo!);
+    // メッセージ表示
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            margin: const EdgeInsets.all(20),
+            behavior: SnackBarBehavior.floating,
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              // height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // これで両端によせる
+                children: [
+                  const Text(
+                    '削除しました',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // 再度DBからTodoを取得して、削除を無かったことにする
+                      _todoProvider.initializeList();
+                      _isDelete = false;
+                    },
+                    child: const Text(
+                      '元に戻す',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        )
+        .closed
+        .then(
+      (value) {
+        if (_isDelete == true) {
+          // 元に戻さなかった場合、DBからも削除する
+          _todoProvider.todoDelete(_todo.id);
+        }
+      },
+    );
+  }
+}
+
+///
+/// 一覧に表示するCardウィジェットのクラス
+///
+class _ContentCard extends StatelessWidget {
+  // 引数を受け取る（todoListの1件）
+  final TodoStore todo;
+  const _ContentCard({required this.todo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(
+        vertical: 4, // 上下
+        horizontal: 8, // 左右
+      ),
+      elevation: 5.0,
+      key: Key(todo.id.toString()),
+      child: SizedBox(
+        height: 70,
+        child: InkWell(
+          onTap: () {
+            // Todoの編集画面へ遷移する処理
+            _todoCardTap(context, todo);
+          },
+          // Cardに表示する部分
+          child: _row(context, todo),
+        ),
+      ),
+    );
+  }
+
+  /* TodoカードTap処理 */
+  void _todoCardTap(BuildContext context, TodoStore _todo) {
+    final _todoProvider = context.read<TodoProvider>();
+
+    // 一覧をタップした時の詳細画面遷移
+    _todoProvider.setRowInfo(_todo);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return const edit_page.Main();
+        },
+      ),
+    ).then(
+      (value) async {
+        // 画面遷移から戻ってきた時の処理
+        _todoProvider.clearItems();
+        _todoProvider.initializeList();
+      },
+    );
+  }
+
+  /* Cardに表示する部分 */
+  Widget _row(BuildContext context, TodoStore todo) {
+    return Row(
+      children: <Widget>[
+        // 購入対象アイコン
+        InkWell(
+          onTap: () {
+            // 計算対象区分の更新処理
+            context.read<TodoProvider>().updateIsSum(todo);
+          },
+          child: SizedBox(
+            width: 60,
+            child: Icon(
+              todo.isSum == 1
+                  ? Icons.shopping_cart
+                  : Icons.shopping_cart_outlined,
+              size: 45,
+            ),
+          ),
+        ),
+        Column(
+          children: <Widget>[
+            // １カードの１行目
+            // タイトル
+            SizedBox(
+              width: 250,
+              height: 40,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  todo.title,
+                  style: const TextStyle(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-            Column(
-              children: <Widget>[
-                // １カードの１行目
-                // タイトル
-                SizedBox(
-                  width: 250,
-                  height: 40,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      todo.title,
-                      style: const TextStyle(fontSize: 18),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-                // １カードの２行目
-                SizedBox(
-                  height: 20,
-                  child: Row(
-                    children: <Widget>[
-                      // 価格
-                      SizedBox(
-                        width: 100,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '${formatPrice(todo.price)} 円',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ),
-                      // 発売日又は購入日
-                      SizedBox(
-                        width: 150,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            stringDay(todo),
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            // 購入済チェック
+            // １カードの２行目
             SizedBox(
-              width: 50,
-              child: Column(
-                children: [
-                  const SpaceBox.height(value: 5),
-                  const SizedBox(
-                    height: 17,
+              height: 20,
+              child: Row(
+                children: <Widget>[
+                  // 価格
+                  SizedBox(
+                    width: 100,
                     child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text("購入"),
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${formatPrice(todo.price)} 円',
+                        style: const TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
-                  Transform.scale(
-                    scale: 1.5, // 1.5倍  checkboxのサイズ変更
-                    child: Checkbox(
-                      activeColor: Colors.blue,
-                      value: intToBool(todo.konyuZumi),
-                      onChanged: (bool? value) {
-                        // 購入済のチェックON/OFF処理
-                        _konyuZumiOnOff(context, todo);
-                      },
+                  // 発売日又は購入日
+                  SizedBox(
+                    width: 150,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        stringDay(todo),
+                        style: const TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
                 ],
@@ -181,181 +250,91 @@ Widget _bodyCard(BuildContext context, TodoStore todo) {
             ),
           ],
         ),
-      ),
-    ),
-  );
-}
-
-///
-/// 購入済のチェックON/OFFの処理
-///
-void _konyuZumiOnOff(BuildContext context, TodoStore todo) {
-  final providerTodo = context.read<ProviderTodo>();
-
-  providerTodo.updateKonyuZumi(
-      todo.id, intToBool(todo.konyuZumi) ? false : true);
-  providerTodo.initializeList();
-  if (intToBool(todo.konyuZumi) == false) {
-    // メッセージ表示
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        margin: const EdgeInsets.all(20),
-        behavior: SnackBarBehavior.floating,
-        content: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          // height: 60,
-          child: const Text(
-            '購入済みに変更しました',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+        // 購入済チェック
+        SizedBox(
+          width: 50,
+          child: Column(
+            children: [
+              const SpaceBox.height(value: 5),
+              const SizedBox(
+                height: 17,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text("購入"),
+                ),
+              ),
+              Transform.scale(
+                scale: 1.5, // 1.5倍  checkboxのサイズ変更
+                child: Checkbox(
+                  activeColor: Colors.blue,
+                  value: intToBool(todo.konyuZumi),
+                  onChanged: (bool? value) {
+                    // 購入済のチェックON/OFF処理
+                    _konyuZumiOnOff(context, todo);
+                  },
+                ),
+              ),
+            ],
           ),
         ),
-      ),
+      ],
     );
   }
-}
 
-///
-/// Todo画面の上の並びを変更する処理
-///
-void _changeSort(BuildContext context, int oldIndex, int newIndex) {
-  final store = context.read<ProviderTodo>();
+  // /* 購入対象アイコンTap処理 */
+  // void _isSumIconTap(BuildContext context, TodoStore _todo) {
+  //   final _todoProvider = context.read<TodoProvider>();
+  //   _todoProvider.updateIsSum(
+  //     _todo.id,
+  //     intToBool(_todo.isSum) ? false : true,
+  //   );
+  //   _todoProvider.initializeList();
+  // }
 
-  if (oldIndex < newIndex) {
-    // 下に移動した場合
-    newIndex -= 1;
+  /* 日付を画面表示用の文字列に変換 */
+  String stringDay(TodoStore _todo) {
+    if (intToBool(_todo.konyuZumi) == true) {
+      return '${dateToString(_todo.konyuDay)} 購入';
+    } else {
+      return _todo.release == 1 ? '${dateToString(_todo.releaseDay)} 発売' : '';
+    }
   }
-  final TodoStore todoStore = store.todoList.removeAt(oldIndex);
 
-  store.todoList.insert(newIndex, todoStore);
+  /* 購入済のチェックON/OFFの処理 */
+  void _konyuZumiOnOff(BuildContext context, TodoStore todo) {
+    final todoProvider = context.read<TodoProvider>();
 
-  // リストのソート番号を全件更新
-  updateSortNo(context);
-  store.initializeList();
-}
-
-///
-/// Todoを削除する処理
-///
-void _todoDelete(BuildContext context, TodoStore todo) {
-  final store = context.read<ProviderTodo>();
-  bool _isDelete = true;
-  // まずリストから削除する
-  store.todoList.removeAt(todo.sortNo!);
-  // メッセージ表示
-  ScaffoldMessenger.of(context)
-      .showSnackBar(
+    todoProvider.updateKonyuZumi(
+        todo.id, intToBool(todo.konyuZumi) ? false : true);
+    todoProvider.initializeList();
+    if (intToBool(todo.konyuZumi) == false) {
+      // メッセージ表示
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           margin: const EdgeInsets.all(20),
           behavior: SnackBarBehavior.floating,
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             // height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // これで両端によせる
-              children: [
-                const Text(
-                  '削除しました',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // 再度DBからTodoを取得して、削除を無かったことにする
-                    store.initializeList();
-                    _isDelete = false;
-                  },
-                  child: const Text(
-                    '元に戻す',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
+            child: const Text(
+              '購入済みに変更しました',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-      )
-      .closed
-      .then((value) {
-    if (_isDelete == true) {
-      // 元に戻さなかった場合、DBからも削除する
-      store.delete(todo.id);
-      // リストのソート番号を全件更新
-      updateSortNo(context);
-      // スワイプ後に実行される削除処理
-      store.initializeList();
-    }
-  });
-}
-
-///
-/// DBのTodoのソート番号を更新する処理
-///
-void updateSortNo(BuildContext context) {
-  final store = context.read<ProviderTodo>();
-
-  // リストのソート番号を全件更新
-  for (var i = 0; i < store.todoList.length; i++) {
-    if (store.todoList[i].sortNo != i) {
-      // 登録されているソート番号が現在のインデックスと異なる場合更新
-      store.updateSortNo(store.todoList[i].id, i);
+      );
     }
   }
-}
-
-///
-/// TodoカードTap処理
-///
-void _todoCardTap(BuildContext context, TodoStore todo) {
-  final store = context.read<ProviderTodo>();
-
-  // 一覧をタップした時の詳細画面遷移
-  store.setRowInfo(todo);
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) {
-        return const edit_page.Main();
-      },
-    ),
-  ).then(
-    (value) async {
-      // 画面遷移から戻ってきた時の処理
-      store.clearItems();
-      store.initializeList();
-    },
-  );
-}
-
-///
-/// 購入対象アイコン表示処理
-///
-IconData isSumIcon(int value) {
-  return value == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined;
-}
-
-///
-/// 購入対象アイコンTap処理
-///
-void _isSumIconTap(BuildContext context, TodoStore todo) {
-  final providerTodo = context.read<ProviderTodo>();
-  providerTodo.updateIsSum(
-    todo.id,
-    intToBool(todo.isSum) ? false : true,
-  );
-  providerTodo.initializeList();
 }
 
 ///
 /// フッター表示
 ///
 Widget _setFooter(BuildContext context) {
-  final _groupProvider = context.watch<ProviderGroup>();
-  final _todoProvider = context.read<ProviderTodo>();
+  final _groupProvider = context.watch<GroupProvider>();
+  final _todoProvider = context.read<TodoProvider>();
   return Stack(
     children: [
       // 合計金額表示
@@ -366,12 +345,12 @@ Widget _setFooter(BuildContext context) {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: Text(
-            '合計：${formatPrice(_todoProvider.sumPrice)} 円',
+            '合計：${formatPrice(_todoProvider.totalPrice)} 円',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
-              color: context.watch<ProviderGroup>().fontColor,
+              color: context.watch<GroupProvider>().fontColor,
             ),
           ),
         ),
@@ -389,15 +368,3 @@ Widget _setFooter(BuildContext context) {
     ],
   );
 }
-
-String stringDay(TodoStore todo) {
-  if (intToBool(todo.konyuZumi) == true) {
-    return '${dateToString(todo.konyuDay)} 購入';
-  } else {
-    return todo.release == 1 ? '${dateToString(todo.releaseDay)} 発売' : '';
-  }
-}
-
-// IconData konyuZumiIcon(int value) {
-//   return value == 1 ? Icons.check_box : Icons.check_box_outline_blank;
-// }

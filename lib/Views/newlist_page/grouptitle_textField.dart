@@ -6,11 +6,11 @@ class GroupTitleTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final store = context.watch<ProviderGroup>();
+    final _groupProvider = context.watch<GroupProvider>();
     return TextFormField(
       // 入力エリアのセレクトアクション（コピペ、選択、削除など）の有効、無効
       enableInteractiveSelection: true,
-      controller: store.titleController,
+      controller: _groupProvider.titleController,
       enabled: true,
       maxLength: 15,
       style: const TextStyle(color: Colors.black),

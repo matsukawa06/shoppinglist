@@ -11,14 +11,14 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerGroup = context.watch<ProviderGroup>();
+    final _groupProvider = context.watch<GroupProvider>();
 
     return FutureBuilder(
-      future: providerGroup.getSelectedInfo(),
+      future: _groupProvider.getSelectedInfo(),
       builder: (context, snapshot) {
         return AppBar(
           // タイトル
-          title: Text(providerGroup.selectedTitle),
+          title: Text(_groupProvider.selectedTitle),
           // 右側ボタン
           actions: [
             // 新規追加アイコン
@@ -52,8 +52,8 @@ Widget _newAddIcon(BuildContext context) {
       ).then(
         (value) async {
           // 画面遷移から戻ってきた時の処理
-          context.read<ProviderTodo>().clearItems();
-          context.read<ProviderTodo>().initializeList();
+          context.read<TodoProvider>().clearItems();
+          context.read<TodoProvider>().initializeList();
         },
       );
     },
@@ -76,8 +76,8 @@ Widget _settingIcon(BuildContext context) {
       ).then(
         (value) async {
           // 画面遷移から戻ってきた時の処理
-          context.read<ProviderTodo>().clearItems();
-          context.read<ProviderTodo>().initializeList();
+          context.read<TodoProvider>().clearItems();
+          context.read<TodoProvider>().initializeList();
         },
       );
     },

@@ -5,19 +5,19 @@ class KonyuContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final providerTodo = context.watch<ProviderTodo>();
+    final _todoProvider = context.watch<TodoProvider>();
     return Column(
       children: [
         SwitchListTile(
-          value: providerTodo.switchKonyuZumi,
+          value: _todoProvider.switchKonyuZumi,
           title: const Text('購入済'),
           onChanged: (bool value) {
-            providerTodo.changeKonyuZumi(value);
+            _todoProvider.changeKonyuZumi(value);
           },
         ),
         // 日付表示（switchReleaseDayで表示・非表示切替）
         Visibility(
-          visible: providerTodo.switchKonyuZumi,
+          visible: _todoProvider.switchKonyuZumi,
           child: Container(
             padding: const EdgeInsets.only(left: 15),
             decoration: const BoxDecoration(
@@ -31,7 +31,7 @@ class KonyuContainer extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 15),
                 Text(
-                  providerTodo.labelKonyuDate,
+                  _todoProvider.labelKonyuDate,
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
@@ -55,7 +55,7 @@ class KonyuContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      context.read<ProviderTodo>().changeKonyuDay(selected);
+      context.read<TodoProvider>().changeKonyuDay(selected);
     }
   }
 }

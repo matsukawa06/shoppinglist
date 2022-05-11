@@ -4,8 +4,8 @@ import 'importer.dart';
 /// grouplistテーブルに登録されているデータを表示するアイテム
 ///
 Widget groupItem(BuildContext context, int? id, String title, String color) {
-  final prvShared = context.read<ProviderSharedPreferences>();
-  final providerGroup = context.read<ProviderGroup>();
+  final prvShared = context.read<SharedPreferencesProvider>();
+  final providerGroup = context.read<GroupProvider>();
 
   return Container(
     // margin: EdgeInsets.only(top: 10),
@@ -21,7 +21,7 @@ Widget groupItem(BuildContext context, int? id, String title, String color) {
           // タイトルを反映させる
           providerGroup.getSelectedInfo();
           // ToDoリストも再読み込みする
-          context.read<ProviderTodo>().initializeList();
+          context.read<TodoProvider>().initializeList();
           Navigator.pop(context);
         },
         child: Row(
@@ -50,7 +50,7 @@ Widget groupItem(BuildContext context, int? id, String title, String color) {
 ///
 /// グループリストの背景色を設定
 Color _setBackColor(BuildContext context, int? id) {
-  final providerGroup = context.read<ProviderGroup>();
+  final providerGroup = context.read<GroupProvider>();
 
   if (providerGroup.selectedId == id) {
     // 選択中は背景色を変える

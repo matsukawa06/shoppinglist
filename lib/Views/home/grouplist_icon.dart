@@ -1,5 +1,5 @@
 import '../../Common/importer.dart';
-import '../newlist_page/main.dart';
+import '../newlist_page/main.dart' as newlist;
 
 ///
 /// グループリスト
@@ -10,7 +10,7 @@ class GroupListIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.read<ProviderGroup>().initializeList(),
+      future: context.read<GroupProvider>().initializeList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 非同期処理未完了 = 処理中
@@ -20,7 +20,7 @@ class GroupListIcon extends StatelessWidget {
         }
         return IconButton(
           icon: const Icon(Icons.menu),
-          color: context.watch<ProviderGroup>().fontColor,
+          color: context.watch<GroupProvider>().fontColor,
           iconSize: 40,
           onPressed: () {
             showModalBottomSheet(
@@ -49,14 +49,14 @@ class GroupListIcon extends StatelessWidget {
 /// showModalBottomSheetの表示内容
 ///
 Widget _groupList(BuildContext context) {
-  final providerGroup = context.watch<ProviderGroup>();
+  final _groupProvider = context.watch<GroupProvider>();
   return Column(
     children: [
       ListView(
         // shrinkWrap、physicsの記述が無いとエラーになる
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        children: providerGroup.groupList.map(
+        children: _groupProvider.groupList.map(
           (GroupStore store) {
             return Container(
               key: Key(store.id.toString()),
@@ -73,8 +73,8 @@ Widget _groupList(BuildContext context) {
 ///
 /// リストを新規作成する画面へ遷移するアイテム
 ///
-Widget _groupItemAdd(BuildContext context, String title) {
-  final store = context.read<ProviderGroup>();
+Widget _groupItemAdd(BuildContext context, String _title) {
+  final _groupProvider = context.read<GroupProvider>();
 
   return Container(
     margin: const EdgeInsets.only(bottom: 25),
@@ -89,7 +89,7 @@ Widget _groupItemAdd(BuildContext context, String title) {
     ),
     child: InkWell(
       onTap: () async {
-        if (store.groupList.length > maxGroupListCount) {
+        if (_groupProvider.groupList.length > maxGroupListCount) {
           // グループリストの最大件数を超えている場合、更新画面に遷移させない
           await showDialog(
             context: context,
@@ -115,17 +115,17 @@ Widget _groupItemAdd(BuildContext context, String title) {
             MaterialPageRoute(
               builder: (context) {
                 // 遷移先の画面として編集用画面を指定
-                return const ListEditPage(modeInsert);
+                return const newlist.Main(modeInsert);
               },
             ),
           ).then(
             (value) async {
               // storeの初期化
-              context.read<ProviderGroup>().clearItems();
+              context.read<GroupProvider>().clearItems();
               // グループリストの再読み込み
-              context.read<ProviderGroup>().initializeList();
+              context.read<GroupProvider>().initializeList();
               // ToDoリストも再読み込みする
-              context.read<ProviderTodo>().initializeList();
+              context.read<TodoProvider>().initializeList();
               // メニューリストを閉じる
               Navigator.pop(context);
             },
@@ -139,7 +139,7 @@ Widget _groupItemAdd(BuildContext context, String title) {
           const Icon(Icons.add),
           const Padding(padding: EdgeInsets.only(left: 15.0)),
           Text(
-            title,
+            _title,
             style: const TextStyle(fontSize: 18),
           ),
         ],

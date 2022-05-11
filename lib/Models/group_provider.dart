@@ -1,6 +1,6 @@
 import '../Common/importer.dart';
 
-class ProviderGroup with ChangeNotifier {
+class GroupProvider with ChangeNotifier {
   List<GroupStore> groupList = [];
   // タイトル入力内容
   final titleController = TextEditingController();
