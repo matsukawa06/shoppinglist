@@ -1,11 +1,13 @@
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 
-class ReleaseContainer extends StatelessWidget {
+class ReleaseContainer extends ConsumerWidget {
   const ReleaseContainer({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _todoProvider = context.watch<TodoProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.watch(todoProvider);
     return Column(
       children: [
         SwitchListTile(
@@ -35,7 +37,7 @@ class ReleaseContainer extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
-                    onPressed: () => _selectDate(context),
+                    onPressed: () => _selectDate(context, ref),
                     icon: const Icon(Icons.date_range))
               ],
             ),
@@ -46,7 +48,7 @@ class ReleaseContainer extends StatelessWidget {
   }
 
   // 選択した発売日
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context, WidgetRef ref) async {
     final DateTime? selected = await showDatePicker(
       context: context,
       locale: const Locale('ja'),
@@ -55,7 +57,7 @@ class ReleaseContainer extends StatelessWidget {
       lastDate: DateTime(2024),
     );
     if (selected != null) {
-      context.read<TodoProvider>().changeReleaseDay(selected);
+      ref.read(todoProvider).changeReleaseDay(selected);
     }
   }
 }

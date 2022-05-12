@@ -1,50 +1,60 @@
 ///
 /// アプリ設定ページ
 ///
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoppinglist/Common/common_const.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Cotrollers/group_controller.dart';
+import 'package:shoppinglist/Cotrollers/todo_controller.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/shared_provider.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingPage extends StatefulWidget {
+class SettingPage extends ConsumerWidget {
   const SettingPage({Key? key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() {
-    return _State();
-  }
-}
+  final String _version = '';
+//   @override
+//   State<StatefulWidget> createState() {
+//     return _State();
+//   }
+// }
 
-class _State extends State<SettingPage> {
-  // String _appName = "";
-  // String _packageName = "";
-  String _version = '';
-  // String _buildNumber = "";
+// class _State extends State<SettingPage> {
+//   // String _appName = "";
+//   // String _packageName = "";
+//   String _version = '';
+//   // String _buildNumber = "";
 
-  _restoreValues(BuildContext context) async {
+  _restoreValues(WidgetRef ref) async {
     var prefs = await SharedPreferences.getInstance();
-    context
-        .read<SharedPreferencesProvider>()
+    ref
+        .read(sharedProvider)
         .setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
   }
 
+//   @override
+//   void initState() {
+//     _restoreValues(context);
+
+//     PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+//       // _appName = packageInfo.appName;
+//       // _packageName = packageInfo.packageName;
+//       _version = packageInfo.version;
+//       // _buildNumber = packageInfo.buildNumber;
+//     });
+
+//     super.initState();
+//   }
+
   @override
-  void initState() {
-    _restoreValues(context);
-
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      // _appName = packageInfo.appName;
-      // _packageName = packageInfo.packageName;
-      _version = packageInfo.version;
-      // _buildNumber = packageInfo.buildNumber;
-    });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final _sharedProvider = context.watch<SharedPreferencesProvider>();
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _sharedProvider = ref.watch(sharedProvider);
+    _restoreValues(ref);
     return Scaffold(
       appBar: AppBar(
         title: const Text('設定'),
@@ -108,7 +118,7 @@ class _State extends State<SettingPage> {
                   title: Text('データ初期化'),
                 ),
                 onTap: () {
-                  _allDataInit(context);
+                  _allDataInit(context, ref);
                 },
               ),
             ),
@@ -135,7 +145,7 @@ void _launchURL() async {
 /// 全データ初期化処理
 /// リスト・グループを全て削除する
 ///
-Future _allDataInit(BuildContext context) async {
+Future _allDataInit(BuildContext context, WidgetRef ref) async {
   await showDialog(
     context: context,
     barrierDismissible: false,
@@ -165,8 +175,8 @@ Future _allDataInit(BuildContext context) async {
             onPressed: () {
               TodoController.deleteAll();
               GroupController.deleteAll();
-              context.read<GroupProvider>().initializeList();
-              context.read<TodoProvider>().initializeList();
+              ref.read(groupProvider).initializeList();
+              ref.read(todoProvider).initializeList();
               Navigator.of(context).pop(0);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

@@ -1,7 +1,14 @@
 ///
 /// Todo編集ページのbody部
 ///
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Models/form_provider.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/services/admob.dart';
+
 import 'group_textButton.dart';
 import 'konyu_container.dart';
 import 'memo_textField.dart';
@@ -16,91 +23,97 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _todoProvider = context.watch<TodoProvider>();
-    final _formProvider = context.read<FormProvider>();
+    // final _todoProvider = context.watch<TodoProvider>();
+    // final _formProvider = context.read<FormProvider>();
 
     // 広告の読み込み
     myBanner.load();
     final adWidget = AdWidget(ad: myBanner);
 
     return SingleChildScrollView(
-      child: Container(
-        // 余白をつける
-        padding: const EdgeInsets.all(18),
-        child: Form(
-          key: _formProvider.formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              // グループリスト選択
-              const GroupTextButton(),
-              const SpaceBox.height(value: 1),
-              // タイトル
-              const TitleTextField(),
-              const SpaceBox.height(value: 1),
-              // メモ
-              const MemoTextField(),
-              const SpaceBox.height(value: 1),
-              // 価格
-              const PriceTextField(),
-              const SpaceBox.height(value: 24),
+      child: Consumer(
+        builder: (context, ref, _) {
+          final _formProvider = ref.read(formProvider);
+          final _todoProvider = ref.watch(todoProvider);
+          return Container(
+            // 余白をつける
+            padding: const EdgeInsets.all(18),
+            child: Form(
+              key: _formProvider.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  // グループリスト選択
+                  const GroupTextButton(),
+                  const SpaceBox.height(value: 1),
+                  // タイトル
+                  const TitleTextField(),
+                  const SpaceBox.height(value: 1),
+                  // メモ
+                  const MemoTextField(),
+                  const SpaceBox.height(value: 1),
+                  // 価格
+                  const PriceTextField(),
+                  const SpaceBox.height(value: 24),
 
-              // ====================================
-              // 発売日
-              // ====================================
-              Card(
-                elevation: 5,
-                child: Column(
-                  children: const [
-                    // 発売予定日
-                    ReleaseContainer(),
-                  ],
-                ),
-              ),
-              const SpaceBox.height(value: 24),
+                  // ====================================
+                  // 発売日
+                  // ====================================
+                  Card(
+                    elevation: 5,
+                    child: Column(
+                      children: const [
+                        // 発売予定日
+                        ReleaseContainer(),
+                      ],
+                    ),
+                  ),
+                  const SpaceBox.height(value: 24),
 
-              // ====================================
-              // 計算チェックと購入済みチェック
-              // ====================================
-              Card(
-                elevation: 5,
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey,
+                  // ====================================
+                  // 計算チェックと購入済みチェック
+                  // ====================================
+                  Card(
+                    elevation: 5,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          // 金額計算チェック
+                          child: SwitchListTile(
+                            value: _todoProvider.switchIsSum,
+                            title: const Text('計算対象に含める'),
+                            onChanged: (bool value) {
+                              _todoProvider.changeIsSum(value);
+                            },
                           ),
                         ),
-                      ),
-                      // 金額計算チェック
-                      child: SwitchListTile(
-                        value: _todoProvider.switchIsSum,
-                        title: const Text('計算対象に含める'),
-                        onChanged: (bool value) {
-                          _todoProvider.changeIsSum(value);
-                        },
-                      ),
+
+                        // 購入済みチェック
+                        const KonyuContainer(),
+                      ],
                     ),
+                  ),
+                  const SpaceBox.height(value: 36),
 
-                    // 購入済みチェック
-                    const KonyuContainer(),
-                  ],
-                ),
+                  // ====================================
+                  // ボタン
+                  // ====================================
+                  // _bottomButton(context),
+
+                  // Admob広告の表示
+                  AdMobService().setAdContainer(context, adWidget),
+                ],
               ),
-              const SpaceBox.height(value: 36),
-
-              // ====================================
-              // ボタン
-              // ====================================
-              // _bottomButton(context),
-
-              // Admob広告の表示
-              AdMobService().setAdContainer(context, adWidget),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,4 +1,12 @@
-import '../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Cotrollers/todo_controller.dart';
+import 'package:shoppinglist/Models/todo_store.dart';
+
+final todoProvider = ChangeNotifierProvider<TodoProvider>(
+  (ref) => TodoProvider(),
+);
 
 // ChangeNotifierを継承すると変更可能なデータを渡せる
 class TodoProvider with ChangeNotifier {

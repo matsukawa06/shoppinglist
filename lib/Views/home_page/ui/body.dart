@@ -1,4 +1,9 @@
-import '../../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/Models/todo_store.dart';
 
 import '../../edit_page/main.dart' as edit_page;
 import 'grouplist_icon.dart';
@@ -7,13 +12,13 @@ import 'menulist_icon.dart';
 ///
 /// メインページのbody部
 ///
-class Body extends StatelessWidget {
+class Body extends ConsumerWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
-      future: context.read<TodoProvider>().initializeList(),
+      future: ref.read(todoProvider).initializeList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 非同期処理未完了 = 通信中
@@ -24,7 +29,7 @@ class Body extends StatelessWidget {
             // コンテンツ部
             _Content(),
             // フッター部
-            _setFooter(context),
+            _setFooter(ref),
             const SpaceBox.height(value: 20),
           ],
         );
@@ -36,17 +41,17 @@ class Body extends StatelessWidget {
 ///
 /// コンテンツ部クラス
 ///
-class _Content extends StatelessWidget {
+class _Content extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       // ドラッグ＆ドロップできるListView
       child: ReorderableListView(
         onReorder: (oldIndex, newIndex) {
           // Todoの並び順を変更
-          context.read<TodoProvider>().changeSort(oldIndex, newIndex);
+          ref.read(todoProvider).changeSort(oldIndex, newIndex);
         },
-        children: context.watch<TodoProvider>().todoList.map(
+        children: ref.watch(todoProvider).todoList.map(
           (TodoStore todo) {
             return Dismissible(
               key: Key(todo.id.toString()),
@@ -62,9 +67,9 @@ class _Content extends StatelessWidget {
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
                 // 一旦todoListからデータを削除
-                context.read<TodoProvider>().todoList.removeAt(todo.sortNo!);
+                ref.read(todoProvider).todoList.removeAt(todo.sortNo!);
                 // Todo削除処理
-                _todoDelete(context, todo);
+                _todoDelete(context, ref, todo);
               },
               //================================
               // 一覧に表示する内容
@@ -78,8 +83,8 @@ class _Content extends StatelessWidget {
   }
 
   /* Todoを削除する処理 */
-  void _todoDelete(BuildContext context, TodoStore _todo) {
-    final _todoProvider = context.read<TodoProvider>();
+  void _todoDelete(BuildContext context, WidgetRef ref, TodoStore _todo) {
+    final _todoProvider = ref.read(todoProvider);
     bool _isDelete = true;
     // まずリストから削除する
     // _todoProvider.todoList.removeAt(_todo.sortNo!);
@@ -135,13 +140,13 @@ class _Content extends StatelessWidget {
 ///
 /// 一覧に表示するCardウィジェットのクラス
 ///
-class _ContentCard extends StatelessWidget {
+class _ContentCard extends ConsumerWidget {
   // 引数を受け取る（todoListの1件）
   final TodoStore todo;
   const _ContentCard({required this.todo});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       margin: const EdgeInsets.symmetric(
         vertical: 4, // 上下
@@ -154,18 +159,18 @@ class _ContentCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             // Todoの編集画面へ遷移する処理
-            _todoCardTap(context, todo);
+            _todoCardTap(context, ref, todo);
           },
           // Cardに表示する部分
-          child: _row(context, todo),
+          child: _row(context, ref, todo),
         ),
       ),
     );
   }
 
   /* TodoカードTap処理 */
-  void _todoCardTap(BuildContext context, TodoStore _todo) {
-    final _todoProvider = context.read<TodoProvider>();
+  void _todoCardTap(BuildContext context, WidgetRef ref, TodoStore _todo) {
+    final _todoProvider = ref.read(todoProvider);
 
     // 一覧をタップした時の詳細画面遷移
     _todoProvider.setRowInfo(_todo);
@@ -185,14 +190,14 @@ class _ContentCard extends StatelessWidget {
   }
 
   /* Cardに表示する部分 */
-  Widget _row(BuildContext context, TodoStore todo) {
+  Widget _row(BuildContext context, WidgetRef ref, TodoStore todo) {
     return Row(
       children: <Widget>[
         // 購入対象アイコン
         InkWell(
           onTap: () {
             // 計算対象区分の更新処理
-            context.read<TodoProvider>().updateIsSum(todo);
+            ref.read(todoProvider).updateIsSum(todo);
           },
           child: SizedBox(
             width: 60,
@@ -272,7 +277,7 @@ class _ContentCard extends StatelessWidget {
                   value: intToBool(todo.konyuZumi),
                   onChanged: (bool? value) {
                     // 購入済のチェックON/OFF処理
-                    _konyuZumiOnOff(context, todo);
+                    _konyuZumiOnOff(context, ref, todo);
                   },
                 ),
               ),
@@ -293,12 +298,12 @@ class _ContentCard extends StatelessWidget {
   }
 
   /* 購入済のチェックON/OFFの処理 */
-  void _konyuZumiOnOff(BuildContext context, TodoStore todo) {
-    final todoProvider = context.read<TodoProvider>();
+  void _konyuZumiOnOff(BuildContext context, WidgetRef ref, TodoStore todo) {
+    final _todoProvider = ref.read(todoProvider);
 
-    todoProvider.updateKonyuZumi(
+    _todoProvider.updateKonyuZumi(
         todo.id, intToBool(todo.konyuZumi) ? false : true);
-    todoProvider.initializeList();
+    _todoProvider.initializeList();
     if (intToBool(todo.konyuZumi) == false) {
       // メッセージ表示
       ScaffoldMessenger.of(context).showSnackBar(
@@ -324,28 +329,31 @@ class _ContentCard extends StatelessWidget {
 ///
 /// フッター表示
 ///
-Widget _setFooter(BuildContext context) {
-  final _groupProvider = context.watch<GroupProvider>();
-  final _todoProvider = context.read<TodoProvider>();
+Widget _setFooter(WidgetRef ref) {
+  final _todoProvider = ref.read(todoProvider);
   return Stack(
     children: [
       // 合計金額表示
-      Container(
-        color: _groupProvider.primarySwatch,
-        // 左寄せ
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Text(
-            '合計：${formatPrice(_todoProvider.totalPrice)} 円',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-              color: context.watch<GroupProvider>().fontColor,
+      Consumer(
+        builder: (context, ref, child) {
+          return Container(
+            color: ref.watch(groupProvider).primarySwatch,
+            // 左寄せ
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                '合計：${formatPrice(_todoProvider.totalPrice)} 円',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: ref.watch(groupProvider).fontColor,
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       // グループリストアイコン
       const Align(

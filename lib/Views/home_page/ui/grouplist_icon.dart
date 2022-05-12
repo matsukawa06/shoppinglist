@@ -1,16 +1,22 @@
-import '../../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_const.dart';
+import 'package:shoppinglist/Common/group_item.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/group_store.dart';
+
 import '../../newlist_page/main.dart' as newlist;
 
 ///
 /// グループリスト
 ///
-class GroupListIcon extends StatelessWidget {
+class GroupListIcon extends ConsumerWidget {
   const GroupListIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
-      future: context.read<GroupProvider>().initializeList(),
+      future: ref.read(groupProvider).initializeList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 非同期処理未完了 = 処理中
@@ -18,23 +24,28 @@ class GroupListIcon extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         }
-        return IconButton(
-          icon: const Icon(Icons.menu),
-          color: context.watch<GroupProvider>().fontColor,
-          iconSize: 40,
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              builder: (BuildContext context) {
-                return SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: _groupList(context),
+        return Consumer(
+          builder: (context, ref, child) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              color: ref.watch(groupProvider).fontColor,
+              iconSize: 40,
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
                   ),
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: _groupList(context, ref),
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -48,8 +59,8 @@ class GroupListIcon extends StatelessWidget {
 ///
 /// showModalBottomSheetの表示内容
 ///
-Widget _groupList(BuildContext context) {
-  final _groupProvider = context.watch<GroupProvider>();
+Widget _groupList(BuildContext context, WidgetRef ref) {
+  final _groupProvider = ref.watch(groupProvider);
   return Column(
     children: [
       ListView(
@@ -65,7 +76,7 @@ Widget _groupList(BuildContext context) {
           },
         ).toList(),
       ),
-      _groupItemAdd(context, 'リストを新しく作成'),
+      _groupItemAdd(context, ref, 'リストを新しく作成'),
     ],
   );
 }
@@ -73,8 +84,8 @@ Widget _groupList(BuildContext context) {
 ///
 /// リストを新規作成する画面へ遷移するアイテム
 ///
-Widget _groupItemAdd(BuildContext context, String _title) {
-  final _groupProvider = context.read<GroupProvider>();
+Widget _groupItemAdd(BuildContext context, WidgetRef ref, String _title) {
+  final _groupProvider = ref.read(groupProvider);
 
   return Container(
     margin: const EdgeInsets.only(bottom: 25),
@@ -121,11 +132,11 @@ Widget _groupItemAdd(BuildContext context, String _title) {
           ).then(
             (value) async {
               // storeの初期化
-              context.read<GroupProvider>().clearItems();
+              _groupProvider.clearItems();
               // グループリストの再読み込み
-              context.read<GroupProvider>().initializeList();
+              _groupProvider.initializeList();
               // ToDoリストも再読み込みする
-              context.read<TodoProvider>().initializeList();
+              _groupProvider.initializeList();
               // メニューリストを閉じる
               Navigator.pop(context);
             },

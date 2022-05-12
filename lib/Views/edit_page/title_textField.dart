@@ -1,12 +1,14 @@
 // ignore_for_file: file_names
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 
-class TitleTextField extends StatelessWidget {
+class TitleTextField extends ConsumerWidget {
   const TitleTextField({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _todoProvider = context.watch<TodoProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.watch(todoProvider);
     return TextFormField(
       // 入力エリアのセレクトアクション（コピペ、選択、削除など）の有効、無効
       enableInteractiveSelection: true,

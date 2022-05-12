@@ -1,12 +1,14 @@
 // ignore_for_file: file_names
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 
-class MemoTextField extends StatelessWidget {
+class MemoTextField extends ConsumerWidget {
   const MemoTextField({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _todoProvider = context.watch<TodoProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.watch(todoProvider);
     return TextField(
       controller: _todoProvider.memoController,
       enabled: true,

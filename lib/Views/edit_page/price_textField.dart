@@ -1,14 +1,16 @@
 // ignore_for_file: file_names
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 
-class PriceTextField extends StatelessWidget {
+class PriceTextField extends ConsumerWidget {
   const PriceTextField({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _todoProvider = context.watch<TodoProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
     return TextFormField(
-      controller: _todoProvider.priceController,
+      controller: ref.watch(todoProvider).priceController,
       enabled: true,
       maxLength: 8,
       style: const TextStyle(color: Colors.black),

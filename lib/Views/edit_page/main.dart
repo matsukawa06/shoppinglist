@@ -1,7 +1,16 @@
 ///
 /// Todo の編集ページ
 ///
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoppinglist/Common/common_const.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Cotrollers/todo_controller.dart';
+import 'package:shoppinglist/Models/form_provider.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/Models/todo_store.dart';
 
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,7 +23,7 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _providerTodo = context.watch<TodoProvider>();
+    // final _providerTodo = context.watch<TodoProvider>();
 
     Intl.defaultLocale = 'ja';
     initializeDateFormatting('ja');
@@ -23,24 +32,33 @@ class Main extends StatelessWidget {
         title: const Text('詳細'),
         // 右側のアイコン一覧
         actions: <Widget>[
-          Visibility(
-            visible: _providerTodo.id == 0 ? false : true,
-            child: _iconButton(context),
+          Consumer(
+            builder: (context, ref, child) {
+              return Visibility(
+                visible: ref.watch(todoProvider).id == 0 ? false : true,
+                child: _IconButton(),
+              );
+            },
           ),
           const SpaceBox.width(value: 15),
-          TextButton(
-              onPressed: () async {
-                // 登録・更新処理
-                _insertUpdate(context);
-              },
-              child: Text(
-                '保存',
-                style: TextStyle(
-                  color: context.read<GroupProvider>().fontColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          Consumer(
+            builder: (context, ref, child) {
+              return TextButton(
+                onPressed: () async {
+                  // 登録・更新処理
+                  _insertUpdate(context, ref);
+                },
+                child: Text(
+                  '保存',
+                  style: TextStyle(
+                    color: ref.read(groupProvider).fontColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              )),
+              );
+            },
+          ),
         ],
       ),
       body: Body(),
@@ -52,50 +70,91 @@ class Main extends StatelessWidget {
 ///
 /// AppBarの右側
 ///
-Widget _iconButton(BuildContext context) {
-  final _todoProvider = context.watch<TodoProvider>();
-  return IconButton(
-    onPressed: () async {
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('確認'),
-            content: const Text('削除します。よろしいですか？'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('いいえ'),
-                onPressed: () => Navigator.of(context).pop(0),
-              ),
-              TextButton(
-                child: const Text('はい'),
-                onPressed: () {
-                  // 論理削除に変更
-                  _todoProvider.delete(_todoProvider.id);
-                  // providerTodo.updateIsDelete(providerTodo.id, true);
-                  // ダイアログを閉じる
-                  Navigator.pop(context);
-                  // 編集画面を閉じる
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-      // providerStore.delete(providerStore.id);
-    },
-    icon: const Icon(Icons.delete),
-  );
+class _IconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.watch(todoProvider);
+    return IconButton(
+      onPressed: () async {
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('確認'),
+              content: const Text('削除します。よろしいですか？'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('いいえ'),
+                  onPressed: () => Navigator.of(context).pop(0),
+                ),
+                TextButton(
+                  child: const Text('はい'),
+                  onPressed: () {
+                    // 論理削除に変更
+                    _todoProvider.delete(_todoProvider.id);
+                    // providerTodo.updateIsDelete(providerTodo.id, true);
+                    // ダイアログを閉じる
+                    Navigator.pop(context);
+                    // 編集画面を閉じる
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        // providerStore.delete(providerStore.id);
+      },
+      icon: const Icon(Icons.delete),
+    );
+  }
 }
+
+// Widget _iconButton(BuildContext context) {
+//   final _todoProvider = context.watch<TodoProvider>();
+//   return IconButton(
+//     onPressed: () async {
+//       await showDialog(
+//         context: context,
+//         barrierDismissible: false,
+//         builder: (BuildContext context) {
+//           return AlertDialog(
+//             title: const Text('確認'),
+//             content: const Text('削除します。よろしいですか？'),
+//             actions: <Widget>[
+//               TextButton(
+//                 child: const Text('いいえ'),
+//                 onPressed: () => Navigator.of(context).pop(0),
+//               ),
+//               TextButton(
+//                 child: const Text('はい'),
+//                 onPressed: () {
+//                   // 論理削除に変更
+//                   _todoProvider.delete(_todoProvider.id);
+//                   // providerTodo.updateIsDelete(providerTodo.id, true);
+//                   // ダイアログを閉じる
+//                   Navigator.pop(context);
+//                   // 編集画面を閉じる
+//                   Navigator.pop(context);
+//                 },
+//               ),
+//             ],
+//           );
+//         },
+//       );
+//       // providerStore.delete(providerStore.id);
+//     },
+//     icon: const Icon(Icons.delete),
+//   );
+// }
 
 ///
 /// 登録・修正処理
 ///
-void _insertUpdate(BuildContext context) async {
-  final _todoProvider = context.read<TodoProvider>();
-  final _formProvider = context.read<FormProvider>();
+void _insertUpdate(BuildContext context, WidgetRef ref) async {
+  final _todoProvider = ref.read(todoProvider);
+  final _formProvider = ref.read(formProvider);
   var prefs = await SharedPreferences.getInstance();
   var selectedId = (prefs.getInt(keySelectId) ?? defualtGroupId);
 

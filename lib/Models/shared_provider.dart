@@ -1,4 +1,10 @@
-import '../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final sharedProvider = ChangeNotifierProvider<SharedPreferencesProvider>(
+  (ref) => SharedPreferencesProvider(),
+);
 
 class SharedPreferencesProvider with ChangeNotifier {
   // 購入済を表示するか

@@ -1,16 +1,23 @@
 ///
 /// リストの新規追加ページ
 ///
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_const.dart';
+
+import 'package:shoppinglist/Cotrollers/group_controller.dart';
+import 'package:shoppinglist/Models/form_provider.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/group_store.dart';
 import 'body.dart';
 
-class Main extends StatelessWidget {
+class Main extends ConsumerWidget {
   final String _mode;
   const Main(this._mode, {Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Form(
-      key: context.read<FormProvider>().formKey,
+      key: ref.read(formProvider).formKey,
       child: Scaffold(
         appBar: AppBar(
           title: _retTitleTextWidget(_mode),
@@ -24,7 +31,7 @@ class Main extends StatelessWidget {
               child: InkWell(
                 child: _retKanryoTextWidget(),
                 onTap: () async {
-                  _clickKanryo(context, _mode);
+                  _clickKanryo(context, ref, _mode);
                 },
               ),
             ),
@@ -70,9 +77,9 @@ Widget _retKanryoTextWidget() {
 ///
 /// 完了クリック処理
 ///
-void _clickKanryo(BuildContext context, String _mode) async {
-  final _groupProvider = context.read<GroupProvider>();
-  if (context.read<FormProvider>().formVallidate()) {
+void _clickKanryo(BuildContext context, WidgetRef ref, String _mode) async {
+  final _groupProvider = ref.read(groupProvider);
+  if (ref.read(formProvider).formVallidate()) {
     // 入力チェックでエラーが無ければ、DBに登録する
     switch (_mode) {
       case modeInsert:

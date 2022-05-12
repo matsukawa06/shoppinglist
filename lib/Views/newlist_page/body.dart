@@ -1,7 +1,11 @@
 ///
 /// グループリスト編集ページのbody部
 ///
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_util.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'grouptitle_textField.dart';
 
@@ -28,32 +32,40 @@ class Body extends StatelessWidget {
                 elevation: 5,
                 child: SizedBox(
                   height: 50,
-                  child: InkWell(
-                    child: Row(
-                      children: [
-                        // Cardのタイトル
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          child: const SizedBox(
-                            width: 220,
-                            child: Text(
-                              'カラー選択',
-                              style: TextStyle(fontSize: 18),
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      return InkWell(
+                        child: Row(
+                          children: [
+                            // Cardのタイトル
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              child: const SizedBox(
+                                width: 220,
+                                child: Text(
+                                  'カラー選択',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
                             ),
-                          ),
+                            // 選択中のカラーをContainerで表示
+                            Consumer(
+                              builder: (context, ref, child) {
+                                return SizedBox(
+                                  width: 50,
+                                  height: 40,
+                                  child: Container(
+                                    color: ref.watch(groupProvider).pickerColor,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        // 選択中のカラーをContainerで表示
-                        SizedBox(
-                          width: 50,
-                          height: 40,
-                          child: Container(
-                            color: context.watch<GroupProvider>().pickerColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      _showColorPicker(context);
+                        onTap: () {
+                          _showColorPicker(context, ref);
+                        },
+                      );
                     },
                   ),
                 ),
@@ -66,7 +78,7 @@ class Body extends StatelessWidget {
   }
 }
 
-Future _showColorPicker(BuildContext context) async {
+Future _showColorPicker(BuildContext context, WidgetRef ref) async {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -74,8 +86,8 @@ Future _showColorPicker(BuildContext context) async {
       return AlertDialog(
         title: const Text('カラー選択'),
         content: BlockPicker(
-          pickerColor: context.watch<GroupProvider>().pickerColor,
-          onColorChanged: context.read<GroupProvider>().changeColor,
+          pickerColor: ref.watch(groupProvider).pickerColor,
+          onColorChanged: ref.read(groupProvider).changeColor,
         ),
         actions: <Widget>[
           TextButton(

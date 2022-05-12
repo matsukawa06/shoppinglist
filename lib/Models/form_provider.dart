@@ -1,4 +1,9 @@
-import '../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final formProvider = ChangeNotifierProvider<FormProvider>(
+  (ref) => FormProvider(),
+);
 
 class FormProvider with ChangeNotifier {
   final formKey = GlobalKey<FormState>();

@@ -1,18 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Common/common_const.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/Models/shared_provider.dart';
+import 'package:shoppinglist/Models/todo_provider.dart';
 import 'package:shoppinglist/Views/newlist_page/main.dart';
-
-import '../../../Common/importer.dart';
 
 ///
 /// メニューリスト
 ///
-class MenuListIcon extends StatelessWidget {
+class MenuListIcon extends ConsumerWidget {
   const MenuListIcon({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       icon: const Icon(Icons.more_horiz),
-      color: context.watch<GroupProvider>().fontColor,
+      color: ref.watch(groupProvider).fontColor,
       iconSize: 40,
       onPressed: () {
         showModalBottomSheet(
@@ -42,12 +46,12 @@ class MenuListIcon extends StatelessWidget {
 ///
 /// リスト更新
 ///
-class ListUpdate extends StatelessWidget {
+class ListUpdate extends ConsumerWidget {
   const ListUpdate({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final store = context.read<GroupProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _groupProvider = ref.read(groupProvider);
 
     return Container(
       margin: const EdgeInsets.only(top: 25, bottom: 5),
@@ -64,7 +68,7 @@ class ListUpdate extends StatelessWidget {
         ),
         onTap: () {
           // グループリストタイトルを初期化
-          store.initTitleController(store.selectedTitle);
+          _groupProvider.initTitleController(_groupProvider.selectedTitle);
           // "push"で更新画面に遷移
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -75,11 +79,11 @@ class ListUpdate extends StatelessWidget {
           ).then(
             (value) async {
               // storeの初期化
-              context.read<GroupProvider>().clearItems();
+              _groupProvider.clearItems();
               // タイトルを反映させる
-              store.getSelectedInfo();
+              _groupProvider.getSelectedInfo();
               // グループリストの再読み込み
-              context.read<GroupProvider>().initializeList();
+              _groupProvider.initializeList();
               // // ToDoリストも再読み込みする
               // context.read<ProviderTodo>().initializeList();
               // メニューリストを閉じる
@@ -95,19 +99,19 @@ class ListUpdate extends StatelessWidget {
 ///
 /// リスト削除
 ///
-class ListDelete extends StatelessWidget {
+class ListDelete extends ConsumerWidget {
   const ListDelete({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _sharedProvider = context.read<SharedPreferencesProvider>();
-    final _groupProvider = context.read<GroupProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _sharedProvider = ref.read(sharedProvider);
+    final _groupProvider = ref.read(groupProvider);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 35),
       height: 70.0,
       child: InkWell(
-        child: _delContainer(context),
+        child: _delContainer(ref),
         onTap: () async {
           if (_groupProvider.selectedId != defualtGroupId) {
             // デフォルトのリストで無ければ、削除処理を行う
@@ -147,7 +151,7 @@ class ListDelete extends StatelessWidget {
                         // グループリストと紐づくTodoを物理削除
                         _groupProvider.delete(_groupProvider.selectedId);
                         // グループリストの再読み込み
-                        context.read<GroupProvider>().initializeList();
+                        _groupProvider.initializeList();
                         // デフォルトリストを選択中にする
                         _sharedProvider.saveIntValue(
                             keySelectId, defualtGroupId);
@@ -155,7 +159,7 @@ class ListDelete extends StatelessWidget {
                         // タイトルを反映させる
                         _groupProvider.getSelectedInfo();
                         // ToDoリストも再読み込みする
-                        context.read<TodoProvider>().initializeList();
+                        ref.read(todoProvider).initializeList();
                         // ダイアログを閉じる
                         Navigator.pop(context);
                         // メニューリストを閉じる
@@ -176,8 +180,8 @@ class ListDelete extends StatelessWidget {
 ///
 /// リスト削除用の選択行の見た目
 ///
-Widget _delContainer(BuildContext context) {
-  final _groupProvider = context.watch<GroupProvider>();
+Widget _delContainer(WidgetRef ref) {
+  final _groupProvider = ref.watch<GroupProvider>(groupProvider);
   final _isDefualt = _groupProvider.selectedId == defualtGroupId ? true : false;
 
   return Container(

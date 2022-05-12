@@ -1,12 +1,14 @@
 // ignore_for_file: file_names
-import '../../Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shoppinglist/Models/group_provider.dart';
 
-class GroupTitleTextField extends StatelessWidget {
+class GroupTitleTextField extends ConsumerWidget {
   const GroupTitleTextField({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _groupProvider = context.watch<GroupProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _groupProvider = ref.watch(groupProvider);
     return TextFormField(
       // 入力エリアのセレクトアクション（コピペ、選択、削除など）の有効、無効
       enableInteractiveSelection: true,

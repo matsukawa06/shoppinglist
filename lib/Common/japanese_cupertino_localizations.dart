@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-
-import 'importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   final _materialDelegate = GlobalMaterialLocalizations.delegate;
