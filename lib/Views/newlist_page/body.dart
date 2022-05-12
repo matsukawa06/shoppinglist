@@ -7,9 +7,8 @@ import 'grouptitle_textField.dart';
 
 // ignore: must_be_immutable
 class Body extends StatelessWidget {
-  Color picker = Colors.blue;
-
-  Body({Key? key}) : super(key: key);
+  const Body({Key? key}) : super(key: key);
+  // Color picker = Colors.blue;
 
   @override
   Widget build(BuildContext context) {

@@ -30,7 +30,7 @@ class Main extends StatelessWidget {
             ),
           ],
         ),
-        body: Body(),
+        body: const Body(),
       ),
     );
   }

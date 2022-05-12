@@ -1,7 +1,7 @@
-import '../../Common/importer.dart';
+import '../../../Common/importer.dart';
 
-import 'package:shoppinglist/Views/home/appbar.dart';
-import '../home/body.dart';
+import 'package:shoppinglist/Views/home_page/ui/appbar.dart';
+import 'body.dart';
 
 // リスト一覧画面用Widget
 class Main extends StatelessWidget {

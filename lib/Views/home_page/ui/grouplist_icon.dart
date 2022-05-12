@@ -1,5 +1,5 @@
-import '../../Common/importer.dart';
-import '../newlist_page/main.dart' as newlist;
+import '../../../Common/importer.dart';
+import '../../newlist_page/main.dart' as newlist;
 
 ///
 /// グループリスト

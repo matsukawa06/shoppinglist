@@ -1,8 +1,8 @@
-import '../../Common/importer.dart';
+import '../../../Common/importer.dart';
 
-import '../edit_page/main.dart' as edit_page;
-import '../home/grouplist_icon.dart';
-import '../home/menulist_icon.dart';
+import '../../edit_page/main.dart' as edit_page;
+import 'grouplist_icon.dart';
+import 'menulist_icon.dart';
 
 ///
 /// メインページのbody部
@@ -61,6 +61,8 @@ class _Content extends StatelessWidget {
               ),
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
+                // 一旦todoListからデータを削除
+                context.read<TodoProvider>().todoList.removeAt(todo.sortNo!);
                 // Todo削除処理
                 _todoDelete(context, todo);
               },
@@ -80,7 +82,7 @@ class _Content extends StatelessWidget {
     final _todoProvider = context.read<TodoProvider>();
     bool _isDelete = true;
     // まずリストから削除する
-    _todoProvider.todoList.removeAt(_todo.sortNo!);
+    // _todoProvider.todoList.removeAt(_todo.sortNo!);
     // メッセージ表示
     ScaffoldMessenger.of(context)
         .showSnackBar(
@@ -280,16 +282,6 @@ class _ContentCard extends StatelessWidget {
       ],
     );
   }
-
-  // /* 購入対象アイコンTap処理 */
-  // void _isSumIconTap(BuildContext context, TodoStore _todo) {
-  //   final _todoProvider = context.read<TodoProvider>();
-  //   _todoProvider.updateIsSum(
-  //     _todo.id,
-  //     intToBool(_todo.isSum) ? false : true,
-  //   );
-  //   _todoProvider.initializeList();
-  // }
 
   /* 日付を画面表示用の文字列に変換 */
   String stringDay(TodoStore _todo) {

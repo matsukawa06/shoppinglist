@@ -1,6 +1,6 @@
 import 'package:shoppinglist/Views/newlist_page/main.dart';
 
-import '../../Common/importer.dart';
+import '../../../Common/importer.dart';
 
 ///
 /// メニューリスト

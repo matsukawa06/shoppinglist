@@ -1,7 +1,8 @@
 import 'Common/importer.dart';
 
 import 'Common/japanese_cupertino_localizations.dart';
-import 'Views/home/main.dart';
+import 'Views/home_page/ui/main.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

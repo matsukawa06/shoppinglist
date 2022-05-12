@@ -4,6 +4,7 @@ import '../Common/importer.dart';
 class TodoProvider with ChangeNotifier {
   List<TodoStore> todoList = [];
   int totalPrice = 0;
+  late TodoStore todoStore;
 
   Future<void> initializeList() async {
     todoList = await TodoController.getTodos();

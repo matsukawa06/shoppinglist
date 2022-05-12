@@ -34,7 +34,7 @@ dependencies:
   package_info: 2.0.2
   url_launcher: ^6.0.17
   flutter_colorpicker: ^1.0.3
-  # flutter_riverpod: ^1.0.3
+  flutter_riverpod: ^1.0.3
   google_mobile_ads: ^1.2.0
 
 

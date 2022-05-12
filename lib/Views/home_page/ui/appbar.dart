@@ -1,7 +1,7 @@
-import '../../Common/importer.dart';
+import '../../../Common/importer.dart';
 
 import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import '../edit_page/main.dart' as edit_page;
+import '../../edit_page/main.dart' as edit_page;
 
 ///
 /// メインページのAppBar設定
