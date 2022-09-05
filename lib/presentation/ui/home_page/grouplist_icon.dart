@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_const.dart';
-import 'package:shoppinglist/Common/group_item.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/group_store.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
+import 'package:shoppinglist/common/common_const.dart';
+import 'package:shoppinglist/common/group_item.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/group_store.dart';
 
-import '../../newlist_page/main.dart' as newlist;
+import '../newlist_page/main.dart' as newlist;
 
 ///
 /// グループリスト
@@ -136,7 +137,7 @@ Widget _groupItemAdd(BuildContext context, WidgetRef ref, String _title) {
               // グループリストの再読み込み
               _groupProvider.initializeList();
               // ToDoリストも再読み込みする
-              _groupProvider.initializeList();
+              ref.read(todoProvider).initializeList();
               // メニューリストを閉じる
               Navigator.pop(context);
             },

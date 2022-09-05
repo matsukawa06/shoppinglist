@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
-import 'package:shoppinglist/Models/todo_store.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
+import 'package:shoppinglist/models/todo_store.dart';
 
-import '../../edit_page/main.dart' as edit_page;
+import '../edit_page/main.dart' as edit_page;
 import 'grouplist_icon.dart';
 import 'menulist_icon.dart';
 

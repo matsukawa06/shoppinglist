@@ -1,10 +1,10 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Common/group_item.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/group_store.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/common/group_item.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/group_store.dart';
 
 class GroupTextButton extends StatelessWidget {
   const GroupTextButton({Key? key}) : super(key: key);

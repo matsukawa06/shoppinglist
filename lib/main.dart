@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/group_provider.dart';
 import 'Common/japanese_cupertino_localizations.dart';
-import 'Views/home_page/ui/main.dart';
+import 'presentation/ui/home_page/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {

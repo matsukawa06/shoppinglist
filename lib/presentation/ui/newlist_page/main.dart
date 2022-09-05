@@ -3,12 +3,12 @@
 ///
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_const.dart';
+import 'package:shoppinglist/common/common_const.dart';
 
-import 'package:shoppinglist/Cotrollers/group_controller.dart';
-import 'package:shoppinglist/Models/form_provider.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/group_store.dart';
+import 'package:shoppinglist/presentation/controllers/group_controller.dart';
+import 'package:shoppinglist/models/form_provider.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/group_store.dart';
 import 'body.dart';
 
 class Main extends ConsumerWidget {

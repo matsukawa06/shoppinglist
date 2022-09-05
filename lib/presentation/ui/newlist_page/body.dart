@@ -3,8 +3,8 @@
 ///
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/group_provider.dart';
 
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'grouptitle_textField.dart';

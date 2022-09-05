@@ -4,13 +4,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shoppinglist/Common/common_const.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Cotrollers/group_controller.dart';
-import 'package:shoppinglist/Cotrollers/todo_controller.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/shared_provider.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/common/common_const.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/presentation/controllers/group_controller.dart';
+import 'package:shoppinglist/presentation/controllers/todo_controller.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/shared_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 

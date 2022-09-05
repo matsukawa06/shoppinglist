@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shoppinglist/Common/common_const.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Cotrollers/group_controller.dart';
-import 'package:shoppinglist/Cotrollers/todo_controller.dart';
-import 'package:shoppinglist/Models/group_store.dart';
+import 'package:shoppinglist/common/common_const.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import '../presentation/controllers/group_controller.dart';
+import '../presentation/controllers/todo_controller.dart';
+import 'package:shoppinglist/models/group_store.dart';
 
 final groupProvider = ChangeNotifierProvider<GroupProvider>(
   (ref) => GroupProvider(),

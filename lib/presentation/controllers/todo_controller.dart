@@ -1,11 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shoppinglist/Common/common_const.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Models/todo_store.dart';
+import 'package:shoppinglist/common/common_const.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/todo_store.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'dart:async';
-import 'database.dart';
+import '../../data/database.dart';
 
 class TodoController {
   // Todoテーブルに1件追加

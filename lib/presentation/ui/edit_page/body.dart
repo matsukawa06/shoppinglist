@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Models/form_provider.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/form_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/services/admob.dart';
 
 import 'group_textButton.dart';

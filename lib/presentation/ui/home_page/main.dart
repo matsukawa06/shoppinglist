@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shoppinglist/Views/home_page/ui/appbar.dart';
+import 'package:shoppinglist/presentation/ui/home_page/appbar.dart';
 import 'body.dart';
 
 // リスト一覧画面用Widget

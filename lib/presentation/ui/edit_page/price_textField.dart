@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 
 class PriceTextField extends ConsumerWidget {
   const PriceTextField({Key? key}) : super(key: key);

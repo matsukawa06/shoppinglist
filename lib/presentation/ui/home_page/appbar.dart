@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 
-import 'package:shoppinglist/Views/setting_page/setting_page.dart';
-import '../../edit_page/main.dart' as edit_page;
+import 'package:shoppinglist/presentation/ui/setting_page/setting_page.dart';
+import '../edit_page/main.dart' as edit_page;
 
 ///
 /// メインページのAppBar設定

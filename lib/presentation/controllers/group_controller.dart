@@ -1,8 +1,8 @@
 // import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:shoppinglist/Models/group_store.dart';
+import 'package:shoppinglist/models/group_store.dart';
 import 'package:sqflite/sqlite_api.dart';
-import 'database.dart';
+import '../../data/database.dart';
 
 class GroupController {
   // Groupテーブルに1件追加

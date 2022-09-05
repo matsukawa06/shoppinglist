@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_util.dart';
-import 'package:shoppinglist/Cotrollers/todo_controller.dart';
-import 'package:shoppinglist/Models/todo_store.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/presentation/controllers/todo_controller.dart';
+import 'package:shoppinglist/models/todo_store.dart';
 
 final todoProvider = ChangeNotifierProvider<TodoProvider>(
   (ref) => TodoProvider(),

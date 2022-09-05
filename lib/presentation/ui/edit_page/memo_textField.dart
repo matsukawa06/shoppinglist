@@ -1,7 +1,7 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 
 class MemoTextField extends ConsumerWidget {
   const MemoTextField({Key? key}) : super(key: key);

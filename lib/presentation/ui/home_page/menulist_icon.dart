@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/Common/common_const.dart';
-import 'package:shoppinglist/Models/group_provider.dart';
-import 'package:shoppinglist/Models/shared_provider.dart';
-import 'package:shoppinglist/Models/todo_provider.dart';
-import 'package:shoppinglist/Views/newlist_page/main.dart';
+import 'package:shoppinglist/common/common_const.dart';
+import 'package:shoppinglist/models/group_provider.dart';
+import 'package:shoppinglist/models/shared_provider.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
+import 'package:shoppinglist/presentation/ui/newlist_page/main.dart'
+    as newlist_page;
+import 'package:shoppinglist/presentation/ui/shukei_page/main.dart'
+    as shukei_page;
 
 ///
 /// メニューリスト
@@ -29,6 +32,8 @@ class MenuListIcon extends ConsumerWidget {
             return SingleChildScrollView(
               child: Column(
                 children: const [
+                  // 日付別集計
+                  Shukei(),
                   // リスト更新
                   ListUpdate(),
                   // リスト削除
@@ -54,7 +59,7 @@ class ListUpdate extends ConsumerWidget {
     final _groupProvider = ref.read(groupProvider);
 
     return Container(
-      margin: const EdgeInsets.only(top: 25, bottom: 5),
+      margin: const EdgeInsets.only(bottom: 5),
       height: 60.0,
       child: InkWell(
         child: Row(
@@ -73,7 +78,7 @@ class ListUpdate extends ConsumerWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return const Main(modeUpdate);
+                return const newlist_page.Main(modeUpdate);
               },
             ),
           ).then(
@@ -109,7 +114,7 @@ class ListDelete extends ConsumerWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 35),
-      height: 70.0,
+      height: 60.0,
       child: InkWell(
         child: _delContainer(ref),
         onTap: () async {
@@ -204,4 +209,41 @@ Widget _delContainer(WidgetRef ref) {
       ),
     ),
   );
+}
+
+///
+/// 日付で集計
+///
+class Shukei extends ConsumerWidget {
+  const Shukei({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.only(top: 25, bottom: 5),
+      height: 60,
+      child: InkWell(
+        onTap: () async {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const shukei_page.Main();
+              },
+            ),
+          ).then(
+            (value) {
+              // メニューリストを閉じる
+              Navigator.pop(context);
+            },
+          );
+        },
+        child: Row(
+          children: const [
+            Padding(padding: EdgeInsets.only(left: 15.0)),
+            Text('日付で集計', style: TextStyle(fontSize: 18)),
+          ],
+        ),
+      ),
+    );
+  }
 }
