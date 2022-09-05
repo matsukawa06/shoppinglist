@@ -6,8 +6,7 @@ import 'package:shoppinglist/models/shared_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/presentation/ui/newlist_page/main.dart'
     as newlist_page;
-import 'package:shoppinglist/presentation/ui/shukei_page/main.dart'
-    as shukei_page;
+import 'package:shoppinglist/presentation/ui/shukei_page/shukeimain_page.dart';
 
 ///
 /// メニューリスト
@@ -227,7 +226,7 @@ class Shukei extends ConsumerWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return const shukei_page.Main();
+                return ShukeiMainPage();
               },
             ),
           ).then(
