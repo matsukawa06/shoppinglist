@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shoppinglist/models/group_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
-
 import 'package:shoppinglist/presentation/ui/setting_page/setting_page.dart';
-import '../edit_page/main.dart' as edit_page;
+
+import '../edit_page/edit_page.dart';
 
 ///
 /// メインページのAppBar設定
@@ -52,7 +52,7 @@ class _NewAddIcon extends ConsumerWidget {
           MaterialPageRoute(
             builder: (context) {
               // 遷移先の画面として編集用画面を指定
-              return const edit_page.Main();
+              return const EditPage();
             },
           ),
         ).then(

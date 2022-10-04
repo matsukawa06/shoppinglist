@@ -4,10 +4,25 @@ import 'package:shoppinglist/common/common_util.dart';
 import 'package:shoppinglist/models/group_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/models/todo_store.dart';
+import 'package:shoppinglist/presentation/ui/edit_page/edit_page.dart';
+import 'package:shoppinglist/presentation/ui/home_page/appbar.dart';
+import 'package:shoppinglist/presentation/ui/home_page/grouplist_icon.dart';
+import 'package:shoppinglist/presentation/ui/home_page/menulist_icon.dart';
 
-import '../edit_page/main.dart' as edit_page;
-import 'grouplist_icon.dart';
-import 'menulist_icon.dart';
+// import 'body.dart';
+
+// リスト一覧画面用Widget
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: MyAppBar(),
+      body: Body(),
+    );
+  }
+}
 
 ///
 /// メインページのbody部
@@ -54,7 +69,7 @@ class _Content extends ConsumerWidget {
         children: ref.watch(todoProvider).todoList.map(
           (TodoStore todo) {
             return Dismissible(
-              key: Key(todo.id.toString()),
+              key: UniqueKey(), // ここをTodo.ID.toStringにすると、削除して元に戻す処理でエラーになる
               background: Container(
                 padding: const EdgeInsets.only(right: 10),
                 alignment: AlignmentDirectional.centerEnd,
@@ -177,7 +192,7 @@ class _ContentCard extends ConsumerWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
-          return const edit_page.Main();
+          return const EditPage();
         },
       ),
     ).then(

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shoppinglist/common/common_util.dart';
 import 'package:shoppinglist/models/group_provider.dart';
+
 import 'Common/japanese_cupertino_localizations.dart';
-import 'presentation/ui/home_page/main.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'presentation/ui/home_page/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +51,7 @@ class HomeScreen extends StatelessWidget {
     return Consumer(builder: (context, ref, child) {
       return MaterialApp(
         debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
-        home: const Main(),
+        home: const HomePage(),
         title: 'ShoppingList',
         theme: ThemeData(
           // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
