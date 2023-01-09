@@ -9,9 +9,9 @@ import 'package:shoppinglist/presentation/ui/home_page/appbar.dart';
 import 'package:shoppinglist/presentation/ui/home_page/grouplist_icon.dart';
 import 'package:shoppinglist/presentation/ui/home_page/menulist_icon.dart';
 
-// import 'body.dart';
-
-// リスト一覧画面用Widget
+///
+/// リスト一覧画面用Widget
+///
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -217,9 +217,7 @@ class _ContentCard extends ConsumerWidget {
           child: SizedBox(
             width: 60,
             child: Icon(
-              todo.isSum == 1
-                  ? Icons.shopping_cart
-                  : Icons.shopping_cart_outlined,
+              todo.isSum == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
               size: 45,
             ),
           ),
@@ -316,8 +314,7 @@ class _ContentCard extends ConsumerWidget {
   void _konyuZumiOnOff(BuildContext context, WidgetRef ref, TodoStore todo) {
     final _todoProvider = ref.read(todoProvider);
 
-    _todoProvider.updateKonyuZumi(
-        todo.id, intToBool(todo.konyuZumi) ? false : true);
+    _todoProvider.updateKonyuZumi(todo.id, intToBool(todo.konyuZumi) ? false : true);
     _todoProvider.initializeList();
     if (intToBool(todo.konyuZumi) == false) {
       // メッセージ表示

@@ -35,26 +35,28 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final _groupProvider = context.watch<GroupProvider>();
-    return Consumer(builder: (context, ref, child) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
-        home: const HomePage(),
-        title: 'ShoppingList',
-        theme: ThemeData(
-          // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
-          primarySwatch: createMaterialColor(ref.watch(groupProvider).primarySwatch),
-          brightness: _isDark ? Brightness.dark : Brightness.light,
-        ),
-        localizationsDelegates: const [
-          JapaneseCupertinoLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en'),
-          Locale('ja'),
-        ],
-      );
-    });
+    return Consumer(
+      builder: (context, ref, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
+          title: 'ShoppingList',
+          home: const HomePage(),
+          theme: ThemeData(
+            // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
+            primarySwatch: createMaterialColor(ref.watch(groupProvider).primarySwatch),
+            brightness: _isDark ? Brightness.dark : Brightness.light,
+          ),
+          localizationsDelegates: const [
+            JapaneseCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ja'),
+          ],
+        );
+      },
+    );
   }
 }
