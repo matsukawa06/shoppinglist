@@ -21,19 +21,6 @@ void main() {
   ]);
   // 最初に表示するWidget
   runApp(
-    // MultiProvider(
-    //   providers: [
-    //     // Todo情報
-    //     ChangeNotifierProvider(create: (_) => TodoProvider()),
-    //     // 端末保存情報
-    //     ChangeNotifierProvider(create: (_) => SharedPreferencesProvider()),
-    //     // validate用
-    //     ChangeNotifierProvider(create: (_) => FormProvider()),
-    //     // グループリスト用
-    //     ChangeNotifierProvider(create: (_) => GroupProvider()),
-    //   ],
-    //   child: const HomeScreen(),
-    // ),
     const ProviderScope(
       child: HomeScreen(),
     ),
@@ -55,8 +42,7 @@ class HomeScreen extends StatelessWidget {
         title: 'ShoppingList',
         theme: ThemeData(
           // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
-          primarySwatch:
-              createMaterialColor(ref.watch(groupProvider).primarySwatch),
+          primarySwatch: createMaterialColor(ref.watch(groupProvider).primarySwatch),
           brightness: _isDark ? Brightness.dark : Brightness.light,
         ),
         localizationsDelegates: const [
