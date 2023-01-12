@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/common/common_const.dart';
 import 'package:shoppinglist/common/group_item.dart';
 import 'package:shoppinglist/models/group_provider.dart';
 import 'package:shoppinglist/models/group_store.dart';
+import 'package:shoppinglist/models/todo_provider.dart';
 
-import '../newlist_page/main.dart' as newlist;
+import '../newlist_page/newlist_page.dart';
 
 ///
 /// グループリスト
@@ -36,8 +36,7 @@ class GroupListIcon extends ConsumerWidget {
                   context: context,
                   isScrollControlled: true,
                   shape: const RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   ),
                   builder: (BuildContext context) {
                     return SingleChildScrollView(
@@ -127,7 +126,7 @@ Widget _groupItemAdd(BuildContext context, WidgetRef ref, String _title) {
             MaterialPageRoute(
               builder: (context) {
                 // 遷移先の画面として編集用画面を指定
-                return const newlist.Main(modeInsert);
+                return const NewListPage(modeInsert);
               },
             ),
           ).then(

@@ -4,8 +4,7 @@ import 'package:shoppinglist/common/common_const.dart';
 import 'package:shoppinglist/models/group_provider.dart';
 import 'package:shoppinglist/models/shared_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
-import 'package:shoppinglist/presentation/ui/newlist_page/main.dart'
-    as newlist_page;
+import 'package:shoppinglist/presentation/ui/newlist_page/newlist_page.dart';
 import 'package:shoppinglist/presentation/ui/shukei_page/shukeimain_page.dart';
 
 ///
@@ -77,7 +76,7 @@ class ListUpdate extends ConsumerWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return const newlist_page.Main(modeUpdate);
+                return const NewListPage(modeUpdate);
               },
             ),
           ).then(
@@ -157,8 +156,7 @@ class ListDelete extends ConsumerWidget {
                         // グループリストの再読み込み
                         _groupProvider.initializeList();
                         // デフォルトリストを選択中にする
-                        _sharedProvider.saveIntValue(
-                            keySelectId, defualtGroupId);
+                        _sharedProvider.saveIntValue(keySelectId, defualtGroupId);
                         _sharedProvider.setSelectedGroupId(defualtGroupId);
                         // タイトルを反映させる
                         _groupProvider.getSelectedInfo();

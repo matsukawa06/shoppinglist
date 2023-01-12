@@ -9,7 +9,7 @@ import 'package:shoppinglist/models/shared_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/presentation/controllers/group_controller.dart';
 import 'package:shoppinglist/presentation/controllers/todo_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingPage extends ConsumerWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -20,9 +20,7 @@ class SettingPage extends ConsumerWidget {
 
   _restoreValues(WidgetRef ref) async {
     var prefs = await SharedPreferences.getInstance();
-    ref
-        .read(sharedProvider)
-        .setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
+    ref.read(sharedProvider).setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
   }
 
   @override
@@ -119,8 +117,8 @@ class SettingPage extends ConsumerWidget {
 ///
 void _launchURL() async {
   const url = 'https://naonari.com/kiyaku.html';
-  if (await canLaunch(url)) {
-    await launch(url);
+  if (await canLaunchUrlString(url)) {
+    await launchUrlString(url);
   } else {
     throw 'Could not Launch $url';
   }
