@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppinglist/common/common_const.dart';
 import 'package:shoppinglist/common/common_util.dart';
@@ -9,7 +11,7 @@ import 'package:shoppinglist/models/shared_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/presentation/controllers/group_controller.dart';
 import 'package:shoppinglist/presentation/controllers/todo_controller.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends ConsumerWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -25,7 +27,6 @@ class SettingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _sharedProvider = ref.watch(sharedProvider);
     _restoreValues(ref);
     return Scaffold(
       appBar: AppBar(
@@ -45,53 +46,19 @@ class SettingPage extends ConsumerWidget {
             final data = snapshot.data!;
             return Column(
               children: <Widget>[
-                Card(
-                  elevation: 5,
-                  child: SwitchListTile(
-                    value: _sharedProvider.isKonyuZumiView,
-                    title: const Text('購入済みを表示する'),
-                    onChanged: (bool value) {
-                      _sharedProvider.saveBoolValue(keyKonyuzumiView, value);
-                      _sharedProvider.setKonyuZumiView(value);
-                    },
-                  ),
-                ),
+                // App設定
+                _appSettings(ref),
                 const SpaceBox.height(value: 32),
-                Card(
-                  elevation: 5, // 影のサイズ
-                  child: Column(
-                    children: [
-                      // アプリ情報
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () => showAboutDialog(
-                            context: context,
-                            applicationName: '買い物計画',
-                            applicationVersion: 'Ver. ${data.version}',
-                          ),
-                          child: const ListTile(
-                            title: Text('アプリ情報'),
-                          ),
-                        ),
-                      ),
-                      // 利用規約
-                      const InkWell(
-                        onTap: _launchURL,
-                        child: ListTile(
-                          title: Text('利用規約・プライバシーポリシー'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // App共有・評価
+                _appShare(context),
                 const SpaceBox.height(value: 32),
+                // App情報
+                _appInfo(context, data),
+
+                // その他のアプリ
+                _appOther(context),
+                const SpaceBox.height(value: 32),
+                // データ初期化
                 Card(
                   elevation: 5, // 影のサイズ
                   child: InkWell(
@@ -110,18 +77,161 @@ class SettingPage extends ConsumerWidget {
       ),
     );
   }
+
+  /// App設定
+  Widget _appSettings(WidgetRef ref) {
+    final _sharedProvider = ref.watch(sharedProvider);
+    return Card(
+      elevation: 5,
+      child: SwitchListTile(
+        value: _sharedProvider.isKonyuZumiView,
+        title: const Text('購入済みを表示する'),
+        onChanged: (bool value) {
+          _sharedProvider.saveBoolValue(keyKonyuzumiView, value);
+          _sharedProvider.setKonyuZumiView(value);
+        },
+      ),
+    );
+  }
+
+  /// App共有・評価
+  Widget _appShare(BuildContext context) {
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          // シェアする
+          InkWell(
+            child: const ListTile(
+              title: Text('シェアする'),
+              leading: Icon(Icons.share),
+              trailing: Icon(Icons.arrow_forward_ios),
+            ),
+            onTap: () async => _share(context),
+          ),
+          // 評価する
+          InkWell(
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: Colors.grey),
+                ),
+              ),
+              child: const ListTile(
+                title: Text('評価する'),
+                leading: Icon(Icons.star),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
+            ),
+            onTap: () => _review(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// シェアするタップ処理
+  void _share(BuildContext context) async {
+    // final box = context.findRenderObject() as RenderBox?;
+    await Share.share('https://apple.co/3X3IDPb', subject: '買い物計画リスト');
+  }
+
+  /// 評価するタップ処理
+  void _review() async {
+    final InAppReview inAppReview = InAppReview.instance;
+    inAppReview.openStoreListing(appStoreId: '1596917066', microsoftStoreId: '');
+  }
+
+  /// App情報
+  Widget _appInfo(BuildContext context, PackageInfo data) {
+    return Card(
+      elevation: 5, // 影のサイズ
+      child: Column(
+        children: [
+          // アプリ情報
+          Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            child: InkWell(
+              onTap: () => showAboutDialog(
+                context: context,
+                applicationName: '買い物計画',
+                applicationVersion: 'Ver. ${data.version}',
+              ),
+              child: const ListTile(
+                title: Text('アプリ情報'),
+              ),
+            ),
+          ),
+          // 利用規約
+          InkWell(
+            onTap: () async => _launchURL('https://naonari.com/kiyaku.html'),
+            child: const ListTile(
+              title: Text('利用規約・プライバシーポリシー'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 ///
 /// 利用規約のページをブラウザで表示する
 ///
-void _launchURL() async {
-  const url = 'https://naonari.com/kiyaku.html';
-  if (await canLaunchUrlString(url)) {
-    await launchUrlString(url);
+void _launchURL(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   } else {
     throw 'Could not Launch $url';
   }
+}
+
+/// その他のアプリ
+Widget _appOther(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+  return Container(
+    margin: EdgeInsets.only(top: size.height * 0.05),
+    child: Column(
+      children: [
+        Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(left: size.width * 0.03),
+            alignment: Alignment.centerLeft,
+            child: const Text('開発者の他のアプリ')),
+        Card(
+          elevation: 5,
+          child: Column(
+            children: [
+              // カウントダウンリスト
+              InkWell(
+                onTap: () => _launchURL('https://apple.co/3WQVwMv'),
+                child: ListTile(
+                  leading: _appIcon(context, 'images/countdown.png'),
+                  title: const Text('カウントダウンリスト'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// アプリのアイコンをサイズ指定して返す
+Widget _appIcon(BuildContext context, String imagePath) {
+  final size = MediaQuery.of(context).size;
+  return SizedBox(
+    width: size.width * 0.1,
+    height: size.height * 0.1,
+    child: Image.asset(imagePath),
+  );
 }
 
 ///
@@ -140,10 +250,7 @@ Future _allDataInit(BuildContext context, WidgetRef ref) async {
           child: Column(
             children: const [
               Text('全てのデータを削除します。よろしいですか？'),
-              Text(
-                'この操作は取り消しできません。',
-                style: TextStyle(color: Colors.red),
-              )
+              Text('この操作は取り消しできません。', style: TextStyle(color: Colors.red))
             ],
           ),
         ),
