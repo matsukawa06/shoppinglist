@@ -1,7 +1,13 @@
-import 'Common/importer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/group_provider.dart';
 
 import 'Common/japanese_cupertino_localizations.dart';
-import 'Views/home/main.dart';
+import 'presentation/ui/home_page/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,18 +21,8 @@ void main() {
   ]);
   // 最初に表示するWidget
   runApp(
-    MultiProvider(
-      providers: [
-        // Todo情報
-        ChangeNotifierProvider(create: (_) => ProviderTodo()),
-        // 端末保存情報
-        ChangeNotifierProvider(create: (_) => ProviderSharedPreferences()),
-        // validate用
-        ChangeNotifierProvider(create: (_) => ProviderForm()),
-        // グループリスト用
-        ChangeNotifierProvider(create: (_) => ProviderGroup()),
-      ],
-      child: const HomeScreen(),
+    const ProviderScope(
+      child: HomeScreen(),
     ),
   );
 }
@@ -38,24 +34,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _groupProvider = context.watch<ProviderGroup>();
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
-      home: const Main(),
-      title: 'ShoppingList',
-      theme: ThemeData(
-        primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
-        brightness: _isDark ? Brightness.dark : Brightness.light,
-      ),
-      localizationsDelegates: const [
-        JapaneseCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('ja'),
-      ],
+    // final _groupProvider = context.watch<GroupProvider>();
+    return Consumer(
+      builder: (context, ref, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false, // ← シミュレータのdebugバーを非表示にする
+          title: 'ShoppingList',
+          home: const HomePage(),
+          theme: ThemeData(
+            // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
+            primarySwatch: createMaterialColor(ref.watch(groupProvider).primarySwatch),
+            brightness: _isDark ? Brightness.dark : Brightness.light,
+          ),
+          localizationsDelegates: const [
+            JapaneseCupertinoLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ja'),
+          ],
+        );
+      },
     );
   }
 }
