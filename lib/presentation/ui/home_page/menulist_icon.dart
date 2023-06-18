@@ -31,7 +31,7 @@ class MenuListIcon extends ConsumerWidget {
               child: Column(
                 children: const [
                   // 日付別集計
-                  Shukei(),
+                  // Shukei(),
                   // リスト更新
                   ListUpdate(),
                   // リスト削除
