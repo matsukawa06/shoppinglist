@@ -23,16 +23,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.17.0
+  # intl: ^0.17.0
+  intl: ^0.18.1
   flutter_colorpicker: ^1.0.3
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^1.0.3
   google_mobile_ads: ^1.2.0
   in_app_review: ^2.0.6
-  package_info_plus: ^1.4.3+1
+  # package_info_plus: ^1.4.3+1
+  package_info_plus: ^4.1.0
   path:
-  share_plus: ^6.3.0
+  # share_plus: ^6.3.0
+  share_plus: ^4.5.3
   share_plus_web: ^3.1.0
   shared_preferences: ^2.0.6
   sqflite:

@@ -23,15 +23,14 @@ class PriceTextField extends ConsumerWidget {
       decoration: const InputDecoration(
         labelText: '価格',
         // hintText: '価格を入力してください',
-        enabledBorder:
-            UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.orange),
         ),
       ),
-      validator: (String? value) {
-        return value!.isEmpty ? '価格を入力してください' : null;
-      },
+      // validator: (String? value) {
+      //   return value!.isEmpty ? '価格を入力してください' : null;
+      // },
     );
   }
 }

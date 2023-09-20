@@ -5,21 +5,93 @@ import 'package:shoppinglist/models/group_provider.dart';
 import 'package:shoppinglist/models/todo_provider.dart';
 import 'package:shoppinglist/models/todo_store.dart';
 import 'package:shoppinglist/presentation/ui/edit_page/edit_page.dart';
-import 'package:shoppinglist/presentation/ui/home_page/appbar.dart';
 import 'package:shoppinglist/presentation/ui/home_page/grouplist_icon.dart';
 import 'package:shoppinglist/presentation/ui/home_page/menulist_icon.dart';
+import 'package:shoppinglist/presentation/ui/setting_page/setting_page.dart';
 
 ///
 /// リスト一覧画面用Widget
 ///
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MyAppBar(),
-      body: Body(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _groupProvider = ref.watch(groupProvider);
+    return Scaffold(
+      appBar: AppBar(
+        // タイトル
+        title: Text(_groupProvider.selectedTitle),
+        // 右側ボタン
+        actions: [
+          // 新規追加アイコン
+          _NewAddIcon(),
+          // 設定画面遷移アイコン
+          _SettingIcon(),
+        ],
+      ),
+      body: const Body(),
+    );
+  }
+}
+
+///
+/// 新規追加アイコン
+/// 新規登録ページへ遷移する
+class _NewAddIcon extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.read(todoProvider);
+    return IconButton(
+      onPressed: () {
+        // "push"で新規画面に遷移
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              // 遷移先の画面として編集用画面を指定
+              return const EditPage();
+            },
+          ),
+        ).then(
+          (value) async {
+            // 画面遷移から戻ってきた時の処理
+            _todoProvider.clearItems();
+            _todoProvider.initializeList();
+          },
+        );
+      },
+      icon: const Icon(Icons.add),
+    );
+  }
+}
+
+///
+/// 設定アイコン
+/// 設定画面へ遷移する
+class _SettingIcon extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _todoProvider = ref.read(todoProvider);
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const SettingPage();
+            },
+          ),
+        ).then(
+          (value) async {
+            // 画面遷移から戻ってきた時の処理
+            _todoProvider.clearItems();
+            _todoProvider.initializeList();
+          },
+        );
+      },
+      icon: const Icon(
+        Icons.settings, //dehaze_sharp,
+        size: 30,
+      ),
     );
   }
 }

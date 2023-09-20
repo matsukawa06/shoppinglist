@@ -27,9 +27,9 @@ class MenuListIcon extends ConsumerWidget {
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           builder: (BuildContext contex) {
-            return SingleChildScrollView(
+            return const SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   // 日付別集計
                   // Shukei(),
                   // リスト更新
@@ -60,8 +60,8 @@ class ListUpdate extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 5),
       height: 60.0,
       child: InkWell(
-        child: Row(
-          children: const [
+        child: const Row(
+          children: [
             Padding(padding: EdgeInsets.only(left: 15.0)),
             Text(
               'リスト情報を変更する',
@@ -124,10 +124,10 @@ class ListDelete extends ConsumerWidget {
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text('確認'),
-                  content: SizedBox(
+                  content: const SizedBox(
                     height: 90.0,
                     child: Column(
-                      children: const [
+                      children: [
                         Text('リストを削除します。よろしいですか？'),
                         Text(
                           'この操作は取り消しできません。',
@@ -234,8 +234,8 @@ class Shukei extends ConsumerWidget {
             },
           );
         },
-        child: Row(
-          children: const [
+        child: const Row(
+          children: [
             Padding(padding: EdgeInsets.only(left: 15.0)),
             Text('日付で集計', style: TextStyle(fontSize: 18)),
           ],
