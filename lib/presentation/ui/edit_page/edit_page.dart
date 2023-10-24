@@ -134,7 +134,9 @@ void _insertUpdate(BuildContext context, WidgetRef ref) async {
       var _todo = TodoStore(
         title: _todoProvider.titleController.text,
         memo: _todoProvider.memoController.text,
-        price: int.parse(_todoProvider.priceController.text),
+        price: _todoProvider.priceController.text.trim() == ''
+            ? 0
+            : int.parse(_todoProvider.priceController.text),
         release: boolToInt(_todoProvider.switchReleaseDay),
         releaseDay: _todoProvider.releaseDay,
         isSum: boolToInt(_todoProvider.switchIsSum),
@@ -153,7 +155,9 @@ void _insertUpdate(BuildContext context, WidgetRef ref) async {
         id: _todoProvider.id,
         title: _todoProvider.titleController.text,
         memo: _todoProvider.memoController.text,
-        price: int.parse(_todoProvider.priceController.text),
+        price: _todoProvider.priceController.text.trim() == ''
+            ? 0
+            : int.parse(_todoProvider.priceController.text),
         release: boolToInt(_todoProvider.switchReleaseDay),
         releaseDay: _todoProvider.releaseDay,
         isSum: boolToInt(_todoProvider.switchIsSum),
@@ -216,10 +220,10 @@ class Body extends StatelessWidget {
                   // ====================================
                   // 発売日
                   // ====================================
-                  Card(
+                  const Card(
                     elevation: 5,
                     child: Column(
-                      children: const [
+                      children: [
                         // 発売予定日
                         ReleaseContainer(),
                       ],
