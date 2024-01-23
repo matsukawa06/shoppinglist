@@ -139,6 +139,8 @@ class TodoProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void changeKonyuZumiMark(int? id, bool value) {}
+
   // 購入日
   late var konyuDay = DateTime.now();
   // 購入日の初期ラベル
@@ -197,8 +199,7 @@ class TodoProvider with ChangeNotifier {
 
   /* 計算対象区分の更新 */
   void updateIsSum(TodoStore _todo) {
-    TodoController.updateIsSum(
-        _todo.id!, intToBool(_todo.isSum) ? false : true);
+    TodoController.updateIsSum(_todo.id!, intToBool(_todo.isSum) ? false : true);
     initializeList();
   }
 }
