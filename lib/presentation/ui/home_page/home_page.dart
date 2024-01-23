@@ -289,7 +289,9 @@ class _ContentCard extends ConsumerWidget {
           child: SizedBox(
             width: 60,
             child: Icon(
-              todo.isSum == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+              todo.isSum == 1
+                  ? Icons.shopping_cart
+                  : Icons.shopping_cart_outlined,
               size: 45,
             ),
           ),
@@ -386,7 +388,8 @@ class _ContentCard extends ConsumerWidget {
   void _konyuZumiOnOff(BuildContext context, WidgetRef ref, TodoStore todo) {
     final _todoProvider = ref.read(todoProvider);
 
-    _todoProvider.updateKonyuZumi(todo.id, intToBool(todo.konyuZumi) ? false : true);
+    _todoProvider.updateKonyuZumi(
+        todo.id, intToBool(todo.konyuZumi) ? false : true);
     _todoProvider.initializeList();
     if (intToBool(todo.konyuZumi) == false) {
       // メッセージ表示
@@ -414,7 +417,7 @@ class _ContentCard extends ConsumerWidget {
 /// フッター表示
 ///
 Widget _setFooter(WidgetRef ref) {
-  final _todoProvider = ref.read(todoProvider);
+  final _todoProvider = ref.watch(todoProvider);
   return Stack(
     children: [
       // 合計金額表示
