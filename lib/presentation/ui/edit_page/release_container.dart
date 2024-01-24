@@ -37,8 +37,9 @@ class ReleaseContainer extends ConsumerWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
-                    onPressed: () => _selectDate(context, ref),
-                    icon: const Icon(Icons.date_range))
+                  onPressed: () => _selectDate(context, ref),
+                  icon: const Icon(Icons.date_range),
+                )
               ],
             ),
           ),
@@ -54,7 +55,7 @@ class ReleaseContainer extends ConsumerWidget {
       locale: const Locale('ja'),
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
-      lastDate: DateTime(2024),
+      lastDate: DateTime(2030),
     );
     if (selected != null) {
       ref.read(todoProvider).changeReleaseDay(selected);
