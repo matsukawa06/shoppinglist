@@ -414,7 +414,6 @@ class _ContentCard extends ConsumerWidget {
 /// フッター表示
 ///
 Widget _setFooter(WidgetRef ref) {
-  final _todoProvider = ref.read(todoProvider);
   return Stack(
     children: [
       // 合計金額表示
@@ -427,7 +426,7 @@ Widget _setFooter(WidgetRef ref) {
             padding: const EdgeInsets.all(16),
             child: Center(
               child: Text(
-                '合計：${formatPrice(_todoProvider.totalPrice)} 円',
+                '合計：${formatPrice(ref.watch(todoProvider).totalPrice)} 円',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
