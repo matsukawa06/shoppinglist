@@ -57,7 +57,7 @@ class GroupProvider with ChangeNotifier {
     List<GroupStore> list =
         await GroupController.getGroupSelect(prefsSelectedId);
     // 1件しか取得しないけどforでループしておく
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < list.length;) {
       selectedId = list[i].id;
       selectedTitle = list[i].title;
       primarySwatch = stringToColor(list[i].color);
@@ -106,6 +106,7 @@ class GroupProvider with ChangeNotifier {
   changeColor(Color _color) {
     pickerColor = _color;
     changeFontColor(_color);
+    notifyListeners();
   }
 
   // フォントカラーの設定
