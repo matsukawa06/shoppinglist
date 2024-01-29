@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppinglist/common/common_const.dart';
 import 'package:shoppinglist/common/common_util.dart';
+import 'package:shoppinglist/models/group_store.dart';
+
 import '../presentation/controllers/group_controller.dart';
 import '../presentation/controllers/todo_controller.dart';
-import 'package:shoppinglist/models/group_store.dart';
 
 final groupProvider = ChangeNotifierProvider<GroupProvider>(
   (ref) => GroupProvider(),
@@ -40,6 +41,7 @@ class GroupProvider with ChangeNotifier {
       var prefs = await SharedPreferences.getInstance();
       prefs.setInt(keySelectId, defualtGroupId);
     }
+    getSelectedInfo();
     notifyListeners();
   }
 
@@ -54,10 +56,9 @@ class GroupProvider with ChangeNotifier {
   Future<void> getSelectedInfo() async {
     var prefs = await SharedPreferences.getInstance();
     var prefsSelectedId = (prefs.getInt(keySelectId) ?? defualtGroupId);
-    List<GroupStore> list =
-        await GroupController.getGroupSelect(prefsSelectedId);
+    List<GroupStore> list = await GroupController.getGroupSelect(prefsSelectedId);
     // 1件しか取得しないけどforでループしておく
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < list.length;) {
       selectedId = list[i].id;
       selectedTitle = list[i].title;
       primarySwatch = stringToColor(list[i].color);
@@ -106,6 +107,7 @@ class GroupProvider with ChangeNotifier {
   changeColor(Color _color) {
     pickerColor = _color;
     changeFontColor(_color);
+    notifyListeners();
   }
 
   // フォントカラーの設定
