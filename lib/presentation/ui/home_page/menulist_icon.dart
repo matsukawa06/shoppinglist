@@ -139,35 +139,10 @@ class ListDelete extends ConsumerWidget {
                     ),
                   ),
                   actions: <Widget>[
-                    TextButton(
-                      child: const Text('いいえ'),
-                      onPressed: () {
-                        // ダイアログを閉じる
-                        Navigator.of(context).pop(0);
-                        // モーダルシートも閉じる
-                        Navigator.pop(context);
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('はい'),
-                      onPressed: () {
-                        // グループリストと紐づくTodoを物理削除
-                        _groupProvider.delete(_groupProvider.selectedId);
-                        // グループリストの再読み込み
-                        _groupProvider.initializeList();
-                        // デフォルトリストを選択中にする
-                        _sharedProvider.saveIntValue(keySelectId, defualtGroupId);
-                        _sharedProvider.setSelectedGroupId(defualtGroupId);
-                        // タイトルを反映させる
-                        _groupProvider.getSelectedInfo();
-                        // ToDoリストも再読み込みする
-                        ref.read(todoProvider).initializeList();
-                        // ダイアログを閉じる
-                        Navigator.pop(context);
-                        // メニューリストを閉じる
-                        Navigator.pop(context);
-                      },
-                    )
+                    // いいえボタン
+                    buttonCancel(context),
+                    // はいボタン
+                    buttonYes(_groupProvider, _sharedProvider, ref, context)
                   ],
                 );
               },
@@ -177,35 +152,73 @@ class ListDelete extends ConsumerWidget {
       ),
     );
   }
-}
 
-///
-/// リスト削除用の選択行の見た目
-///
-Widget _delContainer(WidgetRef ref) {
-  final _groupProvider = ref.watch<GroupProvider>(groupProvider);
-  final _isDefualt = _groupProvider.selectedId == defualtGroupId ? true : false;
+  ///
+  /// リスト削除用の選択行の見た目
+  ///
+  Widget _delContainer(WidgetRef ref) {
+    final _groupProvider = ref.watch<GroupProvider>(groupProvider);
+    final _isDefualt = _groupProvider.selectedId == defualtGroupId ? true : false;
 
-  return Container(
-    width: double.infinity,
-    alignment: Alignment.topLeft,
-    child: ListTile(
-      title: Text(
-        'リストを削除する',
-        style: TextStyle(
-          fontSize: 18,
-          color: _isDefualt ? Colors.grey : Colors.black,
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.topLeft,
+      child: ListTile(
+        title: Text(
+          'リストを削除する',
+          style: TextStyle(
+            fontSize: 18,
+            color: _isDefualt ? Colors.grey : Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          _isDefualt ? '\nデフォルトのリストは削除できません' : '',
+          style: TextStyle(
+            fontSize: 14,
+            color: _isDefualt ? Colors.grey : Colors.black,
+          ),
         ),
       ),
-      subtitle: Text(
-        _isDefualt ? '\nデフォルトのリストは削除できません' : '',
-        style: TextStyle(
-          fontSize: 14,
-          color: _isDefualt ? Colors.grey : Colors.black,
-        ),
-      ),
-    ),
-  );
+    );
+  }
+
+  // はいボタン
+  TextButton buttonYes(GroupProvider _groupProvider, SharedPreferencesProvider _sharedProvider,
+      WidgetRef ref, BuildContext context) {
+    return TextButton(
+      child: const Text('はい'),
+      onPressed: () {
+        // グループリストと紐づくTodoを物理削除
+        _groupProvider.delete(_groupProvider.selectedId);
+        // グループリストの再読み込み
+        _groupProvider.initializeList();
+        // デフォルトリストを選択中にする
+        _sharedProvider.saveIntValue(keySelectId, defualtGroupId);
+        _sharedProvider.setSelectedGroupId(defualtGroupId);
+        // タイトルを反映させる
+        _groupProvider.getSelectedInfo();
+        // ToDoリストも再読み込みする
+        ref.read(todoProvider).initializeList();
+        // ダイアログを閉じる
+        Navigator.pop(context);
+        // メニューリストを閉じる
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  // いいえボタン
+  TextButton buttonCancel(BuildContext context) {
+    return TextButton(
+      child: const Text('いいえ'),
+      onPressed: () {
+        // ダイアログを閉じる
+        Navigator.of(context).pop(0);
+        // モーダルシートも閉じる
+        Navigator.pop(context);
+      },
+    );
+  }
 }
 
 ///

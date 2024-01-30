@@ -25,27 +25,32 @@ class GroupListIcon extends ConsumerWidget {
             child: CircularProgressIndicator(),
           );
         }
-        return Consumer(
-          builder: (context, ref, child) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              color: ref.watch(groupProvider).fontColor,
-              iconSize: 40,
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        return groupListMain();
+      },
+    );
+  }
+
+  // メイン
+  Consumer groupListMain() {
+    return Consumer(
+      builder: (context, ref, child) {
+        return IconButton(
+          icon: const Icon(Icons.menu),
+          color: ref.watch(groupProvider).fontColor,
+          iconSize: 40,
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (BuildContext context) {
+                return SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: _groupList(context, ref),
                   ),
-                  builder: (BuildContext context) {
-                    return SingleChildScrollView(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: _groupList(context, ref),
-                      ),
-                    );
-                  },
                 );
               },
             );

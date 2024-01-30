@@ -41,7 +41,7 @@ class HomePage extends ConsumerWidget {
 class _NewAddIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _todoProvider = ref.read(todoProvider);
+    final _todoProvider = ref.watch(todoProvider);
     return IconButton(
       onPressed: () {
         // "push"で新規画面に遷移
@@ -187,12 +187,10 @@ class _Content extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, // これで両端によせる
                 children: [
-                  const Text(
-                    '削除しました',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('削除しました',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
                   TextButton(
                     onPressed: () {
                       // 再度DBからTodoを取得して、削除を無かったことにする
@@ -297,79 +295,63 @@ class _ContentCard extends ConsumerWidget {
         Column(
           children: <Widget>[
             // １カードの１行目
-            // タイトル
-            SizedBox(
-              width: 250,
-              height: 40,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  todo.title,
-                  style: const TextStyle(fontSize: 18),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
+            cardRow1(todo),
             // １カードの２行目
-            SizedBox(
-              height: 20,
-              child: Row(
-                children: <Widget>[
-                  // 価格
-                  SizedBox(
-                    width: 100,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${formatPrice(todo.price)} 円',
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ),
-                  // 発売日又は購入日
-                  SizedBox(
-                    width: 150,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        stringDay(todo),
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            cardRow2(todo),
           ],
         ),
         // 購入済チェック
-        SizedBox(
-          width: 50,
-          child: Column(
-            children: [
-              const SpaceBox.height(value: 5),
-              const SizedBox(
-                height: 17,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text("購入"),
-                ),
-              ),
-              Transform.scale(
-                scale: 1.5, // 1.5倍  checkboxのサイズ変更
-                child: Checkbox(
-                  activeColor: Colors.blue,
-                  value: intToBool(todo.konyuZumi),
-                  onChanged: (bool? value) {
-                    // 購入済のチェックON/OFF処理
-                    _konyuZumiOnOff(context, ref, todo);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+        konyuzumiCheck(todo, context, ref),
       ],
+    );
+  }
+
+  // 1カードの1行目 タイトル
+  SizedBox cardRow1(TodoStore todo) {
+    return SizedBox(
+      width: 250,
+      height: 40,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          todo.title,
+          style: const TextStyle(fontSize: 18),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+
+  // 1カードの2行目　価格、発売日または購入日
+  SizedBox cardRow2(TodoStore todo) {
+    return SizedBox(
+      height: 20,
+      child: Row(
+        children: <Widget>[
+          // 価格
+          SizedBox(
+            width: 100,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '${formatPrice(todo.price)} 円',
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+          // 発売日又は購入日
+          SizedBox(
+            width: 150,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                stringDay(todo),
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -380,6 +362,36 @@ class _ContentCard extends ConsumerWidget {
     } else {
       return _todo.release == 1 ? '${dateToString(_todo.releaseDay)} 発売' : '';
     }
+  }
+
+  // 購入済みチェック
+  SizedBox konyuzumiCheck(TodoStore todo, BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: 50,
+      child: Column(
+        children: [
+          const SpaceBox.height(value: 5),
+          const SizedBox(
+            height: 17,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text("購入"),
+            ),
+          ),
+          Transform.scale(
+            scale: 1.5, // 1.5倍  checkboxのサイズ変更
+            child: Checkbox(
+              activeColor: Colors.blue,
+              value: intToBool(todo.konyuZumi),
+              onChanged: (bool? value) {
+                // 購入済のチェックON/OFF処理
+                _konyuZumiOnOff(context, ref, todo);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /* 購入済のチェックON/OFFの処理 */
