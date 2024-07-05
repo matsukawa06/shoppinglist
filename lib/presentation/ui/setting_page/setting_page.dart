@@ -22,7 +22,9 @@ class SettingPage extends ConsumerWidget {
 
   _restoreValues(WidgetRef ref) async {
     var prefs = await SharedPreferences.getInstance();
-    ref.read(sharedProvider).setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
+    ref
+        .read(sharedProvider)
+        .setKonyuZumiView(prefs.getBool(keyKonyuzumiView) ?? false);
   }
 
   @override
@@ -139,7 +141,8 @@ class SettingPage extends ConsumerWidget {
   /// 評価するタップ処理
   void _review() async {
     final InAppReview inAppReview = InAppReview.instance;
-    inAppReview.openStoreListing(appStoreId: '1596917066', microsoftStoreId: '');
+    inAppReview.openStoreListing(
+        appStoreId: '1596917066', microsoftStoreId: '');
   }
 
   /// App情報
@@ -245,10 +248,10 @@ Future _allDataInit(BuildContext context, WidgetRef ref) async {
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('確認'),
-        content: SizedBox(
+        content: const SizedBox(
           height: 90,
           child: Column(
-            children: const [
+            children: [
               Text('全てのデータを削除します。よろしいですか？'),
               Text('この操作は取り消しできません。', style: TextStyle(color: Colors.red))
             ],

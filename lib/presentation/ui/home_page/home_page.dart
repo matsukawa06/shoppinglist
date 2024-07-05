@@ -18,30 +18,31 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _groupProvider = ref.watch(groupProvider);
+    final _todoProvider = ref.watch(todoProvider);
     return Scaffold(
+      //------------------
+      // AppBar
+      //------------------
       appBar: AppBar(
         // タイトル
         title: Text(_groupProvider.selectedTitle),
         // 右側ボタン
         actions: [
           // 新規追加アイコン
-          _NewAddIcon(),
+          _newAddIcon(context, _todoProvider),
           // 設定画面遷移アイコン
-          _SettingIcon(),
+          _settingIcon(context, _todoProvider),
         ],
       ),
+      //------------------
+      // body
+      //------------------
       body: const Body(),
     );
   }
-}
 
-///
-/// 新規追加アイコン
-/// 新規登録ページへ遷移する
-class _NewAddIcon extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final _todoProvider = ref.watch(todoProvider);
+  // 新規追加アイコン
+  IconButton _newAddIcon(BuildContext context, TodoProvider _todoProvider) {
     return IconButton(
       onPressed: () {
         // "push"で新規画面に遷移
@@ -63,15 +64,9 @@ class _NewAddIcon extends ConsumerWidget {
       icon: const Icon(Icons.add),
     );
   }
-}
 
-///
-/// 設定アイコン
-/// 設定画面へ遷移する
-class _SettingIcon extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final _todoProvider = ref.read(todoProvider);
+  // 設定画面遷移アイコン
+  IconButton _settingIcon(BuildContext context, TodoProvider _todoProvider) {
     return IconButton(
       onPressed: () {
         Navigator.of(context).push(
@@ -114,7 +109,7 @@ class Body extends ConsumerWidget {
         return Column(
           children: <Widget>[
             // コンテンツ部
-            _Content(),
+            _content(ref, context),
             // フッター部
             _setFooter(ref),
             const SpaceBox.height(value: 20),
@@ -123,14 +118,8 @@ class Body extends ConsumerWidget {
       },
     );
   }
-}
 
-///
-/// コンテンツ部クラス
-///
-class _Content extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Expanded _content(WidgetRef ref, BuildContext context) {
     return Expanded(
       // ドラッグ＆ドロップできるListView
       child: ReorderableListView(
@@ -287,7 +276,9 @@ class _ContentCard extends ConsumerWidget {
           child: SizedBox(
             width: 60,
             child: Icon(
-              todo.isSum == 1 ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+              todo.isSum == 1
+                  ? Icons.shopping_cart
+                  : Icons.shopping_cart_outlined,
               size: 45,
             ),
           ),
@@ -398,7 +389,8 @@ class _ContentCard extends ConsumerWidget {
   void _konyuZumiOnOff(BuildContext context, WidgetRef ref, TodoStore todo) {
     final _todoProvider = ref.read(todoProvider);
 
-    _todoProvider.updateKonyuZumi(todo.id, intToBool(todo.konyuZumi) ? false : true);
+    _todoProvider.updateKonyuZumi(
+        todo.id, intToBool(todo.konyuZumi) ? false : true);
     _todoProvider.initializeList();
     if (intToBool(todo.konyuZumi) == false) {
       // メッセージ表示
