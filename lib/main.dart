@@ -43,7 +43,8 @@ class HomeScreen extends StatelessWidget {
           home: const HomePage(),
           theme: ThemeData(
             // primarySwatch: createMaterialColor(_groupProvider.primarySwatch),
-            primarySwatch: createMaterialColor(ref.watch(groupProvider).primarySwatch),
+            primarySwatch:
+                createMaterialColor(ref.watch(groupProvider).primarySwatch),
             brightness: _isDark ? Brightness.dark : Brightness.light,
           ),
           localizationsDelegates: const [
