@@ -8,8 +8,7 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
 
   late MaterialLocalizations materialLocalizations;
 
-  static const LocalizationsDelegate<CupertinoLocalizations> delegate =
-      _JapaneseDelegate();
+  static const LocalizationsDelegate<CupertinoLocalizations> delegate = _JapaneseDelegate();
 
   static Future<CupertinoLocalizations> load(Locale locale) async {
     var localizations = JapaneseCupertinoLocalizations();
@@ -25,8 +24,7 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   String get alertDialogLabel => materialLocalizations.alertDialogLabel;
 
   @override
-  String get anteMeridiemAbbreviation =>
-      materialLocalizations.anteMeridiemAbbreviation;
+  String get anteMeridiemAbbreviation => materialLocalizations.anteMeridiemAbbreviation;
 
   @override
   String get copyButtonLabel => materialLocalizations.copyButtonLabel;
@@ -48,8 +46,7 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   String datePickerHourSemanticsLabel(int hour) => "$hour時";
 
   @override
-  String datePickerMediumDate(DateTime date) =>
-      materialLocalizations.formatMediumDate(date);
+  String datePickerMediumDate(DateTime date) => materialLocalizations.formatMediumDate(date);
 
   @override
   String datePickerMinute(int minute) => minute.toString().padLeft(2, '0');
@@ -67,8 +64,7 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   String get pasteButtonLabel => materialLocalizations.pasteButtonLabel;
 
   @override
-  String get postMeridiemAbbreviation =>
-      materialLocalizations.postMeridiemAbbreviation;
+  String get postMeridiemAbbreviation => materialLocalizations.postMeridiemAbbreviation;
 
   @override
   String get selectAllButtonLabel => materialLocalizations.selectAllButtonLabel;
@@ -77,22 +73,19 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   String timerPickerHour(int hour) => hour.toString().padLeft(2, "0");
 
   @override
-  String timerPickerHourLabel(int hour) =>
-      "${hour.toString().padLeft(2, '0')}時";
+  String timerPickerHourLabel(int hour) => "${hour.toString().padLeft(2, '0')}時";
 
   @override
   String timerPickerMinute(int minute) => minute.toString().padLeft(2, "0");
 
   @override
-  String timerPickerMinuteLabel(int minute) =>
-      "${minute.toString().padLeft(2, '0')}分";
+  String timerPickerMinuteLabel(int minute) => "${minute.toString().padLeft(2, '0')}分";
 
   @override
   String timerPickerSecond(int second) => second.toString().padLeft(2, "0");
 
   @override
-  String timerPickerSecondLabel(int second) =>
-      "${second.toString().padLeft(2, '0')}秒";
+  String timerPickerSecondLabel(int second) => "${second.toString().padLeft(2, '0')}秒";
 
   @override
   String get modalBarrierDismissLabel => throw UnimplementedError();
@@ -118,39 +111,25 @@ class JapaneseCupertinoLocalizations implements CupertinoLocalizations {
   String get todayLabel => throw UnimplementedError();
 
   @override
-  // TODO: implement noSpellCheckReplacementsLabel
   String get noSpellCheckReplacementsLabel => throw UnimplementedError();
 
   @override
   String datePickerDayOfMonth(int dayIndex, [int? weekDay]) {
-    // TODO: implement datePickerDayOfMonth
     throw UnimplementedError();
   }
 
-  @override
-  // TODO: implement clearButtonLabel
   String get clearButtonLabel => throw UnimplementedError();
 
-  @override
   String datePickerStandaloneMonth(int monthIndex) {
-    // TODO: implement datePickerStandaloneMonth
     throw UnimplementedError();
   }
 
-  @override
-  // TODO: implement lookUpButtonLabel
   String get lookUpButtonLabel => throw UnimplementedError();
 
-  @override
-  // TODO: implement menuDismissLabel
   String get menuDismissLabel => throw UnimplementedError();
 
-  @override
-  // TODO: implement searchWebButtonLabel
   String get searchWebButtonLabel => throw UnimplementedError();
 
-  @override
-  // TODO: implement shareButtonLabel
   String get shareButtonLabel => throw UnimplementedError();
 }
 
